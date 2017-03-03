@@ -1,0 +1,2 @@
+recursive-include user/templates *
+recursive-include user/static *
