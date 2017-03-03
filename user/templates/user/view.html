@@ -19,6 +19,7 @@
             <div class="box-body">
               {{ form.csrf_token }}
 	      {{ render_field(form.firstname) }}
+	      {{ render_field(form.lastname) }}
 	    </div>
           <div class="box-footer">
 	    {{ render_field(form.submit, class_="btn btn-primary pull-right", value="Update", with_label=False) }}
