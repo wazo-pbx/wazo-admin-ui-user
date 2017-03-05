@@ -30,6 +30,7 @@ class UserView(BaseView):
     form = UserForm
     resource = 'user'
     schema = AggregatorSchema
+    ajax_listing = True
 
     @classy_menu_item('.users', 'Users', order=1, icon="user")
     def index(self):
