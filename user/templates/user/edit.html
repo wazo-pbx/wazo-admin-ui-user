@@ -10,6 +10,16 @@
       {% call add_default_fields(form=form, submit_value="Update") %}
 	    {{ render_field(form.firstname) }}
 	    {{ render_field(form.lastname) }}
+	    {{ render_field(form.extension) }}
+	    {{ render_field(form.email) }}
+	    {{ render_field(form.mobile_phone_number) }}
+	    {{ render_field(form.ring_seconds) }}
+	    {{ render_field(form.music_on_hold) }}
+	    {{ render_field(form.preprocess_subroutine) }}
+	    {{ render_field(form.simultaneous_calls) }}
+	    {{ render_field(form.timezone) }}
+	    {{ render_field(form.userfield) }}
+	    {{ render_field(form.description) }}
       {% endcall %}
     {% endcall %}
   {% endcall %}
