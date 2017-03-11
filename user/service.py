@@ -9,3 +9,7 @@ class UserService(BaseConfdService):
 
     resource_name = 'user'
     resource_confd = 'users'
+
+
+    def list(self, limit=None, order=None, direction=None, offset=None, search=None):
+        return self._confd.users.list(view='summary', search=search, order=order, limit=limit, direction=direction, offset=offset)
