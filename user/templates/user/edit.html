@@ -10,6 +10,7 @@
       {% call build_tabs_navigation() %}
         {{ add_tab_navigation_header('User', name, 'user') }}
         {{ add_tab_navigation_item('general', 'General', active=True) }}
+        {{ add_tab_navigation_item('fallbacks', 'Fallbacks') }}
       {% endcall %}
       {% call build_tabs_content() %}
 
@@ -28,6 +29,13 @@
             {{ render_field(form.timezone) }}
             {{ render_field(form.userfield) }}
             {{ render_field(form.description) }}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+
+        {% call build_tab_content_item('fallbacks') %}
+          {% call build_form(action=url_for('.UserView:put', id=resources.user.uuid)) %}
+            {% call add_default_fields(form=form, submit_value="Update") %}
             {% endcall %}
           {% endcall %}
         {% endcall %}
