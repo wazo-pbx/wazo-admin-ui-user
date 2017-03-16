@@ -5,23 +5,33 @@
 {% endblock %}
 
 {% block content %}
-  {% call build_form_containers('User' ~ ' ' ~ resources.user.name, 'user') %}
-    {% call build_form(action=url_for('.UserView:put', id=resources.user.uuid)) %}
-      {% call add_default_fields(form=form, submit_value="Update") %}
-	    {{ render_field(form.firstname) }}
-	    {{ render_field(form.lastname) }}
-	    {{ render_field(form.extension) }}
-	    {{ render_field(form.email) }}
-	    {{ render_field(form.mobile_phone_number) }}
-	    {{ render_field(form.ring_seconds) }}
-	    {{ render_field(form.music_on_hold) }}
-	    {{ render_field(form.preprocess_subroutine) }}
-	    {{ render_field(form.simultaneous_calls) }}
-	    {{ render_field(form.timezone) }}
-	    {{ render_field(form.userfield) }}
-	    {{ render_field(form.description) }}
+    {% set name = resources.user.firstname ~ (' ' ~ resources.user.lastname if resources.user.lastname else '') %}
+    {% call build_tabs_containers() %}
+      {% call build_tabs_navigation() %}
+        {{ add_tab_navigation_header('User', name, 'user') }}
+        {{ add_tab_navigation_item('general', 'General', active=True) }}
+      {% endcall %}
+      {% call build_tabs_content() %}
+
+        {% call build_tab_content_item('general', active=True) %}
+          {% call build_form(action=url_for('.UserView:put', id=resources.user.uuid)) %}
+            {% call add_default_fields(form=form, submit_value="Update") %}
+            {{ render_field(form.firstname) }}
+            {{ render_field(form.lastname) }}
+            {{ render_field(form.extension) }}
+            {{ render_field(form.email) }}
+            {{ render_field(form.mobile_phone_number) }}
+            {{ render_field(form.ring_seconds) }}
+            {{ render_field(form.music_on_hold) }}
+            {{ render_field(form.preprocess_subroutine) }}
+            {{ render_field(form.simultaneous_calls) }}
+            {{ render_field(form.timezone) }}
+            {{ render_field(form.userfield) }}
+            {{ render_field(form.description) }}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+
       {% endcall %}
     {% endcall %}
-  {% endcall %}
-
 {% endblock %}
