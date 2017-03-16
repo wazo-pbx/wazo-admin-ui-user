@@ -57,4 +57,4 @@ class UserDestinationView(BaseDestinationView):
 
             results.append({'id': user[field_id], 'text': text})
 
-        return self._select2_response(results, user['total'], params)
+        return self._select2_response(results, users['total'], params)
