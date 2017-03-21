@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 from flask_menu.classy import classy_menu_item
 from marshmallow import fields
 
+from wazo_admin_ui.helpers.destination import FallbacksSchema
 from wazo_admin_ui.helpers.classful import BaseView, BaseDestinationView
 from wazo_admin_ui.helpers.mallow import BaseSchema, BaseAggregatorSchema, extract_form_fields
 
@@ -14,6 +15,8 @@ from .form import UserForm
 
 
 class UserSchema(BaseSchema):
+
+    fallbacks = fields.Nested(FallbacksSchema)
 
     class Meta:
         fields = extract_form_fields(UserForm)

@@ -14,4 +14,3 @@ function create_list_table(list_url, get_url, delete_url) {
   };
   create_table_serverside(table_config);
 };
-

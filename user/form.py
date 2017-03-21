@@ -11,7 +11,8 @@ from wtforms.fields import (FormField,
                             TextField)
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired
-from wtforms.validators import Optional
+
+from wazo_admin_ui.helpers.destination import FallbacksForm
 
 
 class UserForm(FlaskForm):
@@ -27,6 +28,7 @@ class UserForm(FlaskForm):
     timezone = TextField('Timezone')
     userfield = TextField('User Field')
     description = TextField('Description')
+    fallbacks = FormField(FallbacksForm)
     submit = SubmitField('Submit')
 
 

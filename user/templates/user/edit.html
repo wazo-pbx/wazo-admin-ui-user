@@ -34,6 +34,10 @@
 
           {% call build_tab_content_item('fallbacks') %}
             {% call add_default_fields(form=form, submit_value="Update") %}
+              {{ render_field(form.fallbacks.busy_destination) }}
+              {{ render_field(form.fallbacks.congestion_destination) }}
+              {{ render_field(form.fallbacks.fail_destination) }}
+              {{ render_field(form.fallbacks.noanswer_destination) }}
             {% endcall %}
           {% endcall %}
 
