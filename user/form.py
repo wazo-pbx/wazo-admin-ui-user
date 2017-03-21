@@ -4,11 +4,12 @@
 
 from flask_wtf import FlaskForm
 
-from wtforms.fields import SubmitField
-from wtforms.fields import TextField
-from wtforms.fields import BooleanField
+from wtforms.fields import (FormField,
+                            IntegerField,
+                            SelectField,
+                            SubmitField,
+                            TextField)
 from wtforms.fields.html5 import EmailField
-
 from wtforms.validators import InputRequired
 from wtforms.validators import Optional
 
@@ -27,3 +28,8 @@ class UserForm(FlaskForm):
     userfield = TextField('User Field')
     description = TextField('Description')
     submit = SubmitField('Submit')
+
+
+class UserDestinationForm(FlaskForm):
+    user_id = SelectField('User', choices=[])
+    timeout = IntegerField('Timeout')
