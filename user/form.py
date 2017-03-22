@@ -13,6 +13,7 @@ from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired
 
 from wazo_admin_ui.helpers.destination import FallbacksForm
+from wazo_admin_ui.helpers.form import DestinationHiddenField
 
 
 class UserForm(FlaskForm):
@@ -33,5 +34,9 @@ class UserForm(FlaskForm):
 
 
 class UserDestinationForm(FlaskForm):
+    setted_value_template = '{user_firstname} {user_lastname}'
+
     user_id = SelectField('User', choices=[])
     timeout = IntegerField('Timeout')
+    user_firstname = DestinationHiddenField()
+    user_lastname = DestinationHiddenField()
