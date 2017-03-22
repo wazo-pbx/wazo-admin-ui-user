@@ -12,8 +12,7 @@ from wtforms.fields import (FormField,
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired
 
-from wazo_admin_ui.helpers.destination import FallbacksForm
-from wazo_admin_ui.helpers.form import DestinationHiddenField
+from wazo_admin_ui.helpers.destination import FallbacksForm, DestinationHiddenField
 
 
 class UserForm(FlaskForm):
