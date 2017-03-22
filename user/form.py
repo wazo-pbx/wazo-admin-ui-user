@@ -37,6 +37,6 @@ class UserDestinationForm(FlaskForm):
     setted_value_template = '{user_firstname} {user_lastname}'
 
     user_id = SelectField('User', choices=[])
-    timeout = IntegerField('Timeout')
+    ring_time = IntegerField('Ring time')
     user_firstname = DestinationHiddenField()
     user_lastname = DestinationHiddenField()
