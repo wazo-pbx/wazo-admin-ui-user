@@ -8,7 +8,7 @@ from wtforms.fields import (FormField,
                             IntegerField,
                             SelectField,
                             SubmitField,
-                            TextField)
+                            StringField)
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired
 
@@ -16,18 +16,18 @@ from wazo_admin_ui.helpers.destination import FallbacksForm, DestinationHiddenFi
 
 
 class UserForm(FlaskForm):
-    firstname = TextField('Firstname', [InputRequired()])
-    lastname = TextField('Lastname')
-    extension = TextField('Extension')
+    firstname = StringField('Firstname', [InputRequired()])
+    lastname = StringField('Lastname')
+    extension = StringField('Extension')
     email = EmailField('Email')
-    mobile_phone_number = TextField('Phone mobile')
-    ring_seconds = TextField('Ring seconds')
-    music_on_hold = TextField('Music on Hold')
-    preprocess_subroutine = TextField('Subroutine')
-    simultaneous_calls = TextField('Simultaneous calls')
-    timezone = TextField('Timezone')
-    userfield = TextField('User Field')
-    description = TextField('Description')
+    mobile_phone_number = StringField('Phone mobile')
+    ring_seconds = StringField('Ring seconds')
+    music_on_hold = StringField('Music on Hold')
+    preprocess_subroutine = StringField('Subroutine')
+    simultaneous_calls = StringField('Simultaneous calls')
+    timezone = StringField('Timezone')
+    userfield = StringField('User Field')
+    description = StringField('Description')
     fallbacks = FormField(FallbacksForm)
     submit = SubmitField('Submit')
 
