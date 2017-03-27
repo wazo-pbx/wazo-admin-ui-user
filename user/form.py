@@ -5,7 +5,6 @@
 from flask_wtf import FlaskForm
 
 from wtforms.fields import (FormField,
-                            IntegerField,
                             SelectField,
                             SubmitField,
                             StringField)
@@ -36,6 +35,6 @@ class UserDestinationForm(FlaskForm):
     setted_value_template = '{user_firstname} {user_lastname}'
 
     user_id = SelectField('User', choices=[])
-    ring_time = IntegerField('Ring time')
+    ring_time = StringField('Ring time')
     user_firstname = DestinationHiddenField()
     user_lastname = DestinationHiddenField()
