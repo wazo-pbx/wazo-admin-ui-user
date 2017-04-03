@@ -7,8 +7,8 @@ function create_list_table(list_url, get_url, delete_url) {
       { data: 'extension' },
       { data: 'provisioning_code' },
       { render: function(data, type, row) {
-            return build_table_actions(get_url, delete_url, row.uuid);
-        },
+        return build_table_actions(get_url, delete_url, row.uuid);
+      },
       },
     ]
   };

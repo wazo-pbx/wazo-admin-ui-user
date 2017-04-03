@@ -5,6 +5,8 @@
 from flask_wtf import FlaskForm
 
 from wtforms.fields import (FormField,
+                            FieldList,
+                            HiddenField,
                             SelectField,
                             SubmitField,
                             StringField)
@@ -12,6 +14,20 @@ from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired
 
 from wazo_admin_ui.helpers.destination import FallbacksForm, DestinationHiddenField
+
+
+class LineForm(FlaskForm):
+    line_id = HiddenField()
+    extension_id = HiddenField()
+    endpoint_sip_id = HiddenField()
+    endpoint_sccp_id = HiddenField()
+    endpoint_custom_id = HiddenField()
+    protocol = StringField()
+    name = StringField()
+    context = StringField()
+    extension = StringField()
+    device = StringField()
+    position = StringField()
 
 
 class UserForm(FlaskForm):
@@ -28,6 +44,7 @@ class UserForm(FlaskForm):
     userfield = StringField('User Field')
     description = StringField('Description')
     fallbacks = FormField(FallbacksForm)
+    lines = FieldList(FormField(LineForm))
     submit = SubmitField('Submit')
 
 
