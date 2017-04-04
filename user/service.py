@@ -25,6 +25,9 @@ class UserService(BaseConfdService):
     def get_line(self, line_id):
         return self._confd.lines.get(line_id)
 
+    def get_device(self, device_id):
+        return self._confd.devices.get(device_id)
+
     def update(self, resources):
         super(UserService, self).update(resources)
 

@@ -26,7 +26,8 @@ class LineForm(FlaskForm):
     name = StringField()
     context = StringField()
     extension = StringField()
-    device = StringField()
+    device = SelectField(choices=[])
+    device_mac = HiddenField()
     position = StringField(default=1)
 
 

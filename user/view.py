@@ -52,7 +52,15 @@ class UserView(BaseView):
         resource_lines = [self.service.get_line(line['id']) for line in resources['user']['lines']]
         lines = self._build_lines(resource_lines)
         form = self.form(data=data['user'], lines=lines)
+        for form_line in form.lines:
+            form_line.device.choices = self._build_setted_choices(form_line)
         return form
+
+    def _build_setted_choices(self, line):
+        if not line.device.data:
+            return []
+        text = line.device_mac.data if line.device_mac.data else line.device.data
+        return [(line.device.data, text)]
 
     def _build_lines(self, lines):
         results = []
@@ -78,11 +86,14 @@ class UserView(BaseView):
                 name = line['endpoint_custom']['interface']
                 endpoint_custom_id = line['endpoint_custom']['id']
 
+            device_mac = self.service.get_device(line['device_id'])['mac'] if line['device_id'] else ''
+            device = line['device_id'] if line['device_id'] else ''
             results.append({'protocol': protocol,
                             'extension': extension,
                             'name': name,
                             'context': context,
-                            'device': '12:34:56:78:9A',  # we dont have this information
+                            'device': device,
+                            'device_mac': device_mac,
                             'position': line['position'],
                             'line_id': line['id'],
                             'extension_id': extension_id,
