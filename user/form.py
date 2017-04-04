@@ -22,7 +22,7 @@ class LineForm(FlaskForm):
     endpoint_sip_id = HiddenField()
     endpoint_sccp_id = HiddenField()
     endpoint_custom_id = HiddenField()
-    protocol = SelectField(choices=[('sip', 'SIP'), ('sccp', 'SCCP'), ('custom', 'CUSTOM')])
+    protocol = SelectField(choices=[('sip', 'SIP'), ('sccp', 'SCCP'), ('custom', 'CUSTOM'), ('webrtc', 'SIP (webrtc)')])
     name = StringField()
     context = StringField()
     extension = StringField()

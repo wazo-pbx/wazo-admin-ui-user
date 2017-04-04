@@ -28,6 +28,17 @@ class UserService(BaseConfdService):
     def get_device(self, device_id):
         return self._confd.devices.get(device_id)
 
+    def get_endpoint(self, endpoint_id):
+        return self._confd.endpoints_sip.get(endpoint_id)
+
+    def is_webrtc(self, endpoint_id):
+        endpoint = self.get_endpoint(endpoint_id)
+        for option in endpoint['options']:
+            if option[0] == 'transport':
+                if option[1] == 'wss':
+                    return True
+        return False
+
     def update(self, resources):
         super(UserService, self).update(resources)
 
