@@ -80,6 +80,11 @@
     {% set tr_class = "row-template hidden" %}
   {% endif %}
   <tr class="{{ tr_class }}">
+    {{ render_field(line.line_id) }}
+    {{ render_field(line.endpoint_sip_id) }}
+    {{ render_field(line.endpoint_sccp_id) }}
+    {{ render_field(line.endpoint_custom_id) }}
+    {{ render_field(line.extension_id) }}
     <td class="col-sm-2">
       {{ render_field(line.protocol, with_label=False) }}
     </td>

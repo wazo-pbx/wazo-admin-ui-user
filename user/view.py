@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 
 from flask_menu.classy import classy_menu_item
 from marshmallow import fields
+from random import randint
 
 from wazo_admin_ui.helpers.destination import FallbacksSchema
 from wazo_admin_ui.helpers.classful import BaseView, BaseDestinationView
@@ -88,6 +89,36 @@ class UserView(BaseView):
                             'endpoint_sccp_id': endpoint_sccp_id,
                             'endpoint_custom_id': endpoint_custom_id})
         return results
+
+    def _map_form_to_resources(self, form, form_id=None):
+        data = self.schema(context={'resource_id': form_id}).dump(form).data
+        lines = []
+        for line in data['lines']:
+            result = {'id': int(line['line_id']) if line['line_id'] else None,
+                      'context': line['context'],
+                      'position': line['position'],
+                      'users': [{'uuid': form_id}]}
+
+            if line['protocol'] == 'sip':
+                result['endpoint_sip'] = {'id': line['endpoint_sip_id']}
+            elif line['protocol'] == 'sccp':
+                result['endpoint_sccp'] = {'id': line['endpoint_sccp_id']}
+            elif line['protocol'] == 'custom':
+                result['endpoint_custom'] = {'id': line['endpoint_custom_id'],
+                                             'interface': str(randint(0, 99999999))}  # TODO: to improve ...
+
+            if line['extension'] and line['context']:
+                result['extensions'] = [{'id': line['extension_id'],
+                                         'exten': line['extension'],
+                                         'context': line['context']}]
+
+            if line['device']:
+                line['device'] = {'id': line['device']}
+
+            lines.append(result)
+
+        data['lines'] = lines
+        return data
 
 
 class UserDestinationView(BaseDestinationView):
