@@ -132,11 +132,11 @@ class UserService(BaseConfdService):
 
         # TODO: update device
 
-        extension = line.get('extensions', [{}])[0]
-        if extension.get('id'):
-            self._confd.extensions.update(extension)
+        extensions = line.get('extensions', [])
+        if extensions and extensions[0].get('id'):
+            self._confd.extensions.update(extensions[0])
 
-        elif extension:
+        elif extensions:
             extension = self._confd.extensions.create(extension)
             if extension:
                 self._confd.lines(line).add_extension(extension)
