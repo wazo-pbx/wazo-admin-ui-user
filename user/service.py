@@ -117,9 +117,7 @@ class UserService(BaseConfdService):
             return line
 
         if line.get('extensions'):
-            extension = self._confd.extensions.create(line['extensions'][0])
-            if extension:
-                self._confd.lines(line).add_extension(extension)
+            self._create_or_associate_extension(line, line['extensions'][0])
 
         # TODO: create device
 
@@ -137,9 +135,7 @@ class UserService(BaseConfdService):
             self._confd.extensions.update(extensions[0])
 
         elif extensions:
-            extension = self._confd.extensions.create(extension)
-            if extension:
-                self._confd.lines(line).add_extension(extension)
+            self._create_or_associate_extension(line, extensions[0])
 
         else:
             existing_extensions = self._confd.lines.get(line['id']).get('extensions')
@@ -148,3 +144,14 @@ class UserService(BaseConfdService):
                 self._confd.extensions.delete(existing_extensions[0])
 
         self._confd.lines.update(line)
+
+    def _create_or_associate_extension(self, line, extension):
+        items = self._confd.extensions.list(exten=extension['exten'],
+                                            context=extension['context'])['items']
+        existing_extension = items[0] if items else None
+
+        if not existing_extension:
+            existing_extension = self._confd.extensions.create(extension)
+
+        if existing_extension:
+            self._confd.lines(line).add_extension(existing_extension)

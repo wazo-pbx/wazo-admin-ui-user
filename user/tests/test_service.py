@@ -79,18 +79,37 @@ class TestUserService(unittest.TestCase):
         self._confd_lines.delete.assert_not_called()
 
     def test_update_with_lines_when_existing_lines_with_same_id_and_no_existing_extension(self):
-        line = {'id': 'line-id', 'extensions': [{'id': ''}]}
+        extension1 = {'id': '', 'exten': '12', 'context': 'default'}
+        line = {'id': 'line-id', 'extensions': [extension1]}
         resources = {'user': {'uuid': '1234'},
                      'lines': [line]}
         self._confd_users.get.return_value = {'lines': [{'id': 'line-id'}]}
         self._confd_lines.get.return_value = {'extensions': []}
         self._confd_extensions.create.return_value = {'id': 'extension-id'}
+        self._confd_extensions.list.return_value = {'items': []}
 
         self.service.update(resources)
 
         self._confd_lines.update.assert_called_once_with(line)
-        self._confd_extensions.create.assert_called_once_with({'id': ''})
+        self._confd_extensions.create.assert_called_once_with(extension1)
         self._confd_lines.return_value.add_extension.assert_called_once_with({'id': 'extension-id'})
+        self._confd_lines.create.assert_not_called()
+        self._confd_lines.delete.assert_not_called()
+
+    def test_update_with_lines_when_existing_lines_with_same_id_and_existing_extension_not_on_existing_line(self):
+        extension1 = {'id': '', 'exten': '12', 'context': 'default'}
+        line = {'id': 'line-id', 'extensions': [extension1]}
+        resources = {'user': {'uuid': '1234'},
+                     'lines': [line]}
+        self._confd_users.get.return_value = {'lines': [{'id': 'line-id'}]}
+        self._confd_lines.get.return_value = {'extensions': []}
+        self._confd_extensions.list.return_value = {'items': [extension1]}
+
+        self.service.update(resources)
+
+        self._confd_lines.update.assert_called_once_with(line)
+        self._confd_extensions.create.assert_not_called()
+        self._confd_lines.return_value.add_extension.assert_called_once_with(extension1)
         self._confd_lines.create.assert_not_called()
         self._confd_lines.delete.assert_not_called()
 
