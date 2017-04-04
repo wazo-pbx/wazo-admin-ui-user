@@ -55,29 +55,24 @@ class UserView(BaseView):
     def _build_lines(self, lines):
         results = []
         for line in lines:
-            extension = ''
-            context = ''
-            extension_id = ''
+            extension = context = extension_id = ''
             if line.get('extensions'):
                 extension = line['extensions'][0]['exten']
                 context = line['extensions'][0]['context']
                 extension_id = line['extensions'][0]['id']
 
-            protocol = 'undefined'
-            name = 'undefined'
-            endpoint_sip_id = ''
-            endpoint_sccp_id = ''
-            endpoint_custom_id = ''
+            name = protocol = 'undefined'
+            endpoint_sip_id = endpoint_sccp_id = endpoint_custom_id = ''
             if line.get('endpoint_sip'):
-                protocol = 'SIP'
+                protocol = 'sip'
                 name = line['endpoint_sip']['username']
                 endpoint_sip_id = line['endpoint_sip']['id']
             elif line.get('endpoint_sccp'):
-                protocol = 'SCCP'
+                protocol = 'sccp'
                 name = extension
                 endpoint_sccp_id = line['endpoint_sccp']['id']
             elif line.get('endpoint_custom'):
-                protocol = 'CUSTOM'
+                protocol = 'custom'
                 name = line['endpoint_custom']['interface']
                 endpoint_custom_id = line['endpoint_custom']['id']
 
