@@ -49,7 +49,8 @@ class UserView(BaseView):
 
     def _map_resources_to_form(self, resources):
         data = self.schema().load(resources).data
-        lines = self._build_lines(resources['user']['lines'])
+        resource_lines = [self.service.get_line(line['id']) for line in resources['user']['lines']]
+        lines = self._build_lines(resource_lines)
         form = self.form(data=data['user'], lines=lines)
         return form
 
@@ -82,7 +83,7 @@ class UserView(BaseView):
                             'name': name,
                             'context': context,
                             'device': '12:34:56:78:9A',  # we dont have this information
-                            'position': 1,  # we dont have this information
+                            'position': line['position'],
                             'line_id': line['id'],
                             'extension_id': extension_id,
                             'endpoint_sip_id': endpoint_sip_id,

@@ -22,6 +22,9 @@ class UserService(BaseConfdService):
                                       direction=direction,
                                       offset=offset)
 
+    def get_line(self, line_id):
+        return self._confd.lines.get(line_id)
+
     def update(self, resources):
         super(UserService, self).update(resources)
 
