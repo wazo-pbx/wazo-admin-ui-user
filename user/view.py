@@ -9,7 +9,7 @@ from marshmallow import fields
 from random import randint
 
 from wazo_admin_ui.helpers.destination import FallbacksSchema
-from wazo_admin_ui.helpers.classful import BaseView, BaseDestinationView
+from wazo_admin_ui.helpers.classful import IndexAjaxViewMixin, BaseView, BaseDestinationView
 from wazo_admin_ui.helpers.mallow import BaseSchema, BaseAggregatorSchema, extract_form_fields
 
 from .form import LineForm, UserForm
@@ -36,12 +36,11 @@ class AggregatorSchema(BaseAggregatorSchema):
     lines = fields.List(fields.Nested(LineSchema))
 
 
-class UserView(BaseView):
+class UserView(IndexAjaxViewMixin, BaseView):
 
     form = UserForm
     resource = 'user'
     schema = AggregatorSchema
-    ajax_listing = True
 
     @classy_menu_item('.users', 'Users', order=1, icon="user")
     def index(self):
