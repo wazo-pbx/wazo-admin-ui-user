@@ -6,7 +6,7 @@
 
 {% block content %}
     {% set name = resources.user.firstname ~ (' ' ~ resources.user.lastname if resources.user.lastname else '') %}
-    {% call build_tabs_containers() %}
+    {% call build_form_tabs_box() %}
       {% call build_tabs_navigation() %}
         {{ add_tab_navigation_header('User', name, 'user') }}
         {{ add_tab_navigation_item('general', 'General', active=True) }}
