@@ -4,12 +4,14 @@
 
 from __future__ import unicode_literals
 
+from flask import request, jsonify
 from flask_menu.classy import classy_menu_item
 from marshmallow import fields
 from random import randint
 
 from wazo_admin_ui.helpers.destination import FallbacksSchema
-from wazo_admin_ui.helpers.classful import IndexAjaxViewMixin, BaseView, BaseDestinationView
+from wazo_admin_ui.helpers.classful import IndexAjaxViewMixin, BaseView, LoginRequiredView
+from wazo_admin_ui.helpers.classful import extract_select2_params, build_select2_response
 from wazo_admin_ui.helpers.mallow import BaseSchema, BaseAggregatorSchema, extract_form_fields
 
 from .form import LineForm, UserForm
@@ -156,7 +158,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
         return data
 
 
-class UserDestinationView(BaseDestinationView):
+class UserDestinationView(LoginRequiredView):
 
     def list_json(self):
         return self._list_json('id')
@@ -165,7 +167,7 @@ class UserDestinationView(BaseDestinationView):
         return self._list_json('uuid')
 
     def _list_json(self, field_id):
-        params = self._extract_params()
+        params = extract_select2_params(request.args)
         users = self.service.list(**params)
         results = []
         for user in users['items']:
@@ -176,4 +178,4 @@ class UserDestinationView(BaseDestinationView):
 
             results.append({'id': user[field_id], 'text': text})
 
-        return self._select2_response(results, users['total'], params)
+        return jsonify(build_select2_response(results, users['total'], params))
