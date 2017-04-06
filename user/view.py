@@ -53,6 +53,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
         form = self.form(data=data['user'], lines=lines)
         for form_line in form.lines:
             form_line.device.choices = self._build_setted_choices(form_line)
+            form_line.context.choices = self._build_setted_choices_context(form_line)
         return form
 
     def _build_setted_choices(self, line):
@@ -60,6 +61,9 @@ class UserView(IndexAjaxViewMixin, BaseView):
             return []
         text = line.device_mac.data if line.device_mac.data else line.device.data
         return [(line.device.data, text)]
+
+    def _build_setted_choices_context(self, line):
+        return [(line.context.data, line.context.data)]
 
     def _build_lines(self, lines):
         results = []

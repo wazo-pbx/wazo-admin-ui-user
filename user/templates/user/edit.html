@@ -92,13 +92,13 @@
       {{ render_field(line['name'], with_label=False) }}
     </td>
     <td class="col-sm-2">
-      {{ render_field(line.context, with_label=False) }}
+      {{ render_field(line.context, with_label=False, data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
     </td>
     <td class="col-sm-1">
       {{ render_field(line.extension, with_label=False) }}
     </td>
     <td class="col-sm-4">
-      {{ render_field(line.device, with_label=False) }}
+      {{ render_field(line.device, with_label=False, data_listing_href=url_for(listing_urls['device_by_mac'])) }}
     </td>
     <td class="col-sm-1">
       {{ render_field(line.position, with_label=False) }}
