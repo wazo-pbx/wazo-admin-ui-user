@@ -25,7 +25,7 @@
           {{ render_field(form.lastname) }}
           {% do form.lines.append_entry() %}
           {% for line in form.lines %}
-            {{ render_field(line.extension) }}
+            {{ render_field(line.extension, data_allow_custom_values=True) }}
             {{ render_field(line.context, data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
             {{ render_field(line.protocol) }}
           {% endfor %}

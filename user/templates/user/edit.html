@@ -10,22 +10,27 @@
       {% call build_form_tabs_box() %}
         {% call build_tabs_navigation() %}
           {{ add_tab_navigation_header('User', name, 'user') }}
-          {{ add_tab_navigation_item('general', 'General', active=True) }}
+          {{ add_tab_navigation_item('user', 'User', active=True) }}
+          {{ add_tab_navigation_item('general', 'General') }}
           {{ add_tab_navigation_item('fallbacks', 'Fallbacks') }}
           {{ add_tab_navigation_item('lines', 'Lines') }}
         {% endcall %}
         {% call build_form(action=url_for('.UserView:put', id=resources.user.uuid)) %}
           {% call build_tabs_content() %}
 
-            {% call build_tab_content_item('general', active=True) %}
+            {% call build_tab_content_item('user', active=True) %}
               {% call add_default_fields(form=form, submit_value="Update") %}
                 {{ render_field(form.firstname) }}
                 {{ render_field(form.lastname) }}
-                {{ render_field(form.extension) }}
                 {{ render_field(form.email) }}
-                {{ render_field(form.mobile_phone_number) }}
                 {{ render_field(form.username) }}
                 {{ render_field(form.password) }}
+              {% endcall %}
+            {% endcall %}
+
+            {% call build_tab_content_item('general') %}
+              {% call add_default_fields(form=form, submit_value="Update") %}
+                {{ render_field(form.mobile_phone_number) }}
                 {{ render_field(form.ring_seconds) }}
                 {{ render_field(form.music_on_hold) }}
                 {{ render_field(form.preprocess_subroutine) }}
@@ -35,6 +40,7 @@
                 {{ render_field(form.description) }}
               {% endcall %}
             {% endcall %}
+
 
             {% call build_tab_content_item('fallbacks') %}
               {% call add_default_fields(form=form, submit_value="Update") %}
