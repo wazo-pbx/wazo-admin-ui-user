@@ -52,7 +52,7 @@ class UserForm(FlaskForm):
 
 
 class UserDestinationForm(FlaskForm):
-    setted_value_template = '{user_firstname} {user_lastname}'
+    setted_value_template = u'{user_firstname} {user_lastname}'
 
     user_id = SelectField('User', choices=[])
     ring_time = StringField('Ring time')
