@@ -34,6 +34,8 @@ class LineForm(FlaskForm):
 class UserForm(FlaskForm):
     firstname = StringField('Firstname', [InputRequired()])
     lastname = StringField('Lastname')
+    username = StringField('Username')
+    password = StringField('Password')
     extension = StringField('Extension')
     email = EmailField('Email')
     mobile_phone_number = StringField('Phone mobile')

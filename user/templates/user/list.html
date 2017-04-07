@@ -21,8 +21,14 @@
     {% call build_hidden_add_containers('Add User') %}
       {% call build_form() %}
         {% call add_default_fields(form=form, submit_value="Add") %}
-	      {{ render_field(form.firstname) }}
-	      {{ render_field(form.lastname) }}
+	  {{ render_field(form.firstname) }}
+	  {{ render_field(form.lastname) }}
+          {% do form.lines.append_entry() %}
+          {% for line in form.lines %}
+	    {{ render_field(line.extension) }}
+	    {{ render_field(line.context, data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
+	    {{ render_field(line.protocol) }}
+          {% endfor %}
         {% endcall %}
       {% endcall %}
     {% endcall %}
