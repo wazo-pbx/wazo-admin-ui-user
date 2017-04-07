@@ -25,7 +25,7 @@ class LineForm(FlaskForm):
     protocol = SelectField(choices=[('sip', 'SIP'), ('sccp', 'SCCP'), ('custom', 'CUSTOM'), ('webrtc', 'SIP (webrtc)')])
     name = StringField()
     context = SelectField(choices=[])
-    extension = StringField()
+    extension = SelectField(choices=[])
     device = SelectField(choices=[])
     device_mac = HiddenField()
     position = StringField(default=1)

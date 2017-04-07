@@ -56,6 +56,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
         for form_line in form.lines:
             form_line.device.choices = self._build_setted_choices(form_line)
             form_line.context.choices = self._build_setted_choices_context(form_line)
+            form_line.extension.choices = self._build_setted_choices_extension(form_line)
         return form
 
     def _build_setted_choices(self, line):
@@ -66,6 +67,9 @@ class UserView(IndexAjaxViewMixin, BaseView):
 
     def _build_setted_choices_context(self, line):
         return [(line.context.data, line.context.data)]
+
+    def _build_setted_choices_extension(self, line):
+        return [(line.extension.data, line.extension.data)]
 
     def _build_lines(self, lines):
         results = []
