@@ -18,13 +18,12 @@ class Plugin(object):
 
     def load(self, dependencies):
         core = dependencies['flask']
-        config = dependencies['config']
 
-        UserView.service = UserService(config['confd'])
+        UserView.service = UserService()
         UserView.register(user, route_base='/users')
         register_flaskview(user, UserView)
 
-        UserDestinationView.service = UserService(config['confd'])
+        UserDestinationView.service = UserService()
         UserDestinationView.register(user, route_base='/users_listing')
 
         register_destination_form('user', 'User', UserDestinationForm)
