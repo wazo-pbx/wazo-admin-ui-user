@@ -53,6 +53,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
         resource_lines = [self.service.get_line(line['id']) for line in resources['user']['lines']]
         lines = self._build_lines(resource_lines)
         form = self.form(data=data['user'], lines=lines)
+        form.music_on_hold.choices = self._build_setted_choices_moh(data['user'].get('music_on_hold'))
         for form_line in form.lines:
             form_line.device.choices = self._build_setted_choices(form_line)
             form_line.context.choices = self._build_setted_choices_context(form_line)
@@ -70,6 +71,9 @@ class UserView(IndexAjaxViewMixin, BaseView):
 
     def _build_setted_choices_extension(self, line):
         return [(line.extension.data, line.extension.data)]
+
+    def _build_setted_choices_moh(self, moh):
+        return [(moh, moh)]
 
     def _build_lines(self, lines):
         results = []

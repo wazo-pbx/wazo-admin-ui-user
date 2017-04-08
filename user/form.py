@@ -31,6 +31,17 @@ class LineForm(FlaskForm):
     position = StringField(default=1)
 
 
+class UserForwardForm(FlaskForm):
+    noanswer = StringField('No answer')
+    busy = StringField('Busy')
+    unconditional = StringField('Unconditional')
+
+
+class UserServiceForm(FlaskForm):
+    dnd = StringField('Dnd')
+    incallfilter = StringField('Incall filter')
+
+
 class UserForm(FlaskForm):
     firstname = StringField('Firstname', [InputRequired()])
     lastname = StringField('Lastname')
@@ -40,13 +51,15 @@ class UserForm(FlaskForm):
     email = EmailField('Email')
     mobile_phone_number = StringField('Phone mobile')
     ring_seconds = StringField('Ring seconds')
-    music_on_hold = StringField('Music on Hold')
+    music_on_hold = SelectField('Music On Hold', choices=[])
     preprocess_subroutine = StringField('Subroutine')
     simultaneous_calls = StringField('Simultaneous calls')
     timezone = StringField('Timezone')
     userfield = StringField('User Field')
     description = StringField('Description')
     fallbacks = FormField(FallbacksForm)
+    forwards = FormField(UserForwardForm)
+    services = FormField(UserServiceForm)
     lines = FieldList(FormField(LineForm))
     submit = SubmitField('Submit')
 

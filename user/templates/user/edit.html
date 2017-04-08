@@ -13,6 +13,7 @@
           {{ add_tab_navigation_item('user', 'User', active=True) }}
           {{ add_tab_navigation_item('general', 'General') }}
           {{ add_tab_navigation_item('fallbacks', 'Fallbacks') }}
+          {{ add_tab_navigation_item('services', 'Services') }}
           {{ add_tab_navigation_item('lines', 'Lines') }}
         {% endcall %}
         {% call build_form(action=url_for('.UserView:put', id=resources.user.uuid)) %}
@@ -32,7 +33,7 @@
               {% call add_default_fields(form=form, submit_value="Update") %}
                 {{ render_field(form.mobile_phone_number) }}
                 {{ render_field(form.ring_seconds) }}
-                {{ render_field(form.music_on_hold) }}
+                {{ render_field(form.music_on_hold, data_listing_href=url_for(listing_urls['moh'])) }}
                 {{ render_field(form.preprocess_subroutine) }}
                 {{ render_field(form.simultaneous_calls) }}
                 {{ render_field(form.timezone) }}
@@ -41,13 +42,22 @@
               {% endcall %}
             {% endcall %}
 
-
             {% call build_tab_content_item('fallbacks') %}
               {% call add_default_fields(form=form, submit_value="Update") %}
                 {{ render_field(form.fallbacks.busy_destination) }}
                 {{ render_field(form.fallbacks.congestion_destination) }}
                 {{ render_field(form.fallbacks.fail_destination) }}
                 {{ render_field(form.fallbacks.noanswer_destination) }}
+              {% endcall %}
+            {% endcall %}
+
+            {% call build_tab_content_item('services') %}
+              {% call add_default_fields(form=form, submit_value="Update") %}
+                {{ render_field(form.services.dnd) }}
+                {{ render_field(form.services.incallfilter) }}
+                {{ render_field(form.forwards.busy) }}
+                {{ render_field(form.forwards.unconditional) }}
+                {{ render_field(form.forwards.noanswer) }}
               {% endcall %}
             {% endcall %}
 
