@@ -6,54 +6,28 @@ from __future__ import unicode_literals
 
 from flask import request, jsonify
 from flask_menu.classy import classy_menu_item
-from marshmallow import fields
 from random import randint
 
-from wazo_admin_ui.helpers.destination import FallbacksSchema
 from wazo_admin_ui.helpers.classful import IndexAjaxViewMixin, BaseView, LoginRequiredView
 from wazo_admin_ui.helpers.classful import extract_select2_params, build_select2_response
-from wazo_admin_ui.helpers.mallow import BaseSchema, BaseAggregatorSchema, extract_form_fields
 
-from .form import LineForm, UserForm
-
-
-class LineSchema(BaseSchema):
-
-    class Meta:
-        fields = extract_form_fields(LineForm)
-
-
-class UserSchema(BaseSchema):
-
-    fallbacks = fields.Nested(FallbacksSchema)
-
-    class Meta:
-        fields = extract_form_fields(UserForm)
-
-
-class AggregatorSchema(BaseAggregatorSchema):
-    _main_resource = 'user'
-
-    user = fields.Nested(UserSchema)
-    lines = fields.List(fields.Nested(LineSchema))
+from .form import UserForm
 
 
 class UserView(IndexAjaxViewMixin, BaseView):
 
     form = UserForm
     resource = 'user'
-    schema = AggregatorSchema
 
     @classy_menu_item('.users', 'Users', order=1, icon="user")
     def index(self):
         return super(UserView, self).index()
 
     def _map_resources_to_form(self, resources):
-        data = self.schema().load(resources).data
         resource_lines = [self.service.get_line(line['id']) for line in resources['user']['lines']]
         lines = self._build_lines(resource_lines)
-        form = self.form(data=data['user'], lines=lines)
-        form.music_on_hold.choices = self._build_setted_choices_moh(data['user'].get('music_on_hold'))
+        form = self.form(data=resources['user'], lines=lines)
+        form.music_on_hold.choices = self._build_setted_choices_moh(resources['user'].get('music_on_hold'))
         for form_line in form.lines:
             form_line.device.choices = self._build_setted_choices(form_line)
             form_line.context.choices = self._build_setted_choices_context(form_line)
@@ -118,9 +92,12 @@ class UserView(IndexAjaxViewMixin, BaseView):
         return results
 
     def _map_form_to_resources(self, form, form_id=None):
-        data = self.schema(context={'resource_id': form_id}).dump(form).data
+        resources = {'user': form.to_dict()}
+        if form_id:
+            resources['user']['uuid'] = form_id
+
         lines = []
-        for line in data['lines']:
+        for line in resources['user']['lines']:
             result = {'id': int(line['line_id']) if line['line_id'] else None,
                       'context': line['context'],
                       'position': line['position'],
@@ -160,8 +137,12 @@ class UserView(IndexAjaxViewMixin, BaseView):
 
             lines.append(result)
 
-        data['lines'] = lines
-        return data
+        resources['lines'] = lines
+        return resources
+
+    def _map_resources_to_form_errors(self, form, resources):
+        form.populate_errors(resources.get('user', {}))
+        return form
 
 
 class UserDestinationView(LoginRequiredView):

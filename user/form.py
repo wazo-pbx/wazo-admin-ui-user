@@ -2,7 +2,6 @@
 # Copyright 2017 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
-from flask_wtf import FlaskForm
 
 from wtforms.fields import (FormField,
                             FieldList,
@@ -14,9 +13,10 @@ from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired
 
 from wazo_admin_ui.helpers.destination import FallbacksForm, DestinationHiddenField
+from wazo_admin_ui.helpers.form import BaseForm
 
 
-class LineForm(FlaskForm):
+class LineForm(BaseForm):
     line_id = HiddenField()
     extension_id = HiddenField()
     endpoint_sip_id = HiddenField()
@@ -31,18 +31,18 @@ class LineForm(FlaskForm):
     position = StringField(default=1)
 
 
-class UserForwardForm(FlaskForm):
+class UserForwardForm(BaseForm):
     noanswer = StringField('No answer')
     busy = StringField('Busy')
     unconditional = StringField('Unconditional')
 
 
-class UserServiceForm(FlaskForm):
+class UserServiceForm(BaseForm):
     dnd = StringField('Dnd')
     incallfilter = StringField('Incall filter')
 
 
-class UserForm(FlaskForm):
+class UserForm(BaseForm):
     firstname = StringField('Firstname', [InputRequired()])
     lastname = StringField('Lastname')
     username = StringField('Username')
@@ -64,7 +64,7 @@ class UserForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
-class UserDestinationForm(FlaskForm):
+class UserDestinationForm(BaseForm):
     setted_value_template = u'{user_firstname} {user_lastname}'
 
     user_id = SelectField('User', choices=[])
