@@ -251,7 +251,9 @@ class TestUserService(unittest.TestCase):
 
         self.service.update(resource)
 
-        self._confd_users.return_value.remove_line.assert_has_calls([call('line1-id'), call('line2-id')])
+        self._confd_users.return_value.remove_line.assert_has_calls(
+            [call('line1-id'), call('line2-id')], any_order=True
+        )
         self._confd_lines.update.assert_has_calls([call(line2), call(line1)])
         self._confd_users.return_value.add_line.assert_has_calls([call(line2), call(line1)])
         self._confd_lines.delete.assert_not_called()
