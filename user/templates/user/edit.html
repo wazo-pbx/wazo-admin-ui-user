@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    {% set name = resources.user.firstname ~ (' ' ~ resources.user.lastname if resources.user.lastname else '') %}
+    {% set name = resource.firstname ~ (' ' ~ resource.lastname if resource.lastname else '') %}
     {% call build_section_row() %}
       {% call build_form_tabs_box() %}
         {% call build_tabs_navigation() %}
@@ -16,7 +16,7 @@
           {{ add_tab_navigation_item('services', 'Services') }}
           {{ add_tab_navigation_item('lines', 'Lines') }}
         {% endcall %}
-        {% call build_form(action=url_for('.UserView:put', id=resources.user.uuid)) %}
+        {% call build_form(action=url_for('.UserView:put', id=resource.uuid)) %}
           {% call build_tabs_content() %}
 
             {% call build_tab_content_item('user', active=True) %}

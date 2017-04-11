@@ -23,11 +23,11 @@ class UserView(IndexAjaxViewMixin, BaseView):
     def index(self):
         return super(UserView, self).index()
 
-    def _map_resources_to_form(self, resources):
-        resource_lines = [self.service.get_line(line['id']) for line in resources['user']['lines']]
+    def _map_resources_to_form(self, resource):
+        resource_lines = [self.service.get_line(line['id']) for line in resource['lines']]
         lines = self._build_lines(resource_lines)
-        form = self.form(data=resources['user'], lines=lines)
-        form.music_on_hold.choices = self._build_setted_choices_moh(resources['user'].get('music_on_hold'))
+        form = self.form(data=resource, lines=lines)
+        form.music_on_hold.choices = self._build_setted_choices_moh(resource.get('music_on_hold'))
         for form_line in form.lines:
             form_line.device.choices = self._build_setted_choices(form_line)
             form_line.context.choices = self._build_setted_choices_context(form_line)
@@ -92,12 +92,12 @@ class UserView(IndexAjaxViewMixin, BaseView):
         return results
 
     def _map_form_to_resources(self, form, form_id=None):
-        resources = {'user': form.to_dict()}
+        resource = form.to_dict()
         if form_id:
-            resources['user']['uuid'] = form_id
+            resource['uuid'] = form_id
 
         lines = []
-        for line in resources['user']['lines']:
+        for line in resource['lines']:
             result = {'id': int(line['line_id']) if line['line_id'] else None,
                       'context': line['context'],
                       'position': line['position'],
@@ -137,8 +137,8 @@ class UserView(IndexAjaxViewMixin, BaseView):
 
             lines.append(result)
 
-        resources['lines'] = lines
-        return resources
+        resource['lines'] = lines
+        return resource
 
     def _map_resources_to_form_errors(self, form, resources):
         form.populate_errors(resources.get('user', {}))

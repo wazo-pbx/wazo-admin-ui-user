@@ -12,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 class UserService(BaseConfdService):
 
-    resource_name = 'user'
     resource_confd = 'users'
 
     def list(self, limit=None, order=None, direction=None, offset=None, search=None):
@@ -40,14 +39,14 @@ class UserService(BaseConfdService):
                     return True
         return False
 
-    def update(self, resources):
-        super(UserService, self).update(resources)
+    def update(self, resource):
+        super(UserService, self).update(resource)
 
-        user = resources.get('user', {})
+        user = resource
         if user.get('fallbacks'):
             confd.users(user['uuid']).update_fallbacks(user['fallbacks'])
 
-        lines = resources.get('lines', [])
+        lines = user.get('lines', [])
         line_ids = set([l.get('id') for l in lines])
         existing_lines = confd.users.get(user['uuid'])['lines']
         existing_line_ids = set([l['id'] for l in existing_lines])
