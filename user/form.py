@@ -16,16 +16,20 @@ from wazo_admin_ui.helpers.destination import FallbacksForm, DestinationHiddenFi
 from wazo_admin_ui.helpers.form import BaseForm
 
 
+class ExtensionForm(BaseForm):
+    id = HiddenField()
+    exten = SelectField(choices=[])
+
+
 class LineForm(BaseForm):
-    line_id = HiddenField()
-    extension_id = HiddenField()
+    id = HiddenField()
+    context = SelectField(choices=[])
     endpoint_sip_id = HiddenField()
     endpoint_sccp_id = HiddenField()
     endpoint_custom_id = HiddenField()
     protocol = SelectField(choices=[('sip', 'SIP'), ('sccp', 'SCCP'), ('custom', 'CUSTOM'), ('webrtc', 'SIP (webrtc)')])
+    extensions = FieldList(FormField(ExtensionForm), min_entries=1)
     name = StringField()
-    context = SelectField(choices=[])
-    extension = SelectField(choices=[])
     device = SelectField(choices=[])
     device_mac = HiddenField()
     position = StringField(default=1)

@@ -31,7 +31,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
         for form_line in form.lines:
             form_line.device.choices = self._build_setted_choices(form_line)
             form_line.context.choices = self._build_setted_choices_context(form_line)
-            form_line.extension.choices = self._build_setted_choices_extension(form_line)
+            form_line.extensions[0].exten.choices = self._build_setted_choices_extension(form_line)
         return form
 
     def _build_setted_choices(self, line):
@@ -41,10 +41,12 @@ class UserView(IndexAjaxViewMixin, BaseView):
         return [(line.device.data, text)]
 
     def _build_setted_choices_context(self, line):
-        return [(line.context.data, line.context.data)]
+        context = line.context.data if line.context.data != 'None' else ''
+        return [(context, context)]
 
     def _build_setted_choices_extension(self, line):
-        return [(line.extension.data, line.extension.data)]
+        exten = line.extensions[0].exten.data if line.extensions[0].exten.data != 'None' else ''
+        return [(exten, exten)]
 
     def _build_setted_choices_moh(self, moh):
         return [(moh, moh)]
@@ -52,12 +54,6 @@ class UserView(IndexAjaxViewMixin, BaseView):
     def _build_lines(self, lines):
         results = []
         for line in lines:
-            extension = context = extension_id = ''
-            if line.get('extensions'):
-                extension = line['extensions'][0]['exten']
-                context = line['extensions'][0]['context']
-                extension_id = line['extensions'][0]['id']
-
             name = protocol = 'undefined'
             endpoint_sip_id = endpoint_sccp_id = endpoint_custom_id = ''
             if line.get('endpoint_sip'):
@@ -68,7 +64,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
                     protocol = 'webrtc'
             elif line.get('endpoint_sccp'):
                 protocol = 'sccp'
-                name = extension
+                name = line['extensions'][0]['exten'] if line['extensions'] else ''
                 endpoint_sccp_id = line['endpoint_sccp']['id']
             elif line.get('endpoint_custom'):
                 protocol = 'custom'
@@ -78,14 +74,13 @@ class UserView(IndexAjaxViewMixin, BaseView):
             device_mac = self.service.get_device(line['device_id'])['mac'] if line['device_id'] else ''
             device = line['device_id'] if line['device_id'] else ''
             results.append({'protocol': protocol,
-                            'extension': extension,
                             'name': name,
-                            'context': context,
                             'device': device,
                             'device_mac': device_mac,
                             'position': line['position'],
-                            'line_id': line['id'],
-                            'extension_id': extension_id,
+                            'context': line['context'],
+                            'id': line['id'],
+                            'extensions': line['extensions'],
                             'endpoint_sip_id': endpoint_sip_id,
                             'endpoint_sccp_id': endpoint_sccp_id,
                             'endpoint_custom_id': endpoint_custom_id})
@@ -98,10 +93,9 @@ class UserView(IndexAjaxViewMixin, BaseView):
 
         lines = []
         for line in resource['lines']:
-            result = {'id': int(line['line_id']) if line['line_id'] else None,
+            result = {'id': int(line['id']) if line['id'] else None,
                       'context': line['context'],
-                      'position': line['position'],
-                      'users': [{'uuid': form_id}]}
+                      'position': line['position']}
 
             if line['protocol'] == 'sip':
                 result['endpoint_sip'] = {'id': line['endpoint_sip_id']}
@@ -127,10 +121,9 @@ class UserView(IndexAjaxViewMixin, BaseView):
                 result['endpoint_custom'] = {'id': line['endpoint_custom_id'],
                                              'interface': str(randint(0, 99999999))}  # TODO: to improve ...
 
-            if line['extension'] and line['context']:
-                result['extensions'] = [{'id': line['extension_id'],
-                                         'exten': line['extension'],
-                                         'context': line['context']}]
+            if line['extensions'][0]['exten'] and line['context']:
+                line['extensions'] = [{'exten': line['extensions'][0]['exten'],
+                                       'context': line['context']}]
 
             if line['device']:
                 line['device'] = {'id': line['device']}

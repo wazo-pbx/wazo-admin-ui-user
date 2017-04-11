@@ -100,11 +100,11 @@
     {% set tr_class = "row-template hidden" %}
   {% endif %}
   <tr class="{{ tr_class }}">
-    {{ render_field(line.line_id) }}
+    {{ render_field(line['id']) }}
     {{ render_field(line.endpoint_sip_id) }}
     {{ render_field(line.endpoint_sccp_id) }}
     {{ render_field(line.endpoint_custom_id) }}
-    {{ render_field(line.extension_id) }}
+    {{ render_field(line.extensions[0]['id']) }}
     <td class="col-sm-2">
       {{ render_field(line.protocol, with_label=False) }}
     </td>
@@ -115,7 +115,7 @@
       {{ render_field(line.context, with_label=False, data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
     </td>
     <td class="col-sm-1">
-      {{ render_field(line.extension, with_label=False, data_allow_custom_values=True) }}
+      {{ render_field(line.extensions[0].exten, with_label=False, data_allow_custom_values=True) }}
     </td>
     <td class="col-sm-4">
       {{ render_field(line.device, with_label=False, data_listing_href=url_for(listing_urls['device'])) }}
