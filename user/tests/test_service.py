@@ -64,15 +64,17 @@ class TestUserService(unittest.TestCase):
         self._confd_lines.delete.assert_not_called()
 
     def test_update_with_lines_when_existing_lines_with_same_id_and_same_extension(self):
-        line = {'id': 'line-id', 'extensions': [{'id': 'extension-id', 'exten': '999'}]}
+        extension = {'id': 'extension-id', 'exten': '999', 'context': 'default'}
+        line = {'id': 'line-id', 'extensions': [extension]}
         resource = {'uuid': '1234', 'lines': [line]}
         self._confd_users.get.return_value = {'lines': [{'id': 'line-id'}]}
+        self._confd_extensions.list.return_value = {'items': [{'lines': [{}]}]}
         self._confd_lines.get.return_value = {'extensions': [{'id': 'extension-id'}]}
 
         self.service.update(resource)
 
         self._confd_lines.update.assert_called_once_with(line)
-        self._confd_extensions.update.assert_called_once_with({'id': 'extension-id', 'exten': '999'})
+        self._confd_extensions.update.assert_called_once_with(extension)
         self._confd_lines.create.assert_not_called()
         self._confd_lines.delete.assert_not_called()
 
@@ -257,3 +259,20 @@ class TestUserService(unittest.TestCase):
         self._confd_lines.update.assert_has_calls([call(line2), call(line1)])
         self._confd_users.return_value.add_line.assert_has_calls([call(line2), call(line1)])
         self._confd_lines.delete.assert_not_called()
+
+    def test_update_when_extension_is_updated_and_it_is_associated_with_other_lines(self):
+        extension = {'id': 'extension-id', 'exten': '123', 'context': 'default'}
+        line = {'id': 'line1-id', 'extensions': [extension]}
+        resource = {'uuid': '1234', 'lines': [line]}
+        self._confd_users.get.return_value = {'lines': [line]}
+        self._confd_extensions.list.return_value = {'items': [{'lines': [{}, {}]}]}
+        self._confd_extensions.create.return_value = extension
+
+        self.service.update(resource)
+
+        self._confd_lines.update.assert_called_once_with(line)
+        self._confd_lines.return_value.remove_extension.assert_called_once_with(extension)
+        self._confd_extensions.create.assert_called_once_with(extension)
+        self._confd_lines.return_value.add_extension.assert_called_once_with(extension)
+        self._confd_lines.delete.assert_not_called()
+        self._confd_extensions.delete.assert_not_called()

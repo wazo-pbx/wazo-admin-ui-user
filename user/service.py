@@ -132,7 +132,12 @@ class UserService(BaseConfdService):
 
         extensions = line.get('extensions', [])
         if extensions and extensions[0].get('id'):
-            confd.extensions.update(extensions[0])
+            if self._is_extension_associated_with_other_lines(extensions[0]):
+                confd.lines(line).remove_extension(extensions[0])
+                extension_created = confd.extensions.create(extensions[0])
+                confd.lines(line).add_extension(extension_created)
+            else:
+                confd.extensions.update(extensions[0])
 
         elif extensions:
             self._create_or_associate_extension(line, extensions[0])
@@ -144,6 +149,14 @@ class UserService(BaseConfdService):
                 confd.extensions.delete(existing_extensions[0])
 
         confd.lines.update(line)
+
+    def _is_extension_associated_with_other_lines(self, extension):
+        items = confd.extensions.list(exten=extension['exten'],
+                                      context=extension['context'])['items']
+        extension = items[0] if items else None
+        if len(extension['lines']) > 1:
+            return True
+        return False
 
     def _create_or_associate_extension(self, line, extension):
         items = confd.extensions.list(exten=extension['exten'],
