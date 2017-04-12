@@ -41,12 +41,14 @@ class UserView(IndexAjaxViewMixin, BaseView):
         return [(line.device.data, text)]
 
     def _build_setted_choices_context(self, line):
-        context = line.context.data if line.context.data != 'None' else ''
-        return [(context, context)]
+        if not line.context.data or line.context.data == 'None':
+            return []
+        return [(line.context.data, line.context.data)]
 
     def _build_setted_choices_extension(self, line):
-        exten = line.extensions[0].exten.data if line.extensions[0].exten.data != 'None' else ''
-        return [(exten, exten)]
+        if not line.extensions[0].exten.data or line.extensions[0].exten.data == 'None':
+            return []
+        return [(line.extensions[0].exten.data, line.extensions[0].exten.data)]
 
     def _build_setted_choices_moh(self, moh):
         return [(moh, moh)]
@@ -94,7 +96,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
         lines = []
         for line in resource['lines']:
             result = {'id': int(line['id']) if line['id'] else None,
-                      'context': line['context'],
+                      'context': line.get('context'),
                       'position': line['position']}
 
             if line['protocol'] == 'sip':
@@ -121,11 +123,11 @@ class UserView(IndexAjaxViewMixin, BaseView):
                 result['endpoint_custom'] = {'id': line['endpoint_custom_id'],
                                              'interface': str(randint(0, 99999999))}  # TODO: to improve ...
 
-            if line['extensions'][0]['exten'] and line['context']:
+            if line['extensions'][0].get('exten') and line.get('context'):
                 line['extensions'] = [{'exten': line['extensions'][0]['exten'],
                                        'context': line['context']}]
 
-            if line['device']:
+            if line.get('device'):
                 line['device'] = {'id': line['device']}
 
             lines.append(result)
