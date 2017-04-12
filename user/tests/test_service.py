@@ -154,6 +154,31 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         self.confd.endpoints_custom.create.assert_called_once_with({})
         self.confd.lines.return_value.add_endpoint_custom.assert_called_once_with({'id': 'new-custom-id'})
 
+    def test_when_line_and_no_existing_line_with_extension_and_no_existing_extension(self):
+        extension = {'exten': '123', 'context': 'default'}
+        user = {'uuid': '1234', 'lines': [{'endpoint_sip': {}, 'extensions': [extension]}]}
+        self.confd.users.get.return_value = {'lines': []}
+        self.confd.lines.create.return_value = {'id': 'new-line-id'}
+        self.confd.extensions.create.return_value = {'id': 'new-extension-id'}
+        self.confd.extensions.list.return_value = {'items': []}
+
+        self.service._update_user_lines(user)
+
+        self.confd.extensions.create.assert_called_once_with(extension)
+        self.confd.lines.return_value.add_extension.assert_called_once_with({'id': 'new-extension-id'})
+
+    def test_when_line_and_no_existing_line_with_extension_and_existing_extension(self):
+        extension = {'exten': '123', 'context': 'default'}
+        user = {'uuid': '1234', 'lines': [{'endpoint_sip': {}, 'extensions': [extension]}]}
+        self.confd.users.get.return_value = {'lines': []}
+        self.confd.lines.create.return_value = {'id': 'new-line-id'}
+        self.confd.extensions.list.return_value = {'items': [{'id': 'extension-id'}]}
+
+        self.service._update_user_lines(user)
+
+        self.confd.extensions.create.assert_not_called()
+        self.confd.lines.return_value.add_extension.assert_called_once_with({'id': 'extension-id'})
+
     def test_when_no_line_and_no_existing_line(self):
         user = {'uuid': '1234', 'lines': []}
         self.confd.users.get.return_value = {'lines': []}
