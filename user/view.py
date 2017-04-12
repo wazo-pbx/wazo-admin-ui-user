@@ -124,11 +124,11 @@ class UserView(IndexAjaxViewMixin, BaseView):
                                              'interface': str(randint(0, 99999999))}  # TODO: to improve ...
 
             if line['extensions'][0].get('exten') and line.get('context'):
-                line['extensions'] = [{'exten': line['extensions'][0]['exten'],
-                                       'context': line['context']}]
+                result['extensions'] = [{'exten': line['extensions'][0]['exten'],
+                                         'context': line['context']}]
 
             if line.get('device'):
-                line['device'] = {'id': line['device']}
+                result['device'] = {'id': line['device']}
 
             lines.append(result)
 
