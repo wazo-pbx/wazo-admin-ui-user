@@ -46,6 +46,9 @@ class UserService(BaseConfdService):
         if user.get('fallbacks'):
             confd.users(user['uuid']).update_fallbacks(user['fallbacks'])
 
+        self._update_user_lines(user)
+
+    def _update_user_lines(self, user):
         lines = user.get('lines', [])
         line_ids = set([l.get('id') for l in lines])
         existing_lines = confd.users.get(user['uuid'])['lines']
@@ -67,13 +70,12 @@ class UserService(BaseConfdService):
             existing_line_ids = set([])
 
         for line in lines:
-            if not line.get('id'):
+            if line.get('id'):
+                self._update_line_and_associations(line)
+                if line.get('id') not in existing_line_ids:
+                    confd.users(user).add_line(line)
+            else:
                 line = self._create_line_and_associations(line)
-                confd.users(user).add_line(line)
-                continue
-
-            self._update_line_and_associations(line)
-            if line.get('id') not in existing_line_ids:
                 confd.users(user).add_line(line)
 
     def _delete_line_and_associations(self, line_id):
@@ -151,20 +153,21 @@ class UserService(BaseConfdService):
         confd.lines.update(line)
 
     def _is_extension_associated_with_other_lines(self, extension):
-        items = confd.extensions.list(exten=extension['exten'],
-                                      context=extension['context'])['items']
-        extension = items[0] if items else None
+        extension = self._get_first_existing_extension(extension)
         if len(extension['lines']) > 1:
             return True
         return False
 
     def _create_or_associate_extension(self, line, extension):
-        items = confd.extensions.list(exten=extension['exten'],
-                                      context=extension['context'])['items']
-        existing_extension = items[0] if items else None
+        existing_extension = self._get_first_existing_extension(extension)
 
         if not existing_extension:
             existing_extension = confd.extensions.create(extension)
 
         if existing_extension:
             confd.lines(line).add_extension(existing_extension)
+
+    def _get_first_existing_extension(self, extension):
+        items = confd.extensions.list(exten=extension['exten'],
+                                      context=extension['context'])['items']
+        return items[0] if items else None
