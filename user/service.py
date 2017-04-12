@@ -48,6 +48,14 @@ class UserService(BaseConfdService):
 
         self._update_user_lines(user)
 
+    def _create_user_lines(self, user):
+        lines = user.get('lines', [])
+
+        for line in lines:
+            if not line.get('id'):
+                line = self._create_line_and_associations(line)
+            confd.users(user).add_line(line)
+
     def _update_user_lines(self, user):
         lines = user.get('lines', [])
         line_ids = set([l.get('id') for l in lines])

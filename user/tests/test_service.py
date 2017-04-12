@@ -283,3 +283,85 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         self.confd.lines.return_value.add_extension.assert_called_once_with(extension)
         self.confd.lines.delete.assert_not_called()
         self.confd.extensions.delete.assert_not_called()
+
+
+class TestUserServiceCreateUserLines(unittest.TestCase):
+
+    def setUp(self):
+        self.confd = Mock()
+        user.service.confd = self.confd
+        wazo_admin_ui.helpers.service.confd = self.confd
+        self.service = UserService()
+        self.confd.lines.get.return_value = {'extensions': []}
+
+    def test_when_line_with_no_id(self):
+        user = {'uuid': '1234', 'lines': [{'id': ''}]}
+        self.confd.lines.create.return_value = new_line = {'id': 'new-line-id'}
+
+        self.service._create_user_lines(user)
+
+        self.confd.lines.create.assert_called_once_with(new_line)
+        self.confd.users.return_value.add_line.assert_called_once_with(new_line)
+        self.confd.lines.update.assert_not_called()
+        self.confd.lines.delete.assert_not_called()
+
+    def test_when_line_with_id(self):
+        line = {'id': 'line-id'}
+        user = {'uuid': '1234', 'lines': [line]}
+
+        self.service._create_user_lines(user)
+
+        self.confd.users.return_value.add_line.assert_called_once_with(line)
+
+    def test_when_line_with_endpoint_sip(self):
+        user = {'uuid': '1234', 'lines': [{'endpoint_sip': {}}]}
+        self.confd.lines.create.return_value = {'id': 'new-line-id'}
+        self.confd.endpoints_sip.create.return_value = {'id': 'new-sip-id'}
+
+        self.service._create_user_lines(user)
+
+        self.confd.endpoints_sip.create.assert_called_once_with({})
+        self.confd.lines.return_value.add_endpoint_sip.assert_called_once_with({'id': 'new-sip-id'})
+
+    def test_when_line_with_endpoint_sccp(self):
+        user = {'uuid': '1234', 'lines': [{'endpoint_sccp': {}}]}
+        self.confd.lines.create.return_value = {'id': 'new-line-id'}
+        self.confd.endpoints_sccp.create.return_value = {'id': 'new-sccp-id'}
+
+        self.service._create_user_lines(user)
+
+        self.confd.endpoints_sccp.create.assert_called_once_with({})
+        self.confd.lines.return_value.add_endpoint_sccp.assert_called_once_with({'id': 'new-sccp-id'})
+
+    def test_when_line_with_endpoint_custom(self):
+        user = {'uuid': '1234', 'lines': [{'endpoint_custom': {}}]}
+        self.confd.lines.create.return_value = {'id': 'new-line-id'}
+        self.confd.endpoints_custom.create.return_value = {'id': 'new-custom-id'}
+
+        self.service._create_user_lines(user)
+
+        self.confd.endpoints_custom.create.assert_called_once_with({})
+        self.confd.lines.return_value.add_endpoint_custom.assert_called_once_with({'id': 'new-custom-id'})
+
+    def test_when_line_with_extension_and_no_existing_extension(self):
+        extension = {'exten': '123', 'context': 'default'}
+        user = {'uuid': '1234', 'lines': [{'endpoint_sip': {}, 'extensions': [extension]}]}
+        self.confd.lines.create.return_value = {'id': 'new-line-id'}
+        self.confd.extensions.create.return_value = {'id': 'new-extension-id'}
+        self.confd.extensions.list.return_value = {'items': []}
+
+        self.service._create_user_lines(user)
+
+        self.confd.extensions.create.assert_called_once_with(extension)
+        self.confd.lines.return_value.add_extension.assert_called_once_with({'id': 'new-extension-id'})
+
+    def test_when_line_with_extension_and_existing_extension(self):
+        extension = {'exten': '123', 'context': 'default'}
+        user = {'uuid': '1234', 'lines': [{'endpoint_sip': {}, 'extensions': [extension]}]}
+        self.confd.lines.create.return_value = {'id': 'new-line-id'}
+        self.confd.extensions.list.return_value = {'items': [{'id': 'extension-id'}]}
+
+        self.service._create_user_lines(user)
+
+        self.confd.extensions.create.assert_not_called()
+        self.confd.lines.return_value.add_extension.assert_called_once_with({'id': 'extension-id'})
