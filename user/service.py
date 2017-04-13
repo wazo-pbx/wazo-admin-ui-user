@@ -135,12 +135,14 @@ class UserService(BaseConfdService):
 
         extensions = line.get('extensions', [])
         if extensions and extensions[0].get('id'):
-            if self._is_extension_associated_with_other_lines(extensions[0]):
-                confd.lines(line).remove_extension(extensions[0])
-                extension_created = confd.extensions.create(extensions[0])
-                confd.lines(line).add_extension(extension_created)
-            else:
-                confd.extensions.update(extensions[0])
+            existing_extension = confd.extensions.get(extensions[0])
+            if self._is_extension_has_changed(extensions[0], existing_extension):
+                if self._is_extension_associated_with_other_lines(existing_extension):
+                    confd.lines(line).remove_extension(extensions[0])
+                    extension_created = confd.extensions.create(extensions[0])
+                    confd.lines(line).add_extension(extension_created)
+                else:
+                    confd.extensions.update(extensions[0])
 
         elif extensions:
             self._create_or_associate_extension(line, extensions[0])
@@ -154,10 +156,15 @@ class UserService(BaseConfdService):
         confd.lines.update(line)
 
     def _is_extension_associated_with_other_lines(self, extension):
-        extension = self._get_first_existing_extension(extension)
         if len(extension['lines']) > 1:
             return True
         return False
+
+    def _is_extension_has_changed(self, extension, existing_extension):
+        if existing_extension['exten'] == extension['exten'] and \
+           existing_extension['context'] == extension['context']:
+            return False
+        return True
 
     def _create_or_associate_extension(self, line, extension):
         existing_extension = self._get_first_existing_extension(extension)

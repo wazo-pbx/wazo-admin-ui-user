@@ -34,13 +34,13 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         line = {'id': 'line-id', 'extensions': [extension]}
         user = {'uuid': '1234', 'lines': [line]}
         self.confd.users.get.return_value = {'lines': [{'id': 'line-id'}]}
-        self.confd.extensions.list.return_value = {'items': [{'lines': [{}]}]}
+        self.confd.extensions.get.return_value = {'lines': [{}], 'exten': '999', 'context': 'default'}
         self.confd.lines.get.return_value = {'device_id': None, 'extensions': [{'id': 'extension-id'}]}
 
         self.service._update_user_lines(user)
 
         self._assert_line_updated(line)
-        self.confd.extensions.update.assert_called_once_with(extension)
+        self.confd.extensions.update.assert_not_called()
 
     def test_when_line_and_existing_line_with_same_id_and_existing_extension_not_on_existing_line(self):
         extension1 = {'id': '', 'exten': '12', 'context': 'default'}
@@ -256,7 +256,7 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         line = {'id': 'line1-id', 'extensions': [extension]}
         user = {'uuid': '1234', 'lines': [line]}
         self.confd.users.get.return_value = {'lines': [line]}
-        self.confd.extensions.list.return_value = {'items': [{'lines': [{}, {}]}]}
+        self.confd.extensions.get.return_value = {'lines': [{}, {}], 'exten': '234', 'context': 'default'}
         self.confd.extensions.create.return_value = extension
 
         self.service._update_user_lines(user)
@@ -266,6 +266,24 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         self.confd.extensions.create.assert_called_once_with(extension)
         self.confd.lines.return_value.add_extension.assert_called_once_with(extension)
         self.confd.lines.delete.assert_not_called()
+        self.confd.extensions.delete.assert_not_called()
+
+    def test_when_extension_is_not_updated_and_it_is_associated_with_other_lines(self):
+        extension = {'id': 'extension-id', 'exten': '123', 'context': 'default'}
+        line = {'id': 'line1-id', 'extensions': [extension]}
+        user = {'uuid': '1234', 'lines': [line]}
+        self.confd.users.get.return_value = {'lines': [line]}
+        self.confd.extensions.get.return_value = {'lines': [{}, {}], 'exten': '123', 'context': 'default'}
+        self.confd.extensions.create.return_value = extension
+
+        self.service._update_user_lines(user)
+
+        self.confd.lines.update.assert_called_once_with(line)
+        self.confd.extensions.update.assert_not_called()
+        self.confd.lines.return_value.remove_extension.assert_not_called()
+        self.confd.lines.return_value.add_extension.assert_not_called()
+        self.confd.lines.delete.assert_not_called()
+        self.confd.extensions.create.assert_not_called()
         self.confd.extensions.delete.assert_not_called()
 
 
