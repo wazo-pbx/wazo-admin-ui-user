@@ -64,7 +64,6 @@ class UserService(BaseConfdService):
 
         line_ids_to_remove = existing_line_ids - line_ids
         for line_id in line_ids_to_remove:
-            # TODO: Dissociate device first
             self._delete_line_and_associations(line_id)
             existing_line_ids.remove(line_id)
 
@@ -87,8 +86,6 @@ class UserService(BaseConfdService):
 
     def _delete_line_and_associations(self, line_id):
         line = confd.lines.get(line_id)
-
-        # TODO: delete device
 
         for extension in line.get('extensions', []):
             confd.lines(line).remove_extension(extension)
