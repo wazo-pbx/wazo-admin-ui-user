@@ -65,7 +65,6 @@ class UserService(BaseConfdService):
         line_ids_to_remove = existing_line_ids - line_ids
         for line_id in line_ids_to_remove:
             # TODO: Dissociate device first
-            confd.users(user).remove_line(line_id)
             self._delete_line_and_associations(line_id)
             existing_line_ids.remove(line_id)
 
