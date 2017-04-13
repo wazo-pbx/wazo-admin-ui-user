@@ -32,16 +32,17 @@ class UserView(IndexAjaxViewMixin, BaseView):
     def _populate_form(self, form):
         form.music_on_hold.choices = self._build_setted_choices_moh(form)
         for form_line in form.lines:
-            form_line.device.choices = self._build_setted_choices(form_line)
+            form_line.device.choices = self._build_setted_choices_device(form_line)
             form_line.context.choices = self._build_setted_choices_context(form_line)
             for form_extension in form_line.extensions:
                 form_extension.exten.choices = self._build_setted_choices_extension(form_extension)
         return form
 
-    def _build_setted_choices(self, line):
+    def _build_setted_choices_device(self, line):
         if not line.device.data or line.device.data == 'None':
             return []
-        text = line.device_mac.data if line.device_mac.data else line.device.data
+        device_mac = self.service.get_device(line.device.data)['mac']
+        text = device_mac if device_mac else line.device.data
         return [(line.device.data, text)]
 
     def _build_setted_choices_context(self, line):
@@ -79,12 +80,10 @@ class UserView(IndexAjaxViewMixin, BaseView):
                 name = line['endpoint_custom']['interface']
                 endpoint_custom_id = line['endpoint_custom']['id']
 
-            device_mac = self.service.get_device(line['device_id'])['mac'] if line['device_id'] else ''
             device = line['device_id'] if line['device_id'] else ''
             results.append({'protocol': protocol,
                             'name': name,
                             'device': device,
-                            'device_mac': device_mac,
                             'position': line['position'],
                             'context': line['context'],
                             'id': line['id'],

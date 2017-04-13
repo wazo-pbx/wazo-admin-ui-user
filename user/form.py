@@ -31,7 +31,6 @@ class LineForm(BaseForm):
     extensions = FieldList(FormField(ExtensionForm), min_entries=1)
     name = StringField()
     device = SelectField(choices=[])
-    device_mac = HiddenField()
     position = StringField(default=1)
 
 
