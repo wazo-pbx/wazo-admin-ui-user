@@ -27,15 +27,19 @@ class UserView(IndexAjaxViewMixin, BaseView):
         resource_lines = [self.service.get_line(line['id']) for line in resource['lines']]
         lines = self._build_lines(resource_lines)
         form = self.form(data=resource, lines=lines)
-        form.music_on_hold.choices = self._build_setted_choices_moh(resource.get('music_on_hold'))
+        return form
+
+    def _populate_form(self, form):
+        form.music_on_hold.choices = self._build_setted_choices_moh(form)
         for form_line in form.lines:
             form_line.device.choices = self._build_setted_choices(form_line)
             form_line.context.choices = self._build_setted_choices_context(form_line)
-            form_line.extensions[0].exten.choices = self._build_setted_choices_extension(form_line)
+            for form_extension in form_line.extensions:
+                form_extension.exten.choices = self._build_setted_choices_extension(form_extension)
         return form
 
     def _build_setted_choices(self, line):
-        if not line.device.data:
+        if not line.device.data or line.device.data == 'None':
             return []
         text = line.device_mac.data if line.device_mac.data else line.device.data
         return [(line.device.data, text)]
@@ -45,13 +49,15 @@ class UserView(IndexAjaxViewMixin, BaseView):
             return []
         return [(line.context.data, line.context.data)]
 
-    def _build_setted_choices_extension(self, line):
-        if not line.extensions[0].exten.data or line.extensions[0].exten.data == 'None':
+    def _build_setted_choices_extension(self, extension):
+        if not extension.exten.data or extension.exten.data == 'None':
             return []
-        return [(line.extensions[0].exten.data, line.extensions[0].exten.data)]
+        return [(extension.exten.data, extension.exten.data)]
 
-    def _build_setted_choices_moh(self, moh):
-        return [(moh, moh)]
+    def _build_setted_choices_moh(self, user):
+        if not user.music_on_hold.data or user.music_on_hold.data == 'None':
+            return []
+        return [(user.music_on_hold.data, user.music_on_hold.data)]
 
     def _build_lines(self, lines):
         results = []
