@@ -115,7 +115,7 @@
       {{ render_field(line.context, with_label=False, class_='line-context', data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
     </td>
     <td class="col-sm-1">
-      {{ render_field(line.extensions[0].exten, with_label=False, data_allow_custom_values=True, data_listing_href=url_for(listing_urls['exten_extension']), data_ajax_data='return {context: $(this).closest("tr").find(".line-context").val(), term: term.term, page: term.page}') }}
+      {{ render_field(line.extensions[0].exten, with_label=False, data_allow_custom_values=True, data_listing_href=url_for(listing_urls['available_extension']), data_ajax_data='return {context: $(this).closest("tr").find(".line-context").val(), term: term.term, page: term.page}') }}
     </td>
     <td class="col-sm-4">
       {{ render_field(line.device, with_label=False, data_listing_href=url_for(listing_urls['device'])) }}
