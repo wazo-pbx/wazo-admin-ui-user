@@ -201,22 +201,10 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
     def test_when_no_line_and_existing_line(self):
         user = {'uuid': '1234', 'lines': []}
         self.confd.users.get.return_value = {'lines': [{'id': 'line-id'}]}
-        self.confd.lines.get.return_value = confd_line = {'extensions': []}
 
         self.service._update_user_lines(user)
 
-        self._assert_line_deleted(confd_line)
-
-    def test_when_no_line_and_existing_line_with_extensions(self):
-        user = {'uuid': '1234', 'lines': []}
-        self.confd.users.get.return_value = {'lines': [{'id': 'line-id'}]}
-        self.confd.lines.get.return_value = confd_line = {'extensions': [{'id': 'extension-id'}]}
-
-        self.service._update_user_lines(user)
-
-        self.confd.lines.return_value.remove_extension.assert_called_once_with({'id': 'extension-id'})
-        self.confd.extensions.delete.assert_called_once_with({'id': 'extension-id'})
-        self._assert_line_deleted(confd_line)
+        self._assert_line_deleted('line-id')
 
     def _assert_line_deleted(self, line):
         self.confd.lines.delete.assert_called_once_with(line)

@@ -64,7 +64,7 @@ class UserService(BaseConfdService):
 
         line_ids_to_remove = existing_line_ids - line_ids
         for line_id in line_ids_to_remove:
-            self._delete_line_and_associations(line_id)
+            confd.lines.delete(line_id)
             existing_line_ids.remove(line_id)
 
         # Handle case of main_line
@@ -103,15 +103,6 @@ class UserService(BaseConfdService):
         elif device_id != existing_device_id:
             confd.lines(line_id).remove_device(existing_device_id)
             confd.lines(line_id).add_device(device_id)
-
-    def _delete_line_and_associations(self, line_id):
-        line = confd.lines.get(line_id)
-
-        for extension in line.get('extensions', []):
-            confd.lines(line).remove_extension(extension)
-            confd.extensions.delete(extension)
-
-        confd.lines.delete(line)
 
     def _create_line_and_associations(self, line):
         line['id'] = confd.lines.create(line)['id']
