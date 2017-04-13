@@ -71,18 +71,38 @@ class UserService(BaseConfdService):
         existing_lines = [l for l in existing_lines if l['id'] not in line_ids_to_remove]
         if lines and existing_lines and lines[0]['id'] != existing_lines[0]['id']:
             for line_id in existing_line_ids:
-                # TODO: Dissociate device first
+                self._update_device_association(line_id, None)
+                line = confd.lines.get(line_id)
+                if line['device_id']:
+                    confd.lines(line).remove_device(line['device_id'])
                 confd.users(user).remove_line(line_id)
             existing_line_ids = set([])
 
         for line in lines:
             if line.get('id'):
                 self._update_line_and_associations(line)
-                if line.get('id') not in existing_line_ids:
+                if line['id'] not in existing_line_ids:
                     confd.users(user).add_line(line)
+                self._update_device_association(line['id'], line.get('device_id'))
             else:
                 line = self._create_line_and_associations(line)
                 confd.users(user).add_line(line)
+                if line.get('device_id'):
+                    confd.lines(line).add_device(line['device_id'])
+
+    def _update_device_association(self, line_id, device_id):
+        existing_device_id = confd.lines.get(line_id)['device_id']
+
+        if device_id == existing_device_id or (not device_id and not existing_device_id):
+            return
+
+        if not device_id and existing_device_id:
+            confd.lines(line_id).remove_device(existing_device_id)
+        elif device_id and not existing_device_id:
+            confd.lines(line_id).add_device(device_id)
+        elif device_id != existing_device_id:
+            confd.lines(line_id).remove_device(existing_device_id)
+            confd.lines(line_id).add_device(device_id)
 
     def _delete_line_and_associations(self, line_id):
         line = confd.lines.get(line_id)
@@ -115,16 +135,12 @@ class UserService(BaseConfdService):
         if line.get('extensions'):
             self._create_or_associate_extension(line, line['extensions'][0])
 
-        # TODO: create device
-
         return line
 
     def _update_line_and_associations(self, line):
         if line.get('endpoint_sip'):
             # If we move from SIP to WEBRTC
             confd.endpoints_sip.update(line['endpoint_sip'])
-
-        # TODO: update device
 
         extensions = line.get('extensions', [])
         if extensions and extensions[0].get('id'):

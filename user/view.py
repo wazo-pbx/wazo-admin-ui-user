@@ -102,7 +102,8 @@ class UserView(IndexAjaxViewMixin, BaseView):
         for line in resource['lines']:
             result = {'id': int(line['id']) if line['id'] else None,
                       'context': line.get('context'),
-                      'position': line['position']}
+                      'position': line['position'],
+                      'device_id': line.get('device')}
 
             if line['protocol'] == 'sip':
                 result['endpoint_sip'] = {'id': line['endpoint_sip_id']}
@@ -132,9 +133,6 @@ class UserView(IndexAjaxViewMixin, BaseView):
                 result['extensions'] = [{'id': line['extensions'][0]['id'],
                                          'exten': line['extensions'][0]['exten'],
                                          'context': line['context']}]
-
-            if line.get('device'):
-                result['device'] = {'id': line['device']}
 
             lines.append(result)
 

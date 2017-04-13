@@ -18,7 +18,7 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         user.service.confd = self.confd
         wazo_admin_ui.helpers.service.confd = self.confd
         self.service = UserService()
-        self.confd.lines.get.return_value = {'extensions': []}
+        self.confd.lines.get.return_value = {'extensions': [], 'device_id': None}
 
     def test_when_line_and_existing_line_with_same_id(self):
         line = {'id': 'line-id'}
@@ -35,7 +35,7 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         user = {'uuid': '1234', 'lines': [line]}
         self.confd.users.get.return_value = {'lines': [{'id': 'line-id'}]}
         self.confd.extensions.list.return_value = {'items': [{'lines': [{}]}]}
-        self.confd.lines.get.return_value = {'extensions': [{'id': 'extension-id'}]}
+        self.confd.lines.get.return_value = {'device_id': None, 'extensions': [{'id': 'extension-id'}]}
 
         self.service._update_user_lines(user)
 
@@ -47,7 +47,7 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         line = {'id': 'line-id', 'extensions': [extension1]}
         user = {'uuid': '1234', 'lines': [line]}
         self.confd.users.get.return_value = {'lines': [{'id': 'line-id'}]}
-        self.confd.lines.get.return_value = {'extensions': []}
+        self.confd.lines.get.return_value = {'device_id': None, 'extensions': []}
         self.confd.extensions.list.return_value = {'items': [extension1]}
 
         self.service._update_user_lines(user)
@@ -61,7 +61,7 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         line = {'id': 'line-id', 'extensions': [extension1]}
         user = {'uuid': '1234', 'lines': [line]}
         self.confd.users.get.return_value = {'lines': [{'id': 'line-id'}]}
-        self.confd.lines.get.return_value = {'extensions': []}
+        self.confd.lines.get.return_value = {'device_id': None, 'extensions': []}
         self.confd.extensions.create.return_value = {'id': 'extension-id'}
         self.confd.extensions.list.return_value = {'items': []}
 
@@ -75,7 +75,7 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         line = {'id': 'line-id', 'extensions': []}
         user = {'uuid': '1234', 'lines': [line]}
         self.confd.users.get.return_value = {'lines': [{'id': 'line-id'}]}
-        self.confd.lines.get.return_value = {'extensions': [{'id': 'extension-id'}]}
+        self.confd.lines.get.return_value = {'device_id': None, 'extensions': [{'id': 'extension-id'}]}
         self.confd.extensions.create.return_value = {'id': 'extension-id'}
 
         self.service._update_user_lines(user)
@@ -179,6 +179,15 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         self.confd.extensions.create.assert_not_called()
         self.confd.lines.return_value.add_extension.assert_called_once_with({'id': 'extension-id'})
 
+    def test_when_line_and_no_existing_line_with_device_id(self):
+        user = {'uuid': '1234', 'lines': [{'endpoint_sip': {}, 'device_id': 'device-id'}]}
+        self.confd.users.get.return_value = {'lines': []}
+        self.confd.lines.create.return_value = {'id': 'new-line-id'}
+
+        self.service._update_user_lines(user)
+
+        self.confd.lines.return_value.add_device.assert_called_once_with('device-id')
+
     def test_when_no_line_and_no_existing_line(self):
         user = {'uuid': '1234', 'lines': []}
         self.confd.users.get.return_value = {'lines': []}
@@ -228,6 +237,31 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         self.confd.lines.update.assert_has_calls([call(line2), call(line1)])
         self.confd.users.return_value.add_line.assert_has_calls([call(line2), call(line1)])
         self.confd.lines.delete.assert_not_called()
+
+    def test_when_swapping_lines_with_device_then_device_is_dissociated(self):
+        line1 = {'id': 'line1-id', 'device_id': 'device1-id'}
+        line2 = {'id': 'line2-id', 'device_id': 'device2-id'}
+        user = {'uuid': '1234', 'lines': [line2, line1]}
+        self.confd.users.get.return_value = {'lines': [line1, line2]}
+        self.confd.lines.get.side_effect = lambda x: {'line1-id': {'device_id': 'device1-id'},
+                                                      'line2-id': {'device_id': 'device2-id'}}[x]
+
+        self.service._update_user_lines(user)
+
+        self.confd.lines.return_value.remove_device.assert_has_calls(
+            [call('device1-id'), call('device2-id')], any_order=True
+        )
+
+    def test_when_swapping_lines_with_device_then_device_is_reassociated(self):
+        line1 = {'id': 'line1-id', 'device_id': 'device1-id'}
+        line2 = {'id': 'line2-id', 'device_id': 'device2-id'}
+        user = {'uuid': '1234', 'lines': [line2, line1]}
+        self.confd.users.get.return_value = {'lines': [line1, line2]}
+        self.confd.lines.get.return_value = {'device_id': None}
+
+        self.service._update_user_lines(user)
+
+        self.confd.lines.return_value.add_device.assert_has_calls([call('device2-id'), call('device1-id')])
 
     def test_when_extension_is_updated_and_it_is_associated_with_other_lines(self):
         extension = {'id': 'extension-id', 'exten': '123', 'context': 'default'}
@@ -327,3 +361,58 @@ class TestUserServiceCreateUserLines(unittest.TestCase):
 
         self.confd.extensions.create.assert_not_called()
         self.confd.lines.return_value.add_extension.assert_called_once_with({'id': 'extension-id'})
+
+
+class TestUserServiceUpdateDeviceAssociation(unittest.TestCase):
+
+    def setUp(self):
+        self.confd = Mock()
+        user.service.confd = self.confd
+        wazo_admin_ui.helpers.service.confd = self.confd
+        self.service = UserService()
+        self.confd.lines.get.return_value = {'device_id': None}
+
+    def test_when_device_and_existing_device_with_same_id(self):
+        device_id = 'device-id'
+        self.confd.lines.get.return_value = {'device_id': device_id}
+
+        self.service._update_device_association('line-id', device_id)
+
+        self.confd.lines.return_value.add_device.assert_not_called()
+        self.confd.lines.return_value.remove_device.assert_not_called()
+
+    def test_when_no_device_and_no_existing_device(self):
+        device_id = ''
+        self.confd.lines.get.return_value = {'device_id': None}
+
+        self.service._update_device_association('line-id', device_id)
+
+        self.confd.lines.return_value.add_device.assert_not_called()
+        self.confd.lines.return_value.remove_device.assert_not_called()
+
+    def test_when_no_device_and_existing_device(self):
+        device_id = None
+        self.confd.lines.get.return_value = {'device_id': 'device-id'}
+
+        self.service._update_device_association('line-id', device_id)
+
+        self.confd.lines.return_value.add_device.assert_not_called()
+        self.confd.lines.return_value.remove_device.assert_called_once_with('device-id')
+
+    def test_when_device_and_no_existing_device(self):
+        device_id = 'device-id'
+        self.confd.lines.get.return_value = {'device_id': None}
+
+        self.service._update_device_association('line-id', device_id)
+
+        self.confd.lines.return_value.add_device.assert_called_once_with('device-id')
+        self.confd.lines.return_value.remove_device.assert_not_called()
+
+    def test_when_device_and_existing_device_with_different_id(self):
+        device_id = 'device1-id'
+        self.confd.lines.get.return_value = {'device_id': 'device2-id'}
+
+        self.service._update_device_association('line-id', device_id)
+
+        self.confd.lines.return_value.remove_device.assert_called_once_with('device2-id')
+        self.confd.lines.return_value.add_device.assert_called_once_with('device1-id')
