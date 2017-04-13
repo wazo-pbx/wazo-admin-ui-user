@@ -95,16 +95,6 @@ class UserService(BaseConfdService):
             confd.lines(line).remove_extension(extension)
             confd.extensions.delete(extension)
 
-        if line.get('endpoint_sip'):
-            confd.lines(line).remove_endpoint_sip(line['endpoint_sip'])
-            confd.endpoints_sip.delete(line['endpoint_sip'])
-        elif line.get('endpoint_sccp'):
-            confd.lines(line).remove_endpoint_sccp(line['endpoint_sccp'])
-            confd.endpoints_sccp.delete(line['endpoint_sccp'])
-        elif line.get('endpoint_custom'):
-            confd.lines(line).remove_endpoint_custom(line['endpoint_custom'])
-            confd.endpoints_custom.delete(line['endpoint_custom'])
-
         confd.lines.delete(line)
 
     def _create_line_and_associations(self, line):
