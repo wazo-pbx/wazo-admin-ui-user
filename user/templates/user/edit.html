@@ -53,11 +53,14 @@
 
             {% call build_tab_content_item('services') %}
               {% call add_default_fields(form=form, submit_value="Update") %}
-                {{ render_field(form.services.dnd) }}
-                {{ render_field(form.services.incallfilter) }}
-                {{ render_field(form.forwards.busy) }}
-                {{ render_field(form.forwards.unconditional) }}
-                {{ render_field(form.forwards.noanswer) }}
+                {{ render_field(form.services.dnd.enabled) }}
+                {{ render_field(form.services.incallfilter.enabled) }}
+                {{ render_field(form.forwards.busy.enabled) }}
+                {{ render_field(form.forwards.busy.destination) }}
+                {{ render_field(form.forwards.unconditional.enabled) }}
+                {{ render_field(form.forwards.unconditional.destination) }}
+                {{ render_field(form.forwards.noanswer.enabled) }}
+                {{ render_field(form.forwards.noanswer.destination) }}
               {% endcall %}
             {% endcall %}
 

@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: GPL-3.0+
 
 
-from wtforms.fields import (FormField,
+from wtforms.fields import (BooleanField,
+                            FormField,
                             FieldList,
                             HiddenField,
                             SelectField,
@@ -34,15 +35,38 @@ class LineForm(BaseForm):
     position = StringField(default=1)
 
 
+class BusyForwardForm(BaseForm):
+    enabled = BooleanField('Busy', default=False)
+    destination = StringField('Destination')
+
+
+class NoAnswerForwardForm(BaseForm):
+    enabled = BooleanField('No answer', default=False)
+    destination = StringField('Destination')
+
+
+class UnconditionalForwardForm(BaseForm):
+    enabled = BooleanField('Unconditional', default=False)
+    destination = StringField('Destination')
+
+
 class UserForwardForm(BaseForm):
-    noanswer = StringField('No answer')
-    busy = StringField('Busy')
-    unconditional = StringField('Unconditional')
+    busy = FormField(BusyForwardForm)
+    noanswer = FormField(NoAnswerForwardForm)
+    unconditional = FormField(UnconditionalForwardForm)
+
+
+class DNDServiceForm(BaseForm):
+    enabled = BooleanField('Do not disturb', default=False)
+
+
+class IncallFilterServiceForm(BaseForm):
+    enabled = BooleanField('Incall filtering', default=False)
 
 
 class UserServiceForm(BaseForm):
-    dnd = StringField('Dnd')
-    incallfilter = StringField('Incall filter')
+    dnd = FormField(DNDServiceForm)
+    incallfilter = FormField(IncallFilterServiceForm)
 
 
 class UserForm(BaseForm):

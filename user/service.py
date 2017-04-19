@@ -40,6 +40,13 @@ class UserService(BaseConfdService):
         if user.get('fallbacks'):
             confd.users(user['uuid']).update_fallbacks(user['fallbacks'])
 
+        if user.get('services'):
+            for service_name, service in user['services'].iteritems():
+                confd.users(user['uuid']).update_service(service_name, service)
+
+        if user.get('forwards'):
+            confd.users(user['uuid']).update_forwards(user['forwards'])
+
         self._update_user_lines(user)
 
     def _create_user_lines(self, user):
