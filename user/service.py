@@ -72,7 +72,6 @@ class UserService(BaseConfdService):
         existing_lines = [l for l in existing_lines if l['id'] not in line_ids_to_remove]
         if lines and existing_lines and lines[0]['id'] != existing_lines[0]['id']:
             for line_id in existing_line_ids:
-                self._update_device_association(line_id, None)
                 line = confd.lines.get(line_id)
                 if line['device_id']:
                     confd.lines(line).remove_device(line['device_id'])
