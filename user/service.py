@@ -87,7 +87,9 @@ class UserService(BaseConfdService):
     def _update_device_association(self, line_id, device_id):
         existing_device_id = confd.lines.get(line_id)['device_id']
 
-        if device_id == existing_device_id or (not device_id and not existing_device_id):
+        if not device_id and not existing_device_id:
+            return
+        if device_id == existing_device_id:
             return
 
         if not device_id and existing_device_id:
