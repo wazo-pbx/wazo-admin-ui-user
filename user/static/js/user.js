@@ -1,3 +1,13 @@
+$(document).ready(function() {
+  create_list_table();
+  init_add_available_extensions.call(this);
+
+  $('.row-template').on("row:cloned", function(e, row) {
+    init_add_available_extensions.call(row);
+  });
+});
+
+
 function create_list_table() {
   var table_config = {
     columns: [
@@ -9,16 +19,6 @@ function create_list_table() {
   };
   create_table_serverside(table_config);
 };
-
-
-$(document).ready(function() {
-  create_list_table();
-  init_add_available_extensions.call(this);
-
-  $('.row-template').on("row:cloned", function(e, row) {
-    init_add_available_extensions.call(row);
-  });
-});
 
 
 function init_add_available_extensions(){
