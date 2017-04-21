@@ -1,15 +1,10 @@
-function create_list_table(list_url, get_url, delete_url) {
+function create_list_table() {
   var table_config = {
-    ajax: list_url,
     columns: [
       { data: 'firstname' },
       { data: 'lastname' },
       { data: 'extension' },
       { data: 'provisioning_code' },
-      { render: function(data, type, row) {
-        return build_table_actions(get_url, delete_url, row.uuid);
-      },
-      },
     ]
   };
   create_table_serverside(table_config);
@@ -17,6 +12,7 @@ function create_list_table(list_url, get_url, delete_url) {
 
 
 $(document).ready(function() {
+  create_list_table();
   init_add_available_extensions.call(this);
 
   $('.row-template').on("row:cloned", function(e, row) {
