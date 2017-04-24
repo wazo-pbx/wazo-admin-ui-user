@@ -49,6 +49,19 @@ class UserService(BaseConfdService):
 
         self._update_user_lines(user)
 
+    def delete(self, user_uuid):
+        user = confd.users.get(user_uuid)
+        self._delete_user_associations(user)
+        confd.users.delete(user_uuid)
+
+    def _delete_user_associations(self, user):
+        if user.get('voicemail'):
+            confd.users(user['uuid']).remove_voicemail()
+
+        lines = user.get('lines', [])
+        for line in lines:
+            confd.lines.delete(line)
+
     def _create_user_lines(self, user):
         lines = user.get('lines', [])
 
