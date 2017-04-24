@@ -1,3 +1,6 @@
+build:
+	python setup.py build
+
 install:
 	python setup.py install
 	cp etc/wazo-admin-ui/conf.d/user.yml /etc/wazo-admin-ui/conf.d
