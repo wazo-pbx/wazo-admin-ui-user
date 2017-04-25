@@ -25,8 +25,13 @@
           {{ render_field(form.lastname) }}
           {% do form.lines.append_entry() %}
           {% for line in form.lines %}
-            {{ render_field(line.extensions[0].exten, data_allow_custom_values=True) }}
-            {{ render_field(line.context, data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
+            {{ render_field(line['id']) }}
+            {{ render_field(line.endpoint_sip_id) }}
+            {{ render_field(line.endpoint_sccp_id) }}
+            {{ render_field(line.endpoint_custom_id) }}
+            {{ render_field(line.extensions[0]['id']) }}
+            {{ render_field(line.extensions[0].exten, class_='line-extension', data_allow_custom_values=True, data_available_extension_href=url_for(listing_urls['available_extension'])) }}
+            {{ render_field(line.context, class_='line-context', data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
             {{ render_field(line.protocol) }}
           {% endfor %}
         {% endcall %}

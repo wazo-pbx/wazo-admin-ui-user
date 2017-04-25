@@ -30,6 +30,9 @@ function init_add_available_extensions(){
 
 function add_available_extensions() {
   let extension_select = $(this).closest("tr").find(".line-extension")
+  if (extension_select.length == 0) {
+    extension_select = $(this).closest("form").find(".line-extension")
+  }
   let ajax_url = $(extension_select).attr('data-available_extension_href')
   if (! ajax_url) {
     return;
