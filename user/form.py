@@ -74,7 +74,6 @@ class UserForm(BaseForm):
     lastname = StringField('Lastname')
     username = StringField('Username')
     password = StringField('Password')
-    extension = StringField('Extension')
     email = EmailField('Email')
     mobile_phone_number = StringField('Phone mobile')
     ring_seconds = StringField('Ring seconds')
