@@ -105,6 +105,8 @@ class UserView(IndexAjaxViewMixin, BaseView):
 
         lines = []
         for line in resource['lines']:
+            if request.method == 'POST' and not line.get('context'):
+                continue
             result = {'id': int(line['id']) if line['id'] else None,
                       'context': line.get('context'),
                       'position': line['position'],
