@@ -23,6 +23,8 @@
         {% call add_default_fields(form=form, submit_value="Add") %}
           {{ render_field(form.firstname) }}
           {{ render_field(form.lastname) }}
+          {{ render_field(form.email) }}
+          {{ render_field(form.password, type='password', data_toggle='password') }}
           {% do form.lines.append_entry() %}
           {% for line in form.lines %}
             {{ render_field(line['id']) }}
