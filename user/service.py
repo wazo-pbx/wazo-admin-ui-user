@@ -34,6 +34,10 @@ class UserService(BaseConfdService):
             return True
         return False
 
+    def create(self, user):
+        user['uuid'] = super(UserService, self).create(user)['uuid']
+        self._create_user_lines(user)
+
     def update(self, user):
         super(UserService, self).update(user)
 

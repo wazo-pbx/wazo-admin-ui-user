@@ -93,6 +93,11 @@ class UserView(IndexAjaxViewMixin, BaseView):
                             'endpoint_custom_id': endpoint_custom_id})
         return results
 
+    def _map_form_to_resources_post(self, form):
+        form.username.raw_data = form.email.raw_data
+        form.username.data = form.email.data
+        return self._map_form_to_resources(form)
+
     def _map_form_to_resources(self, form, form_id=None):
         resource = form.to_dict()
         if form_id:
@@ -100,6 +105,8 @@ class UserView(IndexAjaxViewMixin, BaseView):
 
         lines = []
         for line in resource['lines']:
+            if request.method == 'POST' and not line.get('context'):
+                continue
             result = {'id': int(line['id']) if line['id'] else None,
                       'context': line.get('context'),
                       'position': line['position'],

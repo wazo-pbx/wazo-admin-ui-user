@@ -23,12 +23,17 @@
         {% call add_default_fields(form=form, submit_value="Add") %}
           {{ render_field(form.firstname) }}
           {{ render_field(form.lastname) }}
+          {{ render_field(form.email) }}
+          {{ render_field(form.password, type='password', data_toggle='password') }}
           {% do form.lines.append_entry() %}
-          {% for line in form.lines %}
-            {{ render_field(line.extensions[0].exten, data_allow_custom_values=True) }}
-            {{ render_field(line.context, data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
-            {{ render_field(line.protocol) }}
-          {% endfor %}
+          {{ render_field(form.lines[0]['id']) }}
+          {{ render_field(form.lines[0].endpoint_sip_id) }}
+          {{ render_field(form.lines[0].endpoint_sccp_id) }}
+          {{ render_field(form.lines[0].endpoint_custom_id) }}
+          {{ render_field(form.lines[0].extensions[0]['id']) }}
+          {{ render_field(form.lines[0].extensions[0].exten, class_='line-extension', data_allow_custom_values=True, data_available_extension_href=url_for(listing_urls['available_extension'])) }}
+          {{ render_field(form.lines[0].context, class_='line-context', data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
+          {{ render_field(form.lines[0].protocol) }}
         {% endcall %}
       {% endcall %}
     {% endcall %}
