@@ -120,10 +120,17 @@
       {{ render_field(line['name'], with_label=False, disabled=True) }}
     </td>
     <td>
-      {{ render_field(line.context, with_label=False, class_='line-context', data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
+      {{ render_field(line.context,
+                      with_label=False,
+                      class_='line-context',
+                      data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
     </td>
     <td>
-      {{ render_field(line.extensions[0].exten, with_label=False, class_='line-extension', data_allow_custom_values=True, data_available_extension_href=url_for(listing_urls['available_extension'])) }}
+      {{ render_field(line.extensions[0].exten,
+                      with_label=False,
+                      class_='line-extension',
+                      data_allow_custom_values=True,
+                      data_available_extension_href=url_for(listing_urls['available_extension'])) }}
     </td>
     <td>
       {{ render_field(line.device, with_label=False, data_listing_href=url_for(listing_urls['device'])) }}
