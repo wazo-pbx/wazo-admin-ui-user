@@ -51,6 +51,7 @@ class UserService(BaseConfdService):
         if user.get('forwards'):
             confd.users(user['uuid']).update_forwards(user['forwards'])
 
+        confd.users(user['uuid']).update_cti_profile(user['cti_profile'])
         self._update_user_lines(user)
 
     def delete(self, user_uuid):

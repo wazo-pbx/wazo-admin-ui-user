@@ -69,6 +69,11 @@ class UserServiceForm(BaseForm):
     incallfilter = FormField(IncallFilterServiceForm)
 
 
+class CtiProfileForm(BaseForm):
+    id = SelectField('CTI Profile', choices=[])
+    name = HiddenField()
+
+
 class UserForm(BaseForm):
     firstname = StringField('Firstname', [InputRequired(), Length(max=128)])
     lastname = StringField('Lastname', [Length(max=128)])
@@ -87,6 +92,7 @@ class UserForm(BaseForm):
     forwards = FormField(UserForwardForm)
     services = FormField(UserServiceForm)
     lines = FieldList(FormField(LineForm))
+    cti_profile = FormField(CtiProfileForm)
     submit = SubmitField('Submit')
 
 

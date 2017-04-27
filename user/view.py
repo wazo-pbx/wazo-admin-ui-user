@@ -30,6 +30,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
         return form
 
     def _populate_form(self, form):
+        form.cti_profile.form.id.choices = self._build_setted_choices_cti_profile(form)
         form.music_on_hold.choices = self._build_setted_choices_moh(form)
         for form_line in form.lines:
             form_line.device.choices = self._build_setted_choices_device(form_line)
@@ -59,6 +60,11 @@ class UserView(IndexAjaxViewMixin, BaseView):
         if not user.music_on_hold.data or user.music_on_hold.data == 'None':
             return []
         return [(user.music_on_hold.data, user.music_on_hold.data)]
+
+    def _build_setted_choices_cti_profile(self, user):
+        if not user.cti_profile.form.id.data or user.cti_profile.form.id.data == 'None':
+            return []
+        return [(user.cti_profile.form.id.data, user.cti_profile.form.name.data)]
 
     def _build_lines(self, lines):
         results = []
