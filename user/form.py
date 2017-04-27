@@ -24,7 +24,7 @@ class ExtensionForm(BaseForm):
 
 class LineForm(BaseForm):
     id = HiddenField()
-    context = SelectField(choices=[], validators=[InputRequired()])
+    context = SelectField(choices=[])
     endpoint_sip_id = HiddenField()
     endpoint_sccp_id = HiddenField()
     endpoint_custom_id = HiddenField()
