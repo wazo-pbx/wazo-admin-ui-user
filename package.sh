@@ -4,11 +4,13 @@
 
 case "$1" in
     build)
-        make build
+        python setup.py sdist --formats=zip
         ;;
 
     install)
-        make install
+        pip install sdist/wazo_admin_ui_user-*.zip
+        cp etc/wazo-admin-ui/conf.d/user.yml /etc/wazo-admin-ui/conf.d
+        systemctl restart wazo-admin-ui
         ;;
 
     uninstall)
