@@ -2,7 +2,8 @@
 # Copyright 2017 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
-export PYTHONPATH=$PYTHONPATH:${pkgdir}/usr/local/lib/python2.7/dist-packages
+DIST_PACKAGES=${pkgdir}/usr/local/lib/python2.7/dist-packages
+export PYTHONPATH=${PYTHONPATH}:${DIST_PACKAGES}
 
 case "$1" in
     build)
@@ -10,7 +11,8 @@ case "$1" in
         ;;
 
     package)
-        cp -R etc ${pkgdir}/etc
+        mkdir -p ${DIST_PACKAGES}
+        cp -R etc ${pkgdir}/
         python setup.py install --prefix ${pkgdir}/usr/local --install-layout deb
         ;;
 
