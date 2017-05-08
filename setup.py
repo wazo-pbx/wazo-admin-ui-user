@@ -23,7 +23,7 @@ setup(
 
     entry_points={
         'wazo_admin_ui.plugins': [
-            'user = user.plugin:Plugin',
+            'user = wazo_plugind_admin_ui_user_official.plugin:Plugin',
         ]
     }
 )

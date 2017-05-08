@@ -1,2 +1,2 @@
-recursive-include user/templates *
-recursive-include user/static *
+recursive-include wazo_plugind_admin_ui_user_official/templates *
+recursive-include wazo_plugind_admin_ui_user_official/static *
