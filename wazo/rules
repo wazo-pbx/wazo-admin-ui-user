@@ -2,18 +2,14 @@
 # Copyright 2017 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
-DIST_PACKAGES=${pkgdir}/usr/local/lib/python2.7/dist-packages
-export PYTHONPATH=${PYTHONPATH}:${DIST_PACKAGES}
-
 case "$1" in
     build)
-        python setup.py build
+        python setup.py bdist
         ;;
 
     package)
-        mkdir -p ${DIST_PACKAGES}
+        tar xvf dist/wazo_admin_ui_user-*.tar.gz -C ${pkgdir}
         cp -R etc ${pkgdir}/
-        python setup.py install --prefix ${pkgdir}/usr/local --install-layout deb
         ;;
 
     install)
