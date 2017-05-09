@@ -17,6 +17,8 @@ case "$1" in
         ;;
 
     uninstall)
+        rm -f /etc/wazo-admin-ui/conf.d/user.yml
+        systemctl restart wazo-admin-ui
         ;;
 
     *)
