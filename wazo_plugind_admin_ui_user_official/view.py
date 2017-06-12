@@ -27,7 +27,8 @@ class UserView(IndexAjaxViewMixin, BaseView):
     def _map_resources_to_form(self, resource):
         resource_lines = [self.service.get_line(line['id']) for line in resource['lines']]
         lines = self._build_lines(resource_lines)
-        form = self.form(data=resource, lines=lines)
+        groups = [group['id'] for group in resource['groups']]
+        form = self.form(data=resource, lines=lines, group_ids=groups)
         return form
 
     def _populate_form(self, form):
@@ -38,6 +39,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
             form_line.context.choices = self._build_setted_choices_context(form_line)
             for form_extension in form_line.extensions:
                 form_extension.exten.choices = self._build_setted_choices_extension(form_extension)
+        form.group_ids.choices = self._build_setted_choices_groups(form.groups)
         return form
 
     def _build_setted_choices_device(self, line):
@@ -61,6 +63,12 @@ class UserView(IndexAjaxViewMixin, BaseView):
         if not user.music_on_hold.data or user.music_on_hold.data == 'None':
             return []
         return [(user.music_on_hold.data, user.music_on_hold.data)]
+
+    def _build_setted_choices_groups(self, groups):
+        results = []
+        for group in groups:
+            results.append((group.form.id.data, group.form.name.data))
+        return results
 
     def _build_setted_choices_cti_profile(self, user):
         if not user.cti_profile.form.id.data or user.cti_profile.form.id.data == 'None':
@@ -109,7 +117,15 @@ class UserView(IndexAjaxViewMixin, BaseView):
         resource = form.to_dict()
         if form_id:
             resource['uuid'] = form_id
+        resource = self._map_form_to_resource_group(form, resource)
+        resource = self._map_form_to_resource_line(form, resource)
+        return resource
 
+    def _map_form_to_resource_group(self, form, resource):
+        resource['groups'] = [{'id': group_id} for group_id in form.group_ids.data]
+        return resource
+
+    def _map_form_to_resource_line(self, form, resource):
         lines = []
         for line in resource['lines']:
             if request.method == 'POST' and not line.get('context'):
