@@ -31,8 +31,8 @@ auth:
 
 confd:
   image: wazopbx/xivo-confd
-  expose:
-    - "9486"
+  ports:
+    - "9486:9486"
   links:
     - auth
     - postgres
