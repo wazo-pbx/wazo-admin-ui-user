@@ -49,8 +49,8 @@ postgres:
 
 provd:
   image: wazopbx/xivo-provd
-  expose:
-    - "8666"
+  ports:
+    - "8666:8666"
   volumes:
     - "./etc/xivo-provd/provd.conf:/etc/xivo/provd/provd.conf"
 
