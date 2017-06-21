@@ -8,3 +8,4 @@ pyvirtualdisplay
 requests
 selenium
 sqlalchemy
+kombu
