@@ -7,7 +7,7 @@ import unittest
 from mock import Mock, call
 
 import wazo_admin_ui.helpers.service
-import user.service
+import wazo_plugind_admin_ui_user_official.service as service
 from ..service import UserService
 
 
@@ -15,7 +15,7 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
 
     def setUp(self):
         self.confd = Mock()
-        user.service.confd = self.confd
+        service.confd = self.confd
         wazo_admin_ui.helpers.service.confd = self.confd
         self.service = UserService()
         self.confd.lines.get.return_value = {'extensions': [], 'device_id': None}
@@ -291,7 +291,7 @@ class TestUserServiceCreateUserLines(unittest.TestCase):
 
     def setUp(self):
         self.confd = Mock()
-        user.service.confd = self.confd
+        service.confd = self.confd
         wazo_admin_ui.helpers.service.confd = self.confd
         self.service = UserService()
         self.confd.lines.get.return_value = {'extensions': []}
@@ -373,7 +373,7 @@ class TestUserServiceUpdateDeviceAssociation(unittest.TestCase):
 
     def setUp(self):
         self.confd = Mock()
-        user.service.confd = self.confd
+        service.confd = self.confd
         wazo_admin_ui.helpers.service.confd = self.confd
         self.service = UserService()
         self.confd.lines.get.return_value = {'device_id': None}
