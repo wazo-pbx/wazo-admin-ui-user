@@ -4,9 +4,10 @@
 
 from __future__ import unicode_literals
 
+from random import randint
+
 from flask import request, jsonify
 from flask_menu.classy import classy_menu_item
-from random import randint
 
 from wazo_admin_ui.helpers.classful import IndexAjaxViewMixin, BaseView, LoginRequiredView
 from wazo_admin_ui.helpers.classful import extract_select2_params, build_select2_response
