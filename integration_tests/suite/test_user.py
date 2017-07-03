@@ -2,7 +2,7 @@
 # Copyright 2017 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
-from hamcrest import assert_that, equal_to
+from hamcrest import assert_that, equal_to, contains_inanyorder, has_item
 
 from xivo_test_helpers.confd import fixtures
 from xivo_test_helpers.confd import associations as a
@@ -81,3 +81,47 @@ class TestUser(IntegrationTest):
         assert_that(page.get_value('userfield'), equal_to(user['userfield']))
         assert_that(page.get_value('description'), equal_to(user['description']))
         page.save()
+
+    @fixtures.user()
+    def test_installed_destination_type(self, user):
+        page = self.browser.users.edit_by_id(user['uuid'])
+        fallbacks_tab = page.fallbacks()
+        for fallback in ('noanswer_destination',
+                         'busy_destination',
+                         'congestion_destination',
+                         'fail_destination'):
+            fallback_destination = getattr(fallbacks_tab, fallback)()
+            assert_that(fallback_destination.type_choices(), contains_inanyorder(
+                'None',
+                'Custom',
+                'Sound',
+                'Hangup',
+                'Application',
+                'User',
+            ))
+
+    @fixtures.user(firstname='Bob', lastname='Ino')
+    def test_user_destination(self, user):
+        page = self.browser.users.edit_by_id(user['uuid'])
+        fallbacks_tab = page.fallbacks()
+
+        for fallback in ('noanswer_destination',
+                         'busy_destination',
+                         'congestion_destination',
+                         'fail_destination'):
+            fallback_destination = getattr(fallbacks_tab, fallback)()
+            assert_that(fallback_destination.type_choices(), has_item('User'))
+
+            fallback_destination.select_type('User')
+            assert_that(fallback_destination.get_selected_type_value(), equal_to('user'))
+            assert_that(page.is_not_savable())
+
+            fallback_destination.select_redirection('Bob Ino')
+            assert_that(fallback_destination.get_selected_redirection_value(), equal_to(unicode(user['id'])))
+            assert_that(page.is_savable())
+
+            fallback_destination.select_redirection_option('ring_time', '-1')
+            assert_that(page.is_not_savable())
+            fallback_destination.select_redirection_option('ring_time', '30')
+            assert_that(fallback_destination.get_redirection_option_value('ring_time'), equal_to('30'))
+            assert_that(page.is_savable())
