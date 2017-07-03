@@ -155,6 +155,11 @@ class TestUser(IntegrationTest):
                 'User',
             ))
 
+            dest.select_type('Custom')
+            assert_that(page.is_not_savable())
+            dest.select_type('None')
+            assert_that(page.is_savable())
+
     @fixtures.user()
     def test_hangup_destination(self, user):
         page = self.browser.users.edit_by_id(user['uuid'])
