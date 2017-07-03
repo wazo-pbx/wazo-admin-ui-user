@@ -145,8 +145,8 @@ class TestUser(IntegrationTest):
                          'busy_destination',
                          'congestion_destination',
                          'fail_destination'):
-            fallback_destination = getattr(fallbacks_tab, fallback)()
-            assert_that(fallback_destination.type_choices(), contains_inanyorder(
+            dest = getattr(fallbacks_tab, fallback)()
+            assert_that(dest.type_choices(), contains_inanyorder(
                 'None',
                 'Custom',
                 'Sound',
@@ -365,15 +365,15 @@ class TestUser(IntegrationTest):
                          'busy_destination',
                          'congestion_destination',
                          'fail_destination'):
-            fallback_destination = getattr(fallbacks_tab, fallback)()
-            assert_that(fallback_destination.type_choices(), has_item('User'))
+            dest = getattr(fallbacks_tab, fallback)()
+            assert_that(dest.type_choices(), has_item('User'))
 
-            fallback_destination.select_type('User')
-            assert_that(fallback_destination.get_selected_type_value(), equal_to('user'))
+            dest.select_type('User')
+            assert_that(dest.get_selected_type_value(), equal_to('user'))
             assert_that(page.is_not_savable())
 
-            fallback_destination.select_redirection('Bob Ino')
-            assert_that(fallback_destination.get_selected_redirection_value(), equal_to(unicode(user['id'])))
+            dest.select_redirection('Bob Ino')
+            assert_that(dest.get_selected_redirection_value(), equal_to(unicode(user['id'])))
             assert_that(page.is_savable())
 
             fallback_destination.fill_redirection_option('ring_time', '-1')
