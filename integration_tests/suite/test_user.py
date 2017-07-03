@@ -63,8 +63,24 @@ class TestUser(IntegrationTest):
                    timezone='na-eastern',
                    preprocess_subroutine='my_subroutine',
                    userfield='montreal,quebec,sageunay',
-                   description='Amazing description')
-    def test_edit_with_all_user_params(self, user):
+                   description='Amazing description',
+                   services={'dnd': {'enabled': True},
+                             'incallfilter': {'enabled': False}},
+                   forwards={'busy': {'enabled': True,
+                                      'destination': '123'},
+                             'unconditional': {'enabled': False,
+                                               'destination': '456'},
+                             'noanswer': {'enabled': False,
+                                          'destination': None}},
+                   fallbacks={'busy_destination': {'type': 'none'},
+                              'congestion_destination': None,
+                              'fail_destination': {'type': 'hangup',
+                                                   'cause': 'busy'},
+                              'noanswer_destination': {'type': 'application',
+                                                       'application': 'disa',
+                                                       'context': 'default',
+                                                       'pin': '123'}})
+    def test_edit_with_same_user_params(self, user):
         page = self.browser.users.edit_by_id(user['uuid'])
 
         assert_that(page.get_value('firstname'), equal_to(user['firstname']))
@@ -80,6 +96,44 @@ class TestUser(IntegrationTest):
         assert_that(page.get_value('preprocess_subroutine'), equal_to(user['preprocess_subroutine']))
         assert_that(page.get_value('userfield'), equal_to(user['userfield']))
         assert_that(page.get_value('description'), equal_to(user['description']))
+
+        assert_that(page.get_checked('services-dnd-enabled'),
+                    equal_to(user['services']['dnd']['enabled']))
+        assert_that(page.get_checked('services-incallfilter-enabled'),
+                    equal_to(user['services']['incallfilter']['enabled']))
+
+        assert_that(page.get_checked('forwards-busy-enabled'),
+                    equal_to(user['forwards']['busy']['enabled']))
+        assert_that(page.get_value('forwards-busy-destination'),
+                    equal_to(user['forwards']['busy']['destination']))
+        assert_that(page.get_checked('forwards-unconditional-enabled'),
+                    equal_to(user['forwards']['unconditional']['enabled']))
+        assert_that(page.get_value('forwards-unconditional-destination'),
+                    equal_to(user['forwards']['unconditional']['destination']))
+        assert_that(page.get_checked('forwards-noanswer-enabled'),
+                    equal_to(user['forwards']['noanswer']['enabled']))
+        assert_that(page.get_value('forwards-noanswer-destination'),
+                    equal_to(''))
+
+        assert_that(page.get_selected_option_value('fallbacks-busy_destination-type'),
+                    equal_to(user['fallbacks']['busy_destination']['type']))
+
+        assert_that(page.get_selected_option_value('fallbacks-congestion_destination-type'),
+                    equal_to('none'))
+
+        assert_that(page.get_selected_option_value('fallbacks-fail_destination-type'),
+                    equal_to(user['fallbacks']['fail_destination']['type']))
+        assert_that(page.get_selected_option_value('fallbacks-fail_destination-hangup-cause'),
+                    equal_to(user['fallbacks']['fail_destination']['cause']))
+
+        assert_that(page.get_selected_option_value('fallbacks-noanswer_destination-type'),
+                    equal_to(user['fallbacks']['noanswer_destination']['type']))
+        assert_that(page.get_selected_option_value('fallbacks-noanswer_destination-application-application'),
+                    equal_to(user['fallbacks']['noanswer_destination']['application']))
+        assert_that(page.get_value('fallbacks-noanswer_destination-application-disa-context'),
+                    equal_to(user['fallbacks']['noanswer_destination']['context']))
+        assert_that(page.get_value('fallbacks-noanswer_destination-application-disa-pin'),
+                    equal_to(user['fallbacks']['noanswer_destination']['pin']))
         page.save()
 
     @fixtures.user()
