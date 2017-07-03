@@ -381,8 +381,102 @@ class TestUser(IntegrationTest):
             assert_that(dest.get_selected_redirection_value(), equal_to(unicode(user['id'])))
             assert_that(page.is_savable())
 
-            fallback_destination.fill_redirection_option('ring_time', '-1')
+            dest.fill_redirection_option('ring_time', '-1')
             assert_that(page.is_not_savable())
-            fallback_destination.fill_redirection_option('ring_time', '30')
-            assert_that(fallback_destination.get_redirection_option_value('ring_time'), equal_to('30'))
+            dest.fill_redirection_option('ring_time', '30')
+            assert_that(dest.get_redirection_option_value('ring_time'), equal_to('30'))
             assert_that(page.is_savable())
+
+    @fixtures.user()
+    def test_forwards(self, user):
+        page = self.browser.users.edit_by_id(user['uuid'])
+        services_tab = page.services()
+
+        for forward in ('busy', 'unconditional', 'noanswer'):
+            forward = getattr(services_tab, forward)()
+
+            forward.enable()
+            assert_that(page.is_not_savable())
+
+            forward.fill_destination(s.random_string(200))
+            assert_that(len(forward.get_destination()), equal_to(128))
+
+            forward.fill_destination('123')
+            assert_that(forward.get_destination(), '123')
+            assert_that(page.is_savable())
+
+            forward.disable()
+            assert_that(page.is_savable())
+
+            forward.fill_destination('')
+            forward.disable()
+
+    @fixtures.user()
+    def test_general_tab(self, user):
+        page = self.browser.users.edit_by_id(user['uuid'])
+        tab = page.general()
+
+        tab.fill_id('mobile_phone_number', s.random_string(100))
+        assert_that(len(tab.get_value('mobile_phone_number')), equal_to(80))
+
+        tab.fill_id('ring_seconds', -1)
+        assert_that(page.is_not_savable())
+        tab.fill_id('ring_seconds', 61)
+        assert_that(page.is_not_savable())
+        tab.fill_id('ring_seconds', 30)
+        assert_that(page.is_savable())
+
+        # TODO MOH
+
+        tab.fill_id('preprocess_subroutine', s.random_string(50))
+        assert_that(len(tab.get_value('preprocess_subroutine')), equal_to(39))
+
+        tab.fill_id('simultaneous_calls', 0)
+        assert_that(page.is_not_savable())
+        tab.fill_id('simultaneous_calls', 25)
+        assert_that(page.is_not_savable())
+        tab.fill_id('simultaneous_calls', 5)
+        assert_that(page.is_savable())
+
+        tab.fill_id('timezone', s.random_string(260))
+        assert_that(len(tab.get_value('timezone')), equal_to(254))
+
+        tab.fill_id('userfield', s.random_string(150))
+        assert_that(len(tab.get_value('userfield')), equal_to(128))
+
+        tab.fill_id('description', 'patate')
+        assert_that(page.is_savable())
+
+    @fixtures.user()
+    def test_user_tab(self, user):
+        page = self.browser.users.edit_by_id(user['uuid'])
+        tab = page.user()
+
+        tab.fill_id('firstname', '')
+        assert_that(page.is_not_savable())
+        tab.fill_id('firstname', s.random_string(150))
+        assert_that(len(tab.get_value('firstname')), equal_to(128))
+
+        tab.fill_id('lastname', s.random_string(150))
+        assert_that(len(tab.get_value('lastname')), equal_to(128))
+
+        tab.fill_id('email', 'invalid_email')
+        assert_that(page.is_not_savable())
+        tab.fill_id('email', s.random_string(260))
+        assert_that(len(tab.get_value('email')), equal_to(254))
+        tab.fill_id('email', 'bob.ino@example.com')
+        assert_that(page.is_savable())
+
+        # TODO CTI PROFILE
+
+        tab.fill_id('username', s.random_string(1))
+        assert_that(page.is_not_savable())
+        tab.fill_id('username', s.random_string(260))
+        assert_that(len(tab.get_value('username')), equal_to(254))
+
+        tab.fill_id('password', s.random_string(3))
+        assert_that(page.is_not_savable())
+        tab.fill_id('password', s.random_string(70))
+        assert_that(len(tab.get_value('password')), equal_to(64))
+
+        assert_that(page.is_savable())

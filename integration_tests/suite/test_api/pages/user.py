@@ -15,6 +15,18 @@ class UserPage(Page):
         self._select_tab('fallbacks')
         return FallbacksTab(self.driver)
 
+    def services(self):
+        self._select_tab('services')
+        return ServicesTab(self.driver)
+
+    def general(self):
+        self._select_tab('general')
+        return Page(self.driver)
+
+    def user(self):
+        self._select_tab('user')
+        return Page(self.driver)
+
     def _select_tab(self, id_):
         link = self.driver.find_element_by_css_selector("a[href='#{}']".format(id_))
         link.click()
@@ -34,6 +46,49 @@ class FallbacksTab(Page):
 
     def fail_destination(self):
         return DestinationSection(self.driver, 'fallbacks-fail_destination')
+
+
+class ServicesTab(Page):
+
+    def busy(self):
+        return ForwardSection(self.driver, 'busy')
+
+    def noanswer(self):
+        return ForwardSection(self.driver, 'noanswer')
+
+    def unconditional(self):
+        return ForwardSection(self.driver, 'unconditional')
+
+
+class ForwardSection(Page):
+
+    def __init__(self, driver, section):
+        super(ForwardSection, self).__init__(driver)
+        self.section = section
+
+    @property
+    def section_id(self):
+        return 'forwards-{}'.format(self.section)
+
+    @property
+    def enabled_id(self):
+        return '{}-enabled'.format(self.section_id)
+
+    @property
+    def destination_id(self):
+        return '{}-destination'.format(self.section_id)
+
+    def enable(self):
+        self.fill_id(self.enabled_id, True)
+
+    def disable(self):
+        self.fill_id(self.enabled_id, False)
+
+    def fill_destination(self, value):
+        self.fill_id(self.destination_id, value)
+
+    def get_destination(self):
+        return self.get_value(self.destination_id)
 
 
 class DestinationSection(Page):
