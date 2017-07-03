@@ -89,12 +89,29 @@ class DestinationSection(Page):
             return None
         return [o.text for o in dropdown.options]
 
-    def select_redirection_option(self, option, value):
+    def fill_redirection_option(self, option, value):
         option_id = '{}-{}-{}'.format(self.section, self.get_selected_type_value(), option)
         self.fill_id(option_id, value)
 
     def get_redirection_option_value(self, option):
         option_id = '{}-{}-{}'.format(self.section, self.get_selected_type_value(), option)
+        el = self.driver.find_element_by_id(option_id)
+        if el.get_attribute('type') == 'checkbox':
+            return self.get_checked(option_id)
+        return self.get_value(option_id)
+
+    def fill_sub_redirection_option(self, option, value):
+        option_id = '{}-{}-{}-{}'.format(self.section,
+                                         self.get_selected_type_value(),
+                                         self.get_selected_redirection_value(),
+                                         option)
+        self.fill_id(option_id, value)
+
+    def get_sub_redirection_option_value(self, option):
+        option_id = '{}-{}-{}-{}'.format(self.section,
+                                         self.get_selected_type_value(),
+                                         self.get_selected_redirection_value(),
+                                         option)
         return self.get_value(option_id)
 
 

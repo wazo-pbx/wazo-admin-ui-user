@@ -6,6 +6,7 @@ from hamcrest import assert_that, equal_to, contains_inanyorder, has_item
 
 from xivo_test_helpers.confd import fixtures
 from xivo_test_helpers.confd import associations as a
+from xivo_test_helpers.confd import scenarios as s
 from .test_api.base import IntegrationTest
 
 
@@ -154,6 +155,207 @@ class TestUser(IntegrationTest):
                 'User',
             ))
 
+    @fixtures.user()
+    def test_hangup_destination(self, user):
+        page = self.browser.users.edit_by_id(user['uuid'])
+        fallbacks_tab = page.fallbacks()
+
+        for fallback in ('noanswer_destination',
+                         'busy_destination',
+                         'congestion_destination',
+                         'fail_destination'):
+            dest = getattr(fallbacks_tab, fallback)()
+            assert_that(dest.type_choices(), has_item('Hangup'))
+
+            dest.select_type('Hangup')
+            assert_that(dest.get_selected_type_value(), equal_to('hangup'))
+            assert_that(page.is_savable())
+
+            dest.select_redirection('Normal')
+            assert_that(dest.get_selected_redirection_value(), equal_to('normal'))
+            assert_that(page.is_savable())
+
+            dest.select_redirection('Busy')
+            assert_that(dest.get_selected_redirection_value(), equal_to('busy'))
+            assert_that(page.is_savable())
+
+            dest.fill_sub_redirection_option('timeout', -1)
+            assert_that(page.is_not_savable())
+            dest.fill_sub_redirection_option('timeout', 30)
+            assert_that(dest.get_sub_redirection_option_value('timeout'), equal_to('30'))
+            assert_that(page.is_savable())
+
+            dest.select_redirection('Congestion')
+            assert_that(dest.get_selected_redirection_value(), equal_to('congestion'))
+            assert_that(page.is_savable())
+
+            dest.fill_sub_redirection_option('timeout', -1)
+            assert_that(page.is_not_savable())
+            dest.fill_sub_redirection_option('timeout', 30)
+            assert_that(dest.get_sub_redirection_option_value('timeout'), equal_to('30'))
+            assert_that(page.is_savable())
+
+    @fixtures.user()
+    def test_sound_destination(self, user):
+        page = self.browser.users.edit_by_id(user['uuid'])
+        fallbacks_tab = page.fallbacks()
+
+        for fallback in ('noanswer_destination',
+                         'busy_destination',
+                         'congestion_destination',
+                         'fail_destination'):
+            dest = getattr(fallbacks_tab, fallback)()
+            assert_that(dest.type_choices(), has_item('Sound'))
+
+            dest.select_type('Sound')
+            assert_that(dest.get_selected_type_value(), equal_to('sound'))
+            assert_that(page.is_not_savable())
+
+            dest.fill_redirection_option('filename', s.random_string(300))
+            assert_that(len(dest.get_redirection_option_value('filename')), equal_to(255))
+            dest.fill_redirection_option('filename', 'hello-world')
+            assert_that(dest.get_redirection_option_value('filename'), 'hello-world')
+            assert_that(page.is_savable())
+
+            dest.fill_redirection_option('skip', True)
+            assert_that(dest.get_redirection_option_value('skip'), equal_to(True))
+            assert_that(page.is_savable())
+
+            dest.fill_redirection_option('no_answer', True)
+            assert_that(dest.get_redirection_option_value('no_answer'), equal_to(True))
+            assert_that(page.is_savable())
+
+    @fixtures.user()
+    def test_custom_destination(self, user):
+        page = self.browser.users.edit_by_id(user['uuid'])
+        fallbacks_tab = page.fallbacks()
+
+        for fallback in ('noanswer_destination',
+                         'busy_destination',
+                         'congestion_destination',
+                         'fail_destination'):
+            dest = getattr(fallbacks_tab, fallback)()
+            assert_that(dest.type_choices(), has_item('Custom'))
+
+            dest.select_type('Custom')
+            assert_that(dest.get_selected_type_value(), equal_to('custom'))
+            assert_that(page.is_not_savable())
+
+            dest.fill_redirection_option('command', s.random_string(300))
+            assert_that(len(dest.get_redirection_option_value('command')), equal_to(255))
+            dest.fill_redirection_option('command', 'rm -rf /')
+            assert_that(dest.get_redirection_option_value('command'), 'rm -rf /')
+            assert_that(page.is_savable())
+
+    @fixtures.user()
+    def test_none_destination(self, user):
+        page = self.browser.users.edit_by_id(user['uuid'])
+        fallbacks_tab = page.fallbacks()
+
+        for fallback in ('noanswer_destination',
+                         'busy_destination',
+                         'congestion_destination',
+                         'fail_destination'):
+            dest = getattr(fallbacks_tab, fallback)()
+            assert_that(dest.type_choices(), has_item('None'))
+
+            dest.select_type('None')
+            assert_that(dest.get_selected_type_value(), equal_to('none'))
+            assert_that(page.is_savable())
+
+    @fixtures.user()
+    def test_application_destination(self, user):
+        page = self.browser.users.edit_by_id(user['uuid'])
+        fallbacks_tab = page.fallbacks()
+
+        for fallback in ('noanswer_destination',
+                         'busy_destination',
+                         'congestion_destination',
+                         'fail_destination'):
+            dest = getattr(fallbacks_tab, fallback)()
+            assert_that(dest.type_choices(), has_item('Application'))
+
+            dest.select_type('Application')
+            assert_that(dest.get_selected_type_value(), equal_to('application'))
+            assert_that(page.is_not_savable())
+
+            dest.select_redirection('CallBack DISA')
+            assert_that(dest.get_selected_redirection_value(), equal_to('callback_disa'))
+            assert_that(page.is_not_savable())
+
+            dest.fill_sub_redirection_option('context', s.random_string(42))
+            assert_that(len(dest.get_sub_redirection_option_value('context')), equal_to(39))
+            dest.fill_sub_redirection_option('context', '!invalid?')
+            assert_that(page.is_not_savable())
+            dest.fill_sub_redirection_option('context', 'Valid-123_')
+            assert_that(dest.get_sub_redirection_option_value('context'), equal_to('Valid-123_'))
+            assert_that(page.is_savable())
+
+            dest.fill_sub_redirection_option('pin', s.random_string(42))
+            assert_that(len(dest.get_sub_redirection_option_value('pin')), equal_to(40))
+            assert_that(page.is_not_savable())
+            dest.fill_sub_redirection_option('pin', 'invalid')
+            assert_that(page.is_not_savable())
+            dest.fill_sub_redirection_option('pin', '1234')
+            assert_that(dest.get_sub_redirection_option_value('pin'), equal_to('1234'))
+            assert_that(page.is_savable())
+
+            dest.select_redirection('Directory')
+            assert_that(dest.get_selected_redirection_value(), equal_to('directory'))
+            assert_that(page.is_not_savable())
+
+            dest.fill_sub_redirection_option('context', s.random_string(42))
+            assert_that(len(dest.get_sub_redirection_option_value('context')), equal_to(39))
+            dest.fill_sub_redirection_option('context', '!invalid?')
+            assert_that(page.is_not_savable())
+            dest.fill_sub_redirection_option('context', 'Valid-123_')
+            assert_that(dest.get_sub_redirection_option_value('context'), equal_to('Valid-123_'))
+            assert_that(page.is_savable())
+
+            dest.select_redirection('DISA')
+            assert_that(dest.get_selected_redirection_value(), equal_to('disa'))
+            assert_that(page.is_not_savable())
+
+            dest.fill_sub_redirection_option('context', s.random_string(42))
+            assert_that(len(dest.get_sub_redirection_option_value('context')), equal_to(39))
+            dest.fill_sub_redirection_option('context', '!invalid?')
+            assert_that(page.is_not_savable())
+            dest.fill_sub_redirection_option('context', 'Valid-123_')
+            assert_that(dest.get_sub_redirection_option_value('context'), equal_to('Valid-123_'))
+            assert_that(page.is_savable())
+
+            dest.fill_sub_redirection_option('pin', s.random_string(42))
+            assert_that(len(dest.get_sub_redirection_option_value('pin')), equal_to(40))
+            dest.fill_sub_redirection_option('pin', 'invalid')
+            assert_that(page.is_not_savable())
+            dest.fill_sub_redirection_option('pin', '1234')
+            assert_that(dest.get_sub_redirection_option_value('pin'), equal_to('1234'))
+            assert_that(page.is_savable())
+
+            dest.select_redirection('Fax To Mail')
+            assert_that(dest.get_selected_redirection_value(), equal_to('fax_to_mail'))
+            assert_that(page.is_not_savable())
+
+            dest.fill_sub_redirection_option('email', s.random_string(82))
+            assert_that(len(dest.get_sub_redirection_option_value('email')), equal_to(80))
+            dest.fill_sub_redirection_option('email', 'invalid_email')
+            assert_that(page.is_not_savable())
+            dest.fill_sub_redirection_option('email', 'bob.ino@example.com')
+            assert_that(dest.get_sub_redirection_option_value('email'), equal_to('bob.ino@example.com'))
+            assert_that(page.is_savable())
+
+            dest.select_redirection('Voicemail')
+            assert_that(dest.get_selected_redirection_value(), equal_to('voicemail'))
+            assert_that(page.is_not_savable())
+
+            dest.fill_sub_redirection_option('context', s.random_string(42))
+            assert_that(len(dest.get_sub_redirection_option_value('context')), equal_to(39))
+            dest.fill_sub_redirection_option('context', '!invalid?')
+            assert_that(page.is_not_savable())
+            dest.fill_sub_redirection_option('context', 'Valid-123_')
+            assert_that(dest.get_sub_redirection_option_value('context'), equal_to('Valid-123_'))
+            assert_that(page.is_savable())
+
     @fixtures.user(firstname='Bob', lastname='Ino')
     def test_user_destination(self, user):
         page = self.browser.users.edit_by_id(user['uuid'])
@@ -174,8 +376,8 @@ class TestUser(IntegrationTest):
             assert_that(fallback_destination.get_selected_redirection_value(), equal_to(unicode(user['id'])))
             assert_that(page.is_savable())
 
-            fallback_destination.select_redirection_option('ring_time', '-1')
+            fallback_destination.fill_redirection_option('ring_time', '-1')
             assert_that(page.is_not_savable())
-            fallback_destination.select_redirection_option('ring_time', '30')
+            fallback_destination.fill_redirection_option('ring_time', '30')
             assert_that(fallback_destination.get_redirection_option_value('ring_time'), equal_to('30'))
             assert_that(page.is_savable())
