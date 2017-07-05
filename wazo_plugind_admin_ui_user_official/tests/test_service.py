@@ -201,10 +201,12 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
     def test_when_no_line_and_existing_line(self):
         user = {'uuid': '1234', 'lines': []}
         self.confd.users.get.return_value = {'lines': [{'id': 'line-id'}]}
+        self.confd.lines.get.return_value = {'device_id': 'device-id'}
 
         self.service._update_user_lines(user)
 
         self._assert_line_deleted('line-id')
+        self.confd.lines.return_value.remove_device.assert_called_once_with('device-id')
 
     def _assert_line_deleted(self, line):
         self.confd.lines.delete.assert_called_once_with(line)
