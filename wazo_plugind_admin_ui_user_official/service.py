@@ -68,6 +68,9 @@ class UserService(BaseConfdService):
 
         lines = user.get('lines', [])
         for line in lines:
+            device_id = confd.lines.get(line['id'])['device_id']
+            if device_id:
+                confd.lines(line['id']).remove_device(device_id)
             confd.lines.delete(line)
 
     def _create_user_lines(self, user):
@@ -86,6 +89,9 @@ class UserService(BaseConfdService):
 
         line_ids_to_remove = existing_line_ids - line_ids
         for line_id in line_ids_to_remove:
+            device_id = confd.lines.get(line_id)['device_id']
+            if device_id:
+                confd.lines(line_id).remove_device(device_id)
             confd.lines.delete(line_id)
             existing_line_ids.remove(line_id)
 
