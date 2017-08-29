@@ -15,6 +15,7 @@
           {{ add_tab_navigation_item('fallbacks', 'Fallbacks') }}
           {{ add_tab_navigation_item('services', 'Services') }}
           {{ add_tab_navigation_item('lines', 'Lines') }}
+          {{ add_tab_navigation_item('groups', 'Groups') }}
         {% endcall %}
         {% call build_form(action=url_for('.UserView:put', id=resource.uuid)) %}
           {% call build_tabs_content() %}
@@ -93,6 +94,13 @@
                   {% endcall %}
 
                 {% endcall %}
+              {% endcall %}
+            {% endcall %}
+
+            {% call build_tab_content_item('groups') %}
+              {% call add_default_fields(form=form, submit_value="Update") %}
+              {{ render_field(form.group_ids, data_listing_href=url_for(listing_urls['group'])) }}
+              {{ render_field(form.groups, with_label=False) }}
               {% endcall %}
             {% endcall %}
 

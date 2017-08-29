@@ -8,6 +8,7 @@ from wtforms.fields import (BooleanField,
                             FieldList,
                             HiddenField,
                             SelectField,
+                            SelectMultipleField,
                             SubmitField,
                             StringField)
 from wtforms.fields.html5 import EmailField, IntegerField
@@ -74,6 +75,11 @@ class CtiProfileForm(BaseForm):
     name = HiddenField()
 
 
+class GroupForm(BaseForm):
+    id = HiddenField()
+    name = HiddenField()
+
+
 class UserForm(BaseForm):
     firstname = StringField('Firstname', [InputRequired(), Length(max=128)])
     lastname = StringField('Lastname', [Length(max=128)])
@@ -93,6 +99,8 @@ class UserForm(BaseForm):
     services = FormField(UserServiceForm)
     lines = FieldList(FormField(LineForm))
     cti_profile = FormField(CtiProfileForm)
+    group_ids = SelectMultipleField('Groups', choices=[])
+    groups = FieldList(FormField(GroupForm))
     submit = SubmitField('Submit')
 
 

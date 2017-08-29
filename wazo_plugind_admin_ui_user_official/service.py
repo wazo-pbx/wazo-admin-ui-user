@@ -57,6 +57,9 @@ class UserService(BaseConfdService):
         confd.users(user['uuid']).update_cti_profile(user['cti_profile'])
         self._update_user_lines(user)
 
+        if 'groups' in user and user.get('lines'):
+            confd.users(user).update_groups(user['groups'])
+
     def delete(self, user_uuid):
         user = confd.users.get(user_uuid)
         self._delete_user_associations(user)
