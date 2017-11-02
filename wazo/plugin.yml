@@ -7,3 +7,10 @@ tags:
   - beta
   - users
 homepage: https://github.com/wazo-pbx/wazo-admin-ui-user
+depends:
+  - name: admin-ui-context
+    namespace: official
+  - name: admin-ui-extension
+    namespace: official
+  - name: admin-ui-device
+    namespace: official
