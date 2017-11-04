@@ -15,7 +15,7 @@ sync:
 admin-ui:
   image: wazo-admin-ui-user-test
   ports:
-    - "19296:9296"
+    - "9296"
   links:
     - confd
     - auth
@@ -32,7 +32,7 @@ auth:
 confd:
   image: wazopbx/xivo-confd
   ports:
-    - "9486:9486"
+    - "9486"
   links:
     - auth
     - postgres
@@ -50,7 +50,7 @@ postgres:
 provd:
   image: wazopbx/xivo-provd
   ports:
-    - "8666:8666"
+    - "8666"
   volumes:
     - "./etc/xivo-provd/provd.conf:/etc/xivo/provd/provd.conf"
 

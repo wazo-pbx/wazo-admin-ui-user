@@ -5,7 +5,8 @@
 import os
 
 from xivo_test_helpers.admin_ui.asset_launching_test_case import AdminUIAssetLaunchingTestCase
-from xivo_test_helpers.confd import provd
+from xivo_test_helpers.confd.provd import create_helper as provd_create_helper
+from xivo_test_helpers.confd.helpers import setup_confd as setup_confd_helpers
 
 from .pages.user import UserListPage
 
@@ -19,10 +20,21 @@ class IntegrationTest(AdminUIAssetLaunchingTestCase):
     @classmethod
     def setUpClass(cls):
         super(IntegrationTest, cls).setUpClass()
-        provd.reset()
+        cls.setup_helpers()
+        cls.provd = cls.setup_provd()
+
+    @classmethod
+    def setup_helpers(cls):
+        setup_confd_helpers(host='localhost', port=cls.service_port('9486', 'confd'))
+
+    @classmethod
+    def setup_provd(cls):
+        helper = provd_create_helper(port=cls.service_port(8666, 'provd'))
+        helper.reset()
+        return helper
 
     @classmethod
     def setup_browser(cls):
-        browser = AdminUIAssetLaunchingTestCase.setup_browser()
+        browser = super(IntegrationTest, cls).setup_browser()
         browser.pages['users'] = UserListPage
         return browser
