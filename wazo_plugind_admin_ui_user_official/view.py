@@ -29,45 +29,45 @@ class UserView(IndexAjaxViewMixin, BaseView):
         return form
 
     def _populate_form(self, form):
-        form.cti_profile.form.id.choices = self._build_setted_choices_cti_profile(form)
-        form.music_on_hold.choices = self._build_setted_choices_moh(form)
+        form.cti_profile.form.id.choices = self._build_set_choices_cti_profile(form)
+        form.music_on_hold.choices = self._build_set_choices_moh(form)
         for form_line in form.lines:
-            form_line.device.choices = self._build_setted_choices_device(form_line)
-            form_line.context.choices = self._build_setted_choices_context(form_line)
+            form_line.device.choices = self._build_set_choices_device(form_line)
+            form_line.context.choices = self._build_set_choices_context(form_line)
             for form_extension in form_line.extensions:
-                form_extension.exten.choices = self._build_setted_choices_extension(form_extension)
-        form.group_ids.choices = self._build_setted_choices_groups(form.groups)
+                form_extension.exten.choices = self._build_set_choices_extension(form_extension)
+        form.group_ids.choices = self._build_set_choices_groups(form.groups)
         return form
 
-    def _build_setted_choices_device(self, line):
+    def _build_set_choices_device(self, line):
         if not line.device.data or line.device.data == 'None':
             return []
         device_mac = self.service.get_device(line.device.data)['mac']
         text = device_mac if device_mac else line.device.data
         return [(line.device.data, text)]
 
-    def _build_setted_choices_context(self, line):
+    def _build_set_choices_context(self, line):
         if not line.context.data or line.context.data == 'None':
             return []
         return [(line.context.data, line.context.data)]
 
-    def _build_setted_choices_extension(self, extension):
+    def _build_set_choices_extension(self, extension):
         if not extension.exten.data or extension.exten.data == 'None':
             return []
         return [(extension.exten.data, extension.exten.data)]
 
-    def _build_setted_choices_moh(self, user):
+    def _build_set_choices_moh(self, user):
         if not user.music_on_hold.data or user.music_on_hold.data == 'None':
             return []
         return [(user.music_on_hold.data, user.music_on_hold.data)]
 
-    def _build_setted_choices_groups(self, groups):
+    def _build_set_choices_groups(self, groups):
         results = []
         for group in groups:
             results.append((group.form.id.data, group.form.name.data))
         return results
 
-    def _build_setted_choices_cti_profile(self, user):
+    def _build_set_choices_cti_profile(self, user):
         if not user.cti_profile.form.id.data or user.cti_profile.form.id.data == 'None':
             return []
         return [(user.cti_profile.form.id.data, user.cti_profile.form.name.data)]
