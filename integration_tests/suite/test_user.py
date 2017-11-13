@@ -7,7 +7,7 @@ from hamcrest import assert_that, equal_to, contains_inanyorder, has_item
 from xivo_test_helpers.confd import fixtures
 from xivo_test_helpers.confd import associations as a
 from xivo_test_helpers.confd import scenarios as s
-from .test_api.base import IntegrationTest
+from .helpers.base import IntegrationTest
 
 
 class TestUser(IntegrationTest):
