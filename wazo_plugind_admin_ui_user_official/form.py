@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
@@ -105,7 +104,7 @@ class UserForm(BaseForm):
 
 
 class UserDestinationForm(BaseForm):
-    setted_value_template = u'{user_firstname} {user_lastname}'
+    set_value_template = '{user_firstname} {user_lastname}'
 
     user_id = SelectField('User', choices=[], validators=[InputRequired()])
     ring_time = IntegerField('Ring time', [NumberRange(min=0)])

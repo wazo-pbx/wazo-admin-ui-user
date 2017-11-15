@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
@@ -48,7 +47,7 @@ class UserService(BaseConfdService):
             confd.users(user['uuid']).update_fallbacks(user['fallbacks'])
 
         if user.get('services'):
-            for service_name, service in user['services'].iteritems():
+            for service_name, service in user['services'].items():
                 confd.users(user['uuid']).update_service(service_name, service)
 
         if user.get('forwards'):
