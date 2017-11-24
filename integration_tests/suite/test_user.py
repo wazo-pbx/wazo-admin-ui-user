@@ -4,9 +4,9 @@
 
 from hamcrest import assert_that, equal_to, contains_inanyorder, has_item
 
-from xivo_test_helpers.confd import fixtures
-from xivo_test_helpers.confd import associations as a
-from xivo_test_helpers.confd import scenarios as s
+from xivo_confd_test_helpers import fixtures
+from xivo_confd_test_helpers import associations as a
+from xivo_confd_test_helpers import scenarios as s
 from .helpers.base import IntegrationTest
 
 

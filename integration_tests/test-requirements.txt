@@ -1,5 +1,6 @@
-git+https://github.com/wazo-pbx/xivo-test-helpers.git
-git+https://github.com/wazo-pbx/xivo-provd-client.git
+https://github.com/wazo-pbx/xivo-test-helpers/archive/master.zip
+https://github.com/wazo-pbx/xivo-provd-client/archive/master.zip
+https://github.com/wazo-pbx/xivo-confd/archive/master.zip#subdirectory=integration_tests
 docker-compose
 nose
 pyhamcrest

@@ -5,8 +5,8 @@
 import os
 
 from xivo_test_helpers.admin_ui.asset_launching_test_case import AdminUIAssetLaunchingTestCase
-from xivo_test_helpers.confd.provd import create_helper as provd_create_helper
-from xivo_test_helpers.confd.helpers import setup_confd as setup_confd_helpers
+from xivo_confd_test_helpers.provd import create_helper as provd_create_helper
+from xivo_confd_test_helpers.helpers import setup_confd as setup_confd_helpers
 
 from .pages.user import UserListPage
 
