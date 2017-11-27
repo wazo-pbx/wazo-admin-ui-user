@@ -74,7 +74,7 @@
               {% call add_default_fields(form=form, submit_value="Update") %}
                 {% call build_table() %}
 
-                  {% call build_table_headers() %}
+                  {% call build_table_headers(checkbox=False) %}
                     <th>Protocol</th>
                     <th>Name</th>
                     <th>Context</th>
