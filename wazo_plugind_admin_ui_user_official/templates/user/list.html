@@ -8,12 +8,11 @@
   <section class="content">
     {% call build_list_containers('User', 'user') %}
       {% call build_list_table(list=url_for('.UserView:list_json')) %}
-        {% call build_list_table_headers() %}
+        {% call build_list_table_headers(get=url_for('.UserView:get', id=''), delete=url_for('.UserView:delete', id='')) %}
           <th>Firstname</th>
           <th>Lastname</th>
           <th>Extension</th>
           <th>Code</th>
-          {{ add_list_table_header_action(get=url_for('.UserView:get', id=''), delete=url_for('.UserView:delete', id='')) }}
         {% endcall %}
       {% endcall %}
     {% endcall %}
