@@ -27,7 +27,7 @@ update-db:
 	docker build --no-cache -t wazopbx/postgres-test -f $(POSTGRES_DOCKER) $(MANAGE_DB_DIR)
 
 egg-info:
-	cd .. && python setup.py egg_info
+	cd .. && python3 setup.py egg_info
 
 test:
 	nosetests

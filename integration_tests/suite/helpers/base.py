@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
 import os
 
-from xivo_test_helpers.admin_ui.asset_launching_test_case import AdminUIAssetLaunchingTestCase
+from wazo_admin_ui_test_helpers.asset_launching_test_case import AdminUIAssetLaunchingTestCase
 from xivo_confd_test_helpers.provd import create_helper as provd_create_helper
 from xivo_confd_test_helpers.helpers import setup_confd as setup_confd_helpers
 
