@@ -17,12 +17,7 @@ $(document).ready(function() {
 
 function create_list_table() {
   var table_config = {
-    columns: [{
-        data: null,
-        defaultContent: '',
-        className: 'select-checkbox',
-        orderable: false
-      },
+    columns: [
       { data: 'firstname' },
       { data: 'lastname' },
       { data: 'extension' },
