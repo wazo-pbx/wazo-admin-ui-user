@@ -3,4 +3,4 @@ FROM wazopbx/wazo-admin-ui
 COPY . /usr/src/wazo-admin-ui-user
 WORKDIR /usr/src/wazo-admin-ui-user
 
-RUN python setup.py develop
+RUN python3 setup.py develop

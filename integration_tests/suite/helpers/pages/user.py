@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-from xivo_test_helpers.admin_ui.pages.page import Page, ListPage
-from xivo_test_helpers.admin_ui.pages.select2 import Select2
+from wazo_admin_ui_test_helpers.pages.page import Page, ListPage
+from wazo_admin_ui_test_helpers.pages.select2 import Select2
 
 
 class UserPage(Page):

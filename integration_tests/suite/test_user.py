@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
@@ -90,9 +89,9 @@ class TestUser(IntegrationTest):
         assert_that(page.get_value('username'), equal_to(user['username']))
         assert_that(page.get_value('password'), equal_to(user['password']))
         assert_that(page.get_value('mobile_phone_number'), equal_to(user['mobile_phone_number']))
-        assert_that(page.get_value('ring_seconds'), unicode(equal_to(user['ring_seconds'])))
+        assert_that(page.get_value('ring_seconds'), equal_to(user['ring_seconds']))
         assert_that(page.get_value('music_on_hold'), equal_to(user['music_on_hold']))
-        assert_that(page.get_value('simultaneous_calls'), unicode(equal_to(user['simultaneous_calls'])))
+        assert_that(page.get_value('simultaneous_calls'), equal_to(user['simultaneous_calls']))
         assert_that(page.get_value('timezone'), equal_to(user['timezone']))
         assert_that(page.get_value('preprocess_subroutine'), equal_to(user['preprocess_subroutine']))
         assert_that(page.get_value('userfield'), equal_to(user['userfield']))
@@ -378,7 +377,7 @@ class TestUser(IntegrationTest):
             assert_that(page.is_not_savable())
 
             dest.select_redirection('Bob Ino')
-            assert_that(dest.get_selected_redirection_value(), equal_to(unicode(user['id'])))
+            assert_that(dest.get_selected_redirection_value(), equal_to(user['id']))
             assert_that(page.is_savable())
 
             dest.fill_redirection_option('ring_time', '-1')
