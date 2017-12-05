@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0+
 
 from hamcrest import assert_that, equal_to, contains_inanyorder, has_item
-from unittest import SkipTest
+from unittest import skip
 
 from xivo_confd_test_helpers import fixtures
 from xivo_confd_test_helpers import associations as a
@@ -44,7 +44,7 @@ class TestUser(IntegrationTest):
         assert_that(user2.get_value('username'), equal_to(email))
         assert_that(user2.get_value('password'), equal_to('password2'))
 
-    @SkipTest # need xivo-provd-client to python3
+    @skip('need xivo_provd_client to python3 because confd-test import it')
     @fixtures.user()
     @fixtures.line_sip()
     @fixtures.line_sip()
