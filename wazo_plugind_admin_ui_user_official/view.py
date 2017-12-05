@@ -135,21 +135,23 @@ class UserView(IndexAjaxViewMixin, BaseView):
             if line['protocol'] == 'sip':
                 result['endpoint_sip'] = {'id': line['endpoint_sip_id']}
             elif line['protocol'] == 'webrtc':
-                result['endpoint_sip'] = {'id': line['endpoint_sip_id'],
-                                          'options': [
-                                              ('transport', 'wss'),
-                                              ('directmedia', 'no'),
-                                              ('encryption', 'yes'),
-                                              ('dtlsenable', 'yes'),
-                                              ('dtlsverify', 'no'),
-                                              ('dtlscertfile', '/usr/share/xivo-certs/server.crt'),
-                                              ('dtlsprivatekey', '/usr/share/xivo-certs/server.key'),
-                                              ('dtlssetup', 'actpass'),
-                                              ('force_avp', 'yes'),
-                                              ('avpf', 'yes'),
-                                              ('nat', 'force_rport,comedia'),
-                                              ('icesupport', 'yes')
-                                          ]}
+                result['endpoint_sip'] = {
+                    'id': line['endpoint_sip_id'],
+                    'options': [
+                        ('transport', 'wss'),
+                        ('directmedia', 'no'),
+                        ('encryption', 'yes'),
+                        ('dtlsenable', 'yes'),
+                        ('dtlsverify', 'no'),
+                        ('dtlscertfile', '/usr/share/xivo-certs/server.crt'),
+                        ('dtlsprivatekey', '/usr/share/xivo-certs/server.key'),
+                        ('dtlssetup', 'actpass'),
+                        ('force_avp', 'yes'),
+                        ('avpf', 'yes'),
+                        ('nat', 'force_rport,comedia'),
+                        ('icesupport', 'yes')
+                    ]
+                }
             elif line['protocol'] == 'sccp':
                 result['endpoint_sccp'] = {'id': line['endpoint_sccp_id']}
             elif line['protocol'] == 'custom':
