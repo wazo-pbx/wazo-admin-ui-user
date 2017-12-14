@@ -114,6 +114,8 @@
 {% macro _build_line_entry(line, template=False) %}
   {% if template %}
     {% set tr_class = "row-template hidden" %}
+  {% else %}
+    {% set tr_class = "row-line" %}
   {% endif %}
   <tr class="{{ tr_class }}">
     {{ render_field(line['id']) }}
@@ -139,7 +141,7 @@
                       with_label=False,
                       class_='line-extension',
                       data_allow_custom_values=True,
-                      data_available_extension_href=url_for(listing_urls['available_extension'])) }}
+                      data_available_extension_href=url_for(listing_urls['available_extension_user'])) }}
     </td>
     <td>
       {{ render_field(line.device, with_label=False, data_listing_href=url_for(listing_urls['device'])) }}
