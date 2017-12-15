@@ -6,6 +6,10 @@ $(document).ready(function() {
     init_add_available_extensions.call(row);
   });
 
+  $('.row-line').each(function(e, row) {
+    add_available_extensions.call(row);
+  });
+
   toggle_busy_destination_validator();
   $('#forwards-busy-enabled').change(toggle_busy_destination_validator);
   toggle_noanswer_destination_validator();
@@ -61,28 +65,44 @@ function init_add_available_extensions(){
   $('.line-context', this).on("select2:select", function(e) {
     add_available_extensions.call(this);
   });
+  add_available_extensions()
 }
 
 
 function add_available_extensions() {
-  let extension_select = $(this).closest("tr").find(".line-extension")
-  if (extension_select.length == 0) {
-    extension_select = $(this).closest("form").find(".line-extension")
+  let extension_select, context_select
+
+  if ($('.row-template').length == 0) {
+    extension_select = $(".line-extension")
+    context_select = $(".line-context")
+  } else {
+    extension_select = $(this).closest("tr").find(".line-extension")
+    context_select = $(this).closest("tr").find(".line-context")
+    if (extension_select.length == 0) {
+      extension_select = $(this).closest("form").find(".line-extension")
+    }
   }
+
   let ajax_url = $(extension_select).attr('data-available_extension_href')
-  if (! ajax_url) {
+  if (! ajax_url || ! context_select) {
     return;
   }
 
-  $.ajax({
-    url: ajax_url,
-    data: {context: $(this).val()},
-    success: function(response) {
-      for (i = 0; i < response.results.length; i++) {
-        extension_select.append($("<option></option>")
-                                .attr("value", response.results[i].id)
-                                .text(response.results[i].text));
-      }
+  extension_select.select2({
+    theme: 'bootstrap',
+    ajax: {
+      url: ajax_url,
+      data: function (params) {
+        return {
+          term: params.term,
+          context: context_select.val()
+        }
+      },
+    },
+    processResults: function (data, page) {
+      return {
+        results: data
+      };
     }
   });
 }

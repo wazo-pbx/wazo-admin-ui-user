@@ -31,10 +31,15 @@
           {{ render_field(form.lines[0].endpoint_custom_id) }}
           {{ render_field(form.lines[0].extensions[0]['id']) }}
           {{ render_field(form.lines[0].extensions[0].exten,
+                          divclass='col-sm-4',
+                          inputclass='ui-helper-clearfix',
                           class_='line-extension',
                           data_allow_custom_values=True,
-                          data_available_extension_href=url_for(listing_urls['available_extension'])) }}
+                          data_available_extension_href=url_for(listing_urls['available_extension_user'])) }}
           {{ render_field(form.lines[0].context,
+                          with_label=False,
+                          divclass='col-sm-4',
+                          placeholder='Choose Context',
                           class_='line-context',
                           data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
           {{ render_field(form.lines[0].protocol) }}

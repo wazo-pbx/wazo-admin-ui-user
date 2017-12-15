@@ -11,7 +11,6 @@ from wazo_admin_ui.helpers.classful import extract_select2_params, build_select2
 
 from .form import UserForm
 
-
 class UserView(IndexAjaxViewMixin, BaseView):
 
     form = UserForm
@@ -48,7 +47,13 @@ class UserView(IndexAjaxViewMixin, BaseView):
 
     def _build_set_choices_context(self, line):
         if not line.context.data or line.context.data == 'None':
-            return []
+            context = self.service.get_first_internal_context()
+        else:
+            context = self.service.get_context(line.context.data)
+
+        if context:
+            return [(context['name'], context['label'])]
+
         return [(line.context.data, line.context.data)]
 
     def _build_set_choices_extension(self, extension):
