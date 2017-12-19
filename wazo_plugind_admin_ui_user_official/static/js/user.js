@@ -97,12 +97,7 @@ function add_available_extensions() {
           term: params.term,
           context: context_select.val()
         }
-      },
-    },
-    processResults: function (data, page) {
-      return {
-        results: data
-      };
+      }
     }
   });
 }
