@@ -89,7 +89,9 @@ function add_available_extensions() {
   }
 
   extension_select.select2({
+    allowClear: true,
     theme: 'bootstrap',
+    placeholder: 'Select...',
     ajax: {
       url: ajax_url,
       data: function (params) {
