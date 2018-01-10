@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0+
 
 
+from flask_babel import lazy_gettext as l_
 from wtforms.fields import (BooleanField,
                             FormField,
                             FieldList,
@@ -28,7 +29,7 @@ class LineForm(BaseForm):
     endpoint_sip_id = HiddenField()
     endpoint_sccp_id = HiddenField()
     endpoint_custom_id = HiddenField()
-    protocol = SelectField(choices=[('sip', 'SIP'), ('sccp', 'SCCP'), ('custom', 'CUSTOM'), ('webrtc', 'SIP (webrtc)')])
+    protocol = SelectField(choices=[('sip', l_('SIP')), ('sccp', l_('SCCP')), ('custom', l_('CUSTOM')), ('webrtc', l_('SIP (webrtc)'))])
     extensions = FieldList(FormField(ExtensionForm), min_entries=1)
     name = StringField()
     device = SelectField(choices=[])
@@ -36,18 +37,18 @@ class LineForm(BaseForm):
 
 
 class BusyForwardForm(BaseForm):
-    enabled = BooleanField('Busy', default=False)
-    destination = StringField('Destination', [Length(max=128)])
+    enabled = BooleanField(l_('Busy'), default=False)
+    destination = StringField(l_('Destination'), [Length(max=128)])
 
 
 class NoAnswerForwardForm(BaseForm):
-    enabled = BooleanField('No answer', default=False)
-    destination = StringField('Destination', [Length(max=128)])
+    enabled = BooleanField(l_('No answer'), default=False)
+    destination = StringField(l_('Destination'), [Length(max=128)])
 
 
 class UnconditionalForwardForm(BaseForm):
-    enabled = BooleanField('Unconditional', default=False)
-    destination = StringField('Destination', [Length(max=128)])
+    enabled = BooleanField(l_('Unconditional'), default=False)
+    destination = StringField(l_('Destination'), [Length(max=128)])
 
 
 class UserForwardForm(BaseForm):
@@ -57,11 +58,11 @@ class UserForwardForm(BaseForm):
 
 
 class DNDServiceForm(BaseForm):
-    enabled = BooleanField('Do not disturb', default=False)
+    enabled = BooleanField(l_('Do not disturb'), default=False)
 
 
 class IncallFilterServiceForm(BaseForm):
-    enabled = BooleanField('Incall filtering', default=False)
+    enabled = BooleanField(l_('Incall filtering'), default=False)
 
 
 class UserServiceForm(BaseForm):
@@ -70,7 +71,7 @@ class UserServiceForm(BaseForm):
 
 
 class CtiProfileForm(BaseForm):
-    id = SelectField('CTI Profile', choices=[])
+    id = SelectField(l_('CTI Profile'), choices=[])
     name = HiddenField()
 
 
@@ -80,33 +81,33 @@ class GroupForm(BaseForm):
 
 
 class UserForm(BaseForm):
-    firstname = StringField('Firstname', [InputRequired(), Length(max=128)])
-    lastname = StringField('Lastname', [Length(max=128)])
-    username = StringField('Username', [Length(min=2, max=254)])
-    password = StringField('Password', [Length(min=4, max=64)])
-    email = EmailField('Email', [Length(max=254)])
-    mobile_phone_number = StringField('Phone mobile', [Length(max=80)])
-    ring_seconds = IntegerField('Ring seconds', [NumberRange(min=0, max=60)])
-    music_on_hold = SelectField('Music On Hold', choices=[])
-    preprocess_subroutine = StringField('Subroutine', [Length(max=39)])
-    simultaneous_calls = IntegerField('Simultaneous calls', [NumberRange(min=1, max=20)])
-    timezone = StringField('Timezone', [Length(max=254)])
-    userfield = StringField('User Field', [Length(max=128)])
-    description = StringField('Description')
+    firstname = StringField(l_('Firstname'), [InputRequired(), Length(max=128)])
+    lastname = StringField(l_('Lastname'), [Length(max=128)])
+    username = StringField(l_('Username'), [Length(min=2, max=254)])
+    password = StringField(l_('Password'), [Length(min=4, max=64)])
+    email = EmailField(l_('Email'), [Length(max=254)])
+    mobile_phone_number = StringField(l_('Phone mobile'), [Length(max=80)])
+    ring_seconds = IntegerField(l_('Ring seconds'), [NumberRange(min=0, max=60)])
+    music_on_hold = SelectField(l_('Music On Hold'), choices=[])
+    preprocess_subroutine = StringField(l_('Subroutine'), [Length(max=39)])
+    simultaneous_calls = IntegerField(l_('Simultaneous calls'), [NumberRange(min=1, max=20)])
+    timezone = StringField(l_('Timezone'), [Length(max=254)])
+    userfield = StringField(l_('User Field'), [Length(max=128)])
+    description = StringField(l_('Description'))
     fallbacks = FormField(FallbacksForm)
     forwards = FormField(UserForwardForm)
     services = FormField(UserServiceForm)
     lines = FieldList(FormField(LineForm))
     cti_profile = FormField(CtiProfileForm)
-    group_ids = SelectMultipleField('Groups', choices=[])
+    group_ids = SelectMultipleField(l_('Groups'), choices=[])
     groups = FieldList(FormField(GroupForm))
-    submit = SubmitField('Submit')
+    submit = SubmitField(l_('Submit'))
 
 
 class UserDestinationForm(BaseForm):
     set_value_template = '{user_firstname} {user_lastname}'
 
-    user_id = SelectField('User', choices=[], validators=[InputRequired()])
-    ring_time = IntegerField('Ring time', [NumberRange(min=0)])
+    user_id = SelectField(l_('User'), choices=[], validators=[InputRequired()])
+    ring_time = IntegerField(l_('Ring time'), [NumberRange(min=0)])
     user_firstname = DestinationHiddenField()
     user_lastname = DestinationHiddenField()

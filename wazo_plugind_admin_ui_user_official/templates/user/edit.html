@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content_header %}
-  {{ build_breadcrumb('Users', '', 'user', ['List']) }}
+  {{ build_breadcrumb(_('Users'), '', 'user', ['List']) }}
 {% endblock %}
 
 {% block content %}
@@ -9,33 +9,33 @@
     {% call build_section_row() %}
       {% call build_form_tabs_box() %}
         {% call build_tabs_navigation() %}
-          {{ add_tab_navigation_header('User', name, 'user') }}
-          {{ add_tab_navigation_item('user', 'User', active=True) }}
-          {{ add_tab_navigation_item('general', 'General') }}
-          {{ add_tab_navigation_item('fallbacks', 'Fallbacks') }}
-          {{ add_tab_navigation_item('services', 'Services') }}
-          {{ add_tab_navigation_item('lines', 'Lines') }}
-          {{ add_tab_navigation_item('groups', 'Groups') }}
+          {{ add_tab_navigation_header(_('User'), name, 'user') }}
+          {{ add_tab_navigation_item('user', _('User'), active=True) }}
+          {{ add_tab_navigation_item('general', _('General')) }}
+          {{ add_tab_navigation_item('fallbacks', _('Fallbacks')) }}
+          {{ add_tab_navigation_item('services', _('Services')) }}
+          {{ add_tab_navigation_item('lines', _('Lines')) }}
+          {{ add_tab_navigation_item('groups', _('Groups')) }}
         {% endcall %}
         {% call build_form(action=url_for('.UserView:put', id=resource.uuid)) %}
           {% call build_tabs_content() %}
 
             {% call build_tab_content_item('user', active=True) %}
-              {% call add_default_fields(form=form, submit_value="Update") %}
+              {% call add_default_fields(form=form, submit_value=_('Update')) %}
                 {{ render_field(form.firstname) }}
                 {{ render_field(form.lastname) }}
                 {{ render_field(form.email) }}
                 {{ render_field(form.cti_profile['id'],
                                 data_listing_href=url_for(listing_urls['cti_profile']),
                                 data_allow_clear=True,
-                                data_placeholder='CTI disabled') }}
+                                data_placeholder=_('CTI disabled')) }}
                 {{ render_field(form.username) }}
                 {{ render_field(form.password, type='password', data_toggle='password') }}
               {% endcall %}
             {% endcall %}
 
             {% call build_tab_content_item('general') %}
-              {% call add_default_fields(form=form, submit_value="Update") %}
+              {% call add_default_fields(form=form, submit_value=_('Update')) %}
                 {{ render_field(form.mobile_phone_number) }}
                 {{ render_field(form.ring_seconds) }}
                 {{ render_field(form.music_on_hold, data_listing_href=url_for(listing_urls['moh'])) }}
@@ -48,7 +48,7 @@
             {% endcall %}
 
             {% call build_tab_content_item('fallbacks') %}
-              {% call add_default_fields(form=form, submit_value="Update") %}
+              {% call add_default_fields(form=form, submit_value=_('Update')) %}
                 {{ render_field(form.fallbacks.busy_destination) }}
                 {{ render_field(form.fallbacks.congestion_destination) }}
                 {{ render_field(form.fallbacks.fail_destination) }}
@@ -57,7 +57,7 @@
             {% endcall %}
 
             {% call build_tab_content_item('services') %}
-              {% call add_default_fields(form=form, submit_value="Update") %}
+              {% call add_default_fields(form=form, submit_value=_('Update')) %}
                 {{ render_field(form.services.dnd.enabled) }}
                 {{ render_field(form.services.incallfilter.enabled) }}
                 {{ render_field(form.forwards.busy.enabled) }}
@@ -71,7 +71,7 @@
 
             {% call build_tab_content_item('lines') %}
               {{ build_add_row_entry_header() }}
-              {% call add_default_fields(form=form, submit_value="Update") %}
+              {% call add_default_fields(form=form, submit_value=_('Update')) %}
                 {% call build_table() %}
 
                   {% call build_table_headers() %}
@@ -98,7 +98,7 @@
             {% endcall %}
 
             {% call build_tab_content_item('groups') %}
-              {% call add_default_fields(form=form, submit_value="Update") %}
+              {% call add_default_fields(form=form, submit_value=_('Update')) %}
               {{ render_field(form.group_ids, data_listing_href=url_for(listing_urls['group'])) }}
               {{ render_field(form.groups, with_label=False) }}
               {% endcall %}

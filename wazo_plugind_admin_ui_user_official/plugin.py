@@ -1,6 +1,7 @@
 # Copyright 2017 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
+from flask_babel import lazy_gettext as l_
 from flask_menu.classy import register_flaskview
 
 from wazo_admin_ui.helpers.plugin import create_blueprint
@@ -25,7 +26,7 @@ class Plugin(object):
         UserDestinationView.service = UserService()
         UserDestinationView.register(user, route_base='/users_listing')
 
-        register_destination_form('user', 'User', UserDestinationForm)
+        register_destination_form('user', l_('User'), UserDestinationForm)
 
         register_listing_url('user', 'user.UserDestinationView:list_json')
         register_listing_url('uuid_user', 'user.UserDestinationView:uuid_list_json')
