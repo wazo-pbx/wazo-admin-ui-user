@@ -4,6 +4,7 @@
 from random import randint
 
 from flask import request, jsonify
+from flask_babel import lazy_gettext as l_
 from flask_menu.classy import classy_menu_item
 
 from wazo_admin_ui.helpers.classful import IndexAjaxViewMixin, BaseView, LoginRequiredView
@@ -16,7 +17,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
     form = UserForm
     resource = 'user'
 
-    @classy_menu_item('.users', 'Users', order=1, icon="user")
+    @classy_menu_item('.users', l_('Users'), order=1, icon="user")
     def index(self):
         return super(UserView, self).index()
 

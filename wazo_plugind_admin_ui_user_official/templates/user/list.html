@@ -1,25 +1,25 @@
 {% extends "layout.html" %}
 
 {% block content_header %}
-  {{ build_breadcrumb('Users', '', 'user', ['List']) }}
+  {{ build_breadcrumb(_('Users'), '', 'user', ['List']) }}
 {% endblock %}
 
 {% block content %}
   <section class="content">
-    {% call build_list_containers('User', 'user') %}
+    {% call build_list_containers(_('User'), 'user') %}
       {% call build_list_table(list=url_for('.UserView:list_json')) %}
         {% call build_list_table_headers(get=url_for('.UserView:get', id=''), delete=url_for('.UserView:delete', id='')) %}
-          <th>Firstname</th>
-          <th>Lastname</th>
-          <th>Extension</th>
-          <th>Code</th>
+          <th>{{ _('Firstname') }}</th>
+          <th>{{ _('Lastname') }}</th>
+          <th>{{ _('Extension') }}</th>
+          <th>{{ _('Code') }}</th>
         {% endcall %}
       {% endcall %}
     {% endcall %}
 
-    {% call build_hidden_add_containers('Add User') %}
+    {% call build_hidden_add_containers(_('Add User')) %}
       {% call build_form() %}
-        {% call add_default_fields(form=form, submit_value="Add") %}
+        {% call add_default_fields(form=form, submit_value=_('Add')) %}
           {{ render_field(form.firstname) }}
           {{ render_field(form.lastname) }}
           {{ render_field(form.email) }}
@@ -39,7 +39,7 @@
           {{ render_field(form.lines[0].context,
                           with_label=False,
                           divclass='col-sm-4',
-                          placeholder='Choose Context',
+                          placeholder=_('Choose Context'),
                           class_='line-context',
                           data_listing_href=url_for(listing_urls['context_by_type'], type_='internal')) }}
           {{ render_field(form.lines[0].protocol) }}
