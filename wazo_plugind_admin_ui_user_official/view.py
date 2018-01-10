@@ -25,8 +25,20 @@ class UserView(IndexAjaxViewMixin, BaseView):
         resource_lines = [self.service.get_line(line['id']) for line in resource['lines']]
         lines = self._build_lines(resource_lines)
         groups = [group['id'] for group in resource['groups']]
-        form = self.form(data=resource, lines=lines, group_ids=groups)
+        form = self.form(data=resource,
+                         lines=lines,
+                         group_ids=groups,
+                         funckeys=self._get_funckeys(resource))
         return form
+
+    def _get_funckeys(self, user):
+        funckeys = self.service.list_funckeys(user)['keys']
+        keys = []
+        for digit, key in funckeys.items():
+            key['digit'] = digit
+            keys.append(key)
+        sorted_keys = sorted(keys, key=lambda k: k['digit'])
+        return sorted_keys
 
     def _populate_form(self, form):
         form.cti_profile.form.id.choices = self._build_set_choices_cti_profile(form)
@@ -122,7 +134,18 @@ class UserView(IndexAjaxViewMixin, BaseView):
             resource['uuid'] = form_id
         resource = self._map_form_to_resource_group(form, resource)
         resource = self._map_form_to_resource_line(form, resource)
+        self._update_funckeys(resource)
+
         return resource
+
+    def _update_funckeys(self, resource):
+        funckeys = {
+            'keys': {}
+        }
+        for funckey in resource['funckeys']:
+            funckeys['keys'][funckey['digit']] = funckey
+
+        self.service.update_funckeys(resource, funckeys)
 
     def _map_form_to_resource_group(self, form, resource):
         resource['groups'] = [{'id': group_id} for group_id in form.group_ids.data]

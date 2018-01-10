@@ -27,6 +27,12 @@ class UserService(BaseConfdService):
     def get_device(self, device_id):
         return confd.devices.get(device_id)
 
+    def list_funckeys(self, user):
+        return confd.users(user['uuid']).list_funckeys()
+
+    def update_funckeys(self, user, keys):
+        confd.users(user['uuid']).update_funckeys(keys)
+
     def is_webrtc(self, endpoint_id):
         endpoint_sip = confd.endpoints_sip.get(endpoint_id)
         if ['transport', 'wss'] in endpoint_sip['options']:

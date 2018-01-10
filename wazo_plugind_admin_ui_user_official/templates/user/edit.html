@@ -16,6 +16,7 @@
           {{ add_tab_navigation_item('services', _('Services')) }}
           {{ add_tab_navigation_item('lines', _('Lines')) }}
           {{ add_tab_navigation_item('groups', _('Groups')) }}
+          {{ add_tab_navigation_item('funckeys', _('FuncKeys')) }}
         {% endcall %}
         {% call build_form(action=url_for('.UserView:put', id=resource.uuid)) %}
           {% call build_tabs_content() %}
@@ -104,6 +105,30 @@
               {% endcall %}
             {% endcall %}
 
+            {% call build_tab_content_item('funckeys') %}
+              {% call add_default_fields(form=form, submit_value=_('Update')) %}
+                {{ build_add_row_entry_header() }}
+                {% call build_table() %}
+                  {% call build_table_headers() %}
+                    <th class="text-center col-sm-1">{{ _('Digit') }}</th>
+                    <th class="text-center col-sm-2">{{ _('Label') }}</th>
+                    <th class="text-center">{{ _('Destination') }}</th>
+                    <th class="text-center col-xs-1">{{ _('BLF') }}</th>
+                    <th class="text-center col-xs-1">{{ _('Actions') }}</th>
+                  {% endcall %}
+
+                  {% call build_table_body(class_='dynamic-table') %}
+                    {% do form.funckeys.append_entry() %}
+                    {{ _build_funckey_entry(form.funckeys.pop_entry(), template=True) }}
+
+                    {% for funckey in form.funckeys %}
+                       {{ _build_funckey_entry(funckey) }}
+                    {% endfor %}
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
+
           {% endcall %}
         {% endcall %}
       {% endcall %}
@@ -152,6 +177,20 @@
     <td>
       {{ add_delete_entry_button() }}
     </td>
+  </tr>
+{% endmacro %}
+
+{% macro _build_funckey_entry(funckey, template=False) %}
+  {% if template %}
+    {% set tr_class = "row-template hidden" %}
+  {% endif %}
+  <tr class="{{ tr_class }}">
+    {{ render_field(funckey['id']) }}
+    <td>{{ render_field(funckey.digit, with_label=False) }}</td>
+    <td>{{ render_field(funckey['label'], with_label=False) }}</td>
+    <td>{{ render_field(funckey.destination, with_label=False) }}</td>
+    <td>{{ render_field(funckey.blf, with_label=False) }}</td>
+    <td>{{ add_delete_entry_button() }}</td>
   </tr>
 {% endmacro %}
 

@@ -16,6 +16,7 @@ from wtforms.validators import InputRequired, Length, NumberRange
 
 from wazo_admin_ui.helpers.destination import FallbacksForm, DestinationHiddenField
 from wazo_admin_ui.helpers.form import BaseForm
+from wazo_admin_ui.helpers.funckey import FuncKeyDestinationField
 
 
 class ExtensionForm(BaseForm):
@@ -29,7 +30,10 @@ class LineForm(BaseForm):
     endpoint_sip_id = HiddenField()
     endpoint_sccp_id = HiddenField()
     endpoint_custom_id = HiddenField()
-    protocol = SelectField(choices=[('sip', l_('SIP')), ('sccp', l_('SCCP')), ('custom', l_('CUSTOM')), ('webrtc', l_('SIP (webrtc)'))])
+    protocol = SelectField(choices=[('sip', l_('SIP')),
+                                    ('sccp', l_('SCCP')),
+                                    ('custom', l_('CUSTOM')),
+                                    ('webrtc', l_('SIP (webrtc)'))])
     extensions = FieldList(FormField(ExtensionForm), min_entries=1)
     name = StringField()
     device = SelectField(choices=[])
@@ -80,6 +84,15 @@ class GroupForm(BaseForm):
     name = HiddenField()
 
 
+class FuncKeyTemplateKeysForm(BaseForm):
+    id = HiddenField()
+    label = StringField(l_('Label'), [InputRequired(), Length(max=128)])
+    digit = IntegerField(validators=[InputRequired()])
+    destination = FuncKeyDestinationField()
+    blf = BooleanField(l_('BLF'), default=False)
+    submit = SubmitField()
+
+
 class UserForm(BaseForm):
     firstname = StringField(l_('Firstname'), [InputRequired(), Length(max=128)])
     lastname = StringField(l_('Lastname'), [Length(max=128)])
@@ -101,6 +114,7 @@ class UserForm(BaseForm):
     cti_profile = FormField(CtiProfileForm)
     group_ids = SelectMultipleField(l_('Groups'), choices=[])
     groups = FieldList(FormField(GroupForm))
+    funckeys = FieldList(FormField(FuncKeyTemplateKeysForm))
     submit = SubmitField(l_('Submit'))
 
 
@@ -109,5 +123,13 @@ class UserDestinationForm(BaseForm):
 
     user_id = SelectField(l_('User'), choices=[], validators=[InputRequired()])
     ring_time = IntegerField(l_('Ring time'), [NumberRange(min=0)])
+    user_firstname = DestinationHiddenField()
+    user_lastname = DestinationHiddenField()
+
+
+class UserFuncKeyDestinationForm(BaseForm):
+    set_value_template = '{user_firstname} {user_lastname}'
+
+    user_id = SelectField(l_('User'), [InputRequired()], choices=[])
     user_firstname = DestinationHiddenField()
     user_lastname = DestinationHiddenField()
