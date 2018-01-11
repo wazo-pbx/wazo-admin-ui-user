@@ -1,9 +1,9 @@
 name: admin-ui-user
 namespace: official
-version: 1.1.0
+version: 1.1.0-1
 author: Wazo Team
 display_name: User
-min_wazo_version: 17.17
+min_wazo_version: 18.01
 tags:
   - beta
   - users
@@ -11,9 +11,9 @@ homepage: https://github.com/wazo-pbx/wazo-admin-ui-user
 depends:
   - name: admin-ui-context
     namespace: official
-    version: 1.0.1
+    version: 1.0.1-1
   - name: admin-ui-extension
     namespace: official
-    version: 1.2.0
+    version: 1.2.0-1
   - name: admin-ui-device
     namespace: official
