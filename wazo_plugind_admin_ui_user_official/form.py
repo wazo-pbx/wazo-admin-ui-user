@@ -89,7 +89,7 @@ class FuncKeyTemplateKeysForm(BaseForm):
     label = StringField(l_('Label'), [Length(max=128)])
     digit = IntegerField(validators=[InputRequired()])
     destination = FuncKeyDestinationField()
-    blf = BooleanField(l_('BLF'), default=False)
+    blf = BooleanField(l_('BLF'), default=True)
     submit = SubmitField()
 
 
