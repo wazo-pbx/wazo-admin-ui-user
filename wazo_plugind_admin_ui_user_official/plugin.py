@@ -6,10 +6,11 @@ from flask_menu.classy import register_flaskview
 
 from wazo_admin_ui.helpers.plugin import create_blueprint
 from wazo_admin_ui.helpers.destination import register_destination_form, register_listing_url
+from wazo_admin_ui.helpers.funckey import register_funckey_destination_form
 
 from .service import UserService
 from .view import UserView, UserDestinationView
-from .form import UserDestinationForm
+from .form import UserDestinationForm, UserFuncKeyDestinationForm
 
 user = create_blueprint('user', __name__)
 
@@ -27,6 +28,7 @@ class Plugin(object):
         UserDestinationView.register(user, route_base='/users_listing')
 
         register_destination_form('user', l_('User'), UserDestinationForm)
+        register_funckey_destination_form('user', l_('User'), UserFuncKeyDestinationForm)
 
         register_listing_url('user', 'user.UserDestinationView:list_json')
         register_listing_url('uuid_user', 'user.UserDestinationView:uuid_list_json')

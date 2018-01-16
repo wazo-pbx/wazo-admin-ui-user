@@ -1,4 +1,4 @@
-# Copyright 2017 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2017-2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
 from random import randint
@@ -11,6 +11,7 @@ from wazo_admin_ui.helpers.classful import IndexAjaxViewMixin, BaseView, LoginRe
 from wazo_admin_ui.helpers.classful import extract_select2_params, build_select2_response
 
 from .form import UserForm
+
 
 class UserView(IndexAjaxViewMixin, BaseView):
 
@@ -25,8 +26,15 @@ class UserView(IndexAjaxViewMixin, BaseView):
         resource_lines = [self.service.get_line(line['id']) for line in resource['lines']]
         lines = self._build_lines(resource_lines)
         groups = [group['id'] for group in resource['groups']]
-        form = self.form(data=resource, lines=lines, group_ids=groups)
+        resource_funckeys = self.service.list_funckeys(resource['uuid'])
+        funckeys = self._build_funckeys(resource_funckeys)
+        form = self.form(data=resource, lines=lines, group_ids=groups, funckeys=funckeys)
         return form
+
+    def _build_funckeys(self, funckeys):
+        keys = [dict(digit=digit, **key) for digit, key in funckeys['keys'].items()]
+        keys.sort(key=lambda k: k['digit'])
+        return keys
 
     def _populate_form(self, form):
         form.cti_profile.form.id.choices = self._build_set_choices_cti_profile(form)
@@ -120,17 +128,29 @@ class UserView(IndexAjaxViewMixin, BaseView):
         resource = form.to_dict()
         if form_id:
             resource['uuid'] = form_id
-        resource = self._map_form_to_resource_group(form, resource)
-        resource = self._map_form_to_resource_line(form, resource)
+        resource['groups'] = self._map_form_to_resource_group(form)
+        resource['lines'] = self._map_form_to_resource_line(form)
+        resource['funckeys'] = self._map_form_to_resource_funckey(form)
+
         return resource
 
-    def _map_form_to_resource_group(self, form, resource):
-        resource['groups'] = [{'id': group_id} for group_id in form.group_ids.data]
-        return resource
+    def _map_form_to_resource_funckey(self, form):
+        funckeys = {
+            'keys': {}
+        }
+        for funckey in form.funckeys:
+            funckey = funckey.to_dict()
+            funckeys['keys'][funckey.pop('digit')] = funckey
 
-    def _map_form_to_resource_line(self, form, resource):
+        return funckeys
+
+    def _map_form_to_resource_group(self, form):
+        return [{'id': group_id} for group_id in form.group_ids.data]
+
+    def _map_form_to_resource_line(self, form):
         lines = []
-        for line in resource['lines']:
+        for line in form.lines:
+            line = line.to_dict()
             if request.method == 'POST' and not line.get('context'):
                 continue
             result = {'id': int(line['id']) if line['id'] else None,
@@ -171,8 +191,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
 
             lines.append(result)
 
-        resource['lines'] = lines
-        return resource
+        return lines
 
     def _map_resources_to_form_errors(self, form, resources):
         form.populate_errors(resources.get('user', {}))
