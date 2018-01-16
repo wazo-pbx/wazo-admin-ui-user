@@ -135,18 +135,19 @@ class UserView(IndexAjaxViewMixin, BaseView):
             resource['uuid'] = form_id
         resource = self._map_form_to_resource_group(form, resource)
         resource = self._map_form_to_resource_line(form, resource)
-        self._update_funckeys(resource)
+        resource = self._map_form_to_resource_funckey(form, resource)
 
         return resource
 
-    def _update_funckeys(self, resource):
+    def _map_form_to_resource_funckey(self, resource):
         funckeys = {
             'keys': {}
         }
         for funckey in resource['funckeys']:
-            funckeys['keys'][funckey['digit']] = funckey
+            funckeys['keys'][funckey.pop('digit')] = funckey
 
-        self.service.update_funckeys(resource, funckeys)
+        resource['funckeys'] = funckeys
+        return resource
 
     def _map_form_to_resource_group(self, form, resource):
         resource['groups'] = [{'id': group_id} for group_id in form.group_ids.data]

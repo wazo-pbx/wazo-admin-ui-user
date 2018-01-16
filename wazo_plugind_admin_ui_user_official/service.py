@@ -1,4 +1,4 @@
-# Copyright 2017 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2017-2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
 import logging
@@ -29,9 +29,6 @@ class UserService(BaseConfdService):
 
     def list_funckeys(self, user):
         return confd.users(user['uuid']).list_funckeys()
-
-    def update_funckeys(self, user, keys):
-        confd.users(user['uuid']).update_funckeys(keys)
 
     def is_webrtc(self, endpoint_id):
         endpoint_sip = confd.endpoints_sip.get(endpoint_id)
@@ -64,6 +61,9 @@ class UserService(BaseConfdService):
 
         if 'groups' in user and user.get('lines'):
             confd.users(user).update_groups(user['groups'])
+
+        if user.get('funckeys'):
+            confd.users(user['uuid']).update_funckeys(user['funckeys'])
 
     def delete(self, user_uuid):
         user = confd.users.get(user_uuid)
