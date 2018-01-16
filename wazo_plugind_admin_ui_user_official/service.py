@@ -27,8 +27,8 @@ class UserService(BaseConfdService):
     def get_device(self, device_id):
         return confd.devices.get(device_id)
 
-    def list_funckeys(self, user):
-        return confd.users(user['uuid']).list_funckeys()
+    def list_funckeys(self, user_uuid):
+        return confd.users(user_uuid).list_funckeys()
 
     def is_webrtc(self, endpoint_id):
         endpoint_sip = confd.endpoints_sip.get(endpoint_id)

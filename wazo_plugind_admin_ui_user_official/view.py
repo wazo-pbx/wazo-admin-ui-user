@@ -26,18 +26,13 @@ class UserView(IndexAjaxViewMixin, BaseView):
         resource_lines = [self.service.get_line(line['id']) for line in resource['lines']]
         lines = self._build_lines(resource_lines)
         groups = [group['id'] for group in resource['groups']]
-        form = self.form(data=resource,
-                         lines=lines,
-                         group_ids=groups,
-                         funckeys=self._get_funckeys(resource))
+        resource_funckeys = self.service.list_funckeys(resource['uuid'])
+        funckeys = self._build_funckeys(resource_funckeys)
+        form = self.form(data=resource, lines=lines, group_ids=groups, funckeys=funckeys)
         return form
 
-    def _get_funckeys(self, user):
-        funckeys = self.service.list_funckeys(user)['keys']
-        keys = []
-        for digit, key in funckeys.items():
-            key['digit'] = digit
-            keys.append(key)
+    def _build_funckeys(self, funckeys):
+        keys = [dict(digit=digit, **key) for digit, key in funckeys['keys'].items()]
         keys.sort(key=lambda k: k['digit'])
         return keys
 
