@@ -1,4 +1,4 @@
-# Copyright 2017 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2017-2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
 from random import randint
@@ -11,6 +11,7 @@ from wazo_admin_ui.helpers.classful import IndexAjaxViewMixin, BaseView, LoginRe
 from wazo_admin_ui.helpers.classful import extract_select2_params, build_select2_response
 
 from .form import UserForm
+
 
 class UserView(IndexAjaxViewMixin, BaseView):
 
@@ -37,8 +38,8 @@ class UserView(IndexAjaxViewMixin, BaseView):
         for digit, key in funckeys.items():
             key['digit'] = digit
             keys.append(key)
-        sorted_keys = sorted(keys, key=lambda k: k['digit'])
-        return sorted_keys
+        keys.sort(key=lambda k: k['digit'])
+        return keys
 
     def _populate_form(self, form):
         form.cti_profile.form.id.choices = self._build_set_choices_cti_profile(form)
