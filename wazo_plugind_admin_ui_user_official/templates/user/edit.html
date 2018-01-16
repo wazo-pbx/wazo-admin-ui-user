@@ -113,8 +113,8 @@
                     <th class="text-center col-sm-1">{{ _('Digit') }}</th>
                     <th class="text-center col-sm-2">{{ _('Label') }}</th>
                     <th class="text-center">{{ _('Destination') }}</th>
-                    <th class="text-center col-xs-1">{{ _('BLF') }}</th>
-                    <th class="text-center col-xs-1">{{ _('Actions') }}</th>
+                    <th class="text-center" style="width: 22px">{{ _('BLF') }}</th>
+                    <th class="text-center" style="width: 22px"></th>
                   {% endcall %}
 
                   {% call build_table_body(class_='dynamic-table') %}
@@ -189,8 +189,8 @@
     <td>{{ render_field(funckey.digit, with_label=False) }}</td>
     <td>{{ render_field(funckey['label'], with_label=False) }}</td>
     <td>{{ render_field(funckey.destination, with_label=False) }}</td>
-    <td>{{ render_field(funckey.blf, with_label=False) }}</td>
-    <td>{{ add_delete_entry_button() }}</td>
+    <td class="text-center">{{ render_field(funckey.blf, with_label=False, inputclass='text-center') }}</td>
+    <td class="text-center">{{ add_delete_entry_button() }}</td>
   </tr>
 {% endmacro %}
 
