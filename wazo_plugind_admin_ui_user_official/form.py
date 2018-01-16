@@ -1,4 +1,4 @@
-# Copyright 2017 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2017-2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
 
@@ -86,7 +86,7 @@ class GroupForm(BaseForm):
 
 class FuncKeyTemplateKeysForm(BaseForm):
     id = HiddenField()
-    label = StringField(l_('Label'), [InputRequired(), Length(max=128)])
+    label = StringField(l_('Label'), [Length(max=128)])
     digit = IntegerField(validators=[InputRequired()])
     destination = FuncKeyDestinationField()
     blf = BooleanField(l_('BLF'), default=False)
