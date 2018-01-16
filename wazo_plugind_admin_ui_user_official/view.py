@@ -133,29 +133,29 @@ class UserView(IndexAjaxViewMixin, BaseView):
         resource = form.to_dict()
         if form_id:
             resource['uuid'] = form_id
-        resource = self._map_form_to_resource_group(form, resource)
-        resource = self._map_form_to_resource_line(form, resource)
-        resource = self._map_form_to_resource_funckey(form, resource)
+        resource['groups'] = self._map_form_to_resource_group(form)
+        resource['lines'] = self._map_form_to_resource_line(form)
+        resource['funckeys'] = self._map_form_to_resource_funckey(form)
 
         return resource
 
-    def _map_form_to_resource_funckey(self, resource):
+    def _map_form_to_resource_funckey(self, form):
         funckeys = {
             'keys': {}
         }
-        for funckey in resource['funckeys']:
+        for funckey in form.funckeys:
+            funckey = funckey.to_dict()
             funckeys['keys'][funckey.pop('digit')] = funckey
 
-        resource['funckeys'] = funckeys
-        return resource
+        return funckeys
 
-    def _map_form_to_resource_group(self, form, resource):
-        resource['groups'] = [{'id': group_id} for group_id in form.group_ids.data]
-        return resource
+    def _map_form_to_resource_group(self, form):
+        return [{'id': group_id} for group_id in form.group_ids.data]
 
-    def _map_form_to_resource_line(self, form, resource):
+    def _map_form_to_resource_line(self, form):
         lines = []
-        for line in resource['lines']:
+        for line in form.lines:
+            line = line.to_dict()
             if request.method == 'POST' and not line.get('context'):
                 continue
             result = {'id': int(line['id']) if line['id'] else None,
@@ -196,8 +196,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
 
             lines.append(result)
 
-        resource['lines'] = lines
-        return resource
+        return lines
 
     def _map_resources_to_form_errors(self, form, resources):
         form.populate_errors(resources.get('user', {}))
