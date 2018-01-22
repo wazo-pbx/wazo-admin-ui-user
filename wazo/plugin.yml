@@ -1,6 +1,6 @@
 name: admin-ui-user
 namespace: official
-version: 1.1.2-2
+version: 1.1.2-3
 author: Wazo Team
 display_name: User
 min_wazo_version: 18.01
