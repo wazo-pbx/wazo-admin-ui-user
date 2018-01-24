@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
+{% set name = resource.firstname ~ (' ' ~ resource.lastname if resource.lastname else '') %}
 
 {% block content_header %}
-  {{ build_breadcrumb(_('Users'), '', 'user', ['List']) }}
+  {{ build_breadcrumb(_('Users'), '', 'user', [_('Edit'), name]) }}
 {% endblock %}
 
 {% block content %}
-    {% set name = resource.firstname ~ (' ' ~ resource.lastname if resource.lastname else '') %}
     {% call build_section_row() %}
       {% call build_form_tabs_box() %}
         {% call build_tabs_navigation() %}
