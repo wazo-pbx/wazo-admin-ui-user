@@ -100,29 +100,18 @@ class UserService(BaseConfdService):
             if device_id:
                 confd.lines(line_id).remove_device(device_id)
             confd.lines.delete(line_id)
-            existing_line_ids.remove(line_id)
-
-        # Handle case of main_line
-        existing_lines = [l for l in existing_lines if l['id'] not in line_ids_to_remove]
-        if lines and existing_lines and lines[0]['id'] != existing_lines[0]['id']:
-            for line_id in existing_line_ids:
-                line = confd.lines.get(line_id)
-                if line['device_id']:
-                    confd.lines(line).remove_device(line['device_id'])
-                confd.users(user).remove_line(line_id)
-            existing_line_ids = set([])
 
         for line in lines:
             if line.get('id'):
                 self._update_line_and_associations(line)
-                if line['id'] not in existing_line_ids:
-                    confd.users(user).add_line(line)
                 self._update_device_association(line['id'], line.get('device_id'))
             else:
                 line = self._create_line_and_associations(line)
-                confd.users(user).add_line(line)
                 if line.get('device_id'):
                     confd.lines(line).add_device(line['device_id'])
+
+        if line_ids != existing_line_ids or (line and lines[0]['id'] != existing_lines[0]['id']):
+            confd.users(user).update_lines(lines)
 
     def _update_device_association(self, line_id, device_id):
         existing_device_id = confd.lines.get(line_id)['device_id']
