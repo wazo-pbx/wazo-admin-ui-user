@@ -78,12 +78,12 @@
                 {% call build_table() %}
 
                   {% call build_table_headers() %}
-                    <th>Protocol</th>
-                    <th>Name</th>
-                    <th>Context</th>
-                    <th>Extension</th>
-                    <th style="min-width: 175px">Device</th>
-                    <th>Line (N°)</th>
+                    <th>{{ _('Protocol') }}</th>
+                    <th>{{ _('Name') }}</th>
+                    <th>{{ _('Context') }}</th>
+                    <th>{{ _('Extension') }}</th>
+                    <th style="min-width: 175px">{{ _('Device') }}</th>
+                    <th>{{ _('Line (N°)') }}</th>
                     <th style="width: 21px"></th>
                   {% endcall %}
 
@@ -186,11 +186,16 @@
       {{ render_field(line.extensions[0].exten,
                       with_label=False,
                       class_='line-extension',
+                      data_allow_clear=True,
                       data_allow_custom_values=True,
-                      data_available_extension_href=url_for(listing_urls['available_extension_user'])) }}
+                      data_listing_href=url_for(listing_urls['available_extension_user'])) }}
     </td>
     <td>
-      {{ render_field(line.device, with_label=False, data_listing_href=url_for(listing_urls['device'])) }}
+      {{ render_field(line.device,
+                      with_label=False,
+                      class_='line-device',
+                      data_allow_clear=True,
+                      data_listing_href=url_for(listing_urls['device'])) }}
     </td>
     <td>
       {{ render_field(line.position, with_label=False) }}
