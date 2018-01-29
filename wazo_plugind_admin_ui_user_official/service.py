@@ -50,8 +50,7 @@ class UserService(BaseConfdService):
             confd.users(user['uuid']).update_fallbacks(user['fallbacks'])
 
         if user.get('services'):
-            for service_name, service in user['services'].items():
-                confd.users(user['uuid']).update_service(service_name, service)
+            confd.users(user['uuid']).update_services(user['services'])
 
         if user.get('forwards'):
             confd.users(user['uuid']).update_forwards(user['forwards'])
