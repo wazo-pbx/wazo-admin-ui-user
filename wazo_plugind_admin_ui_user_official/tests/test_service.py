@@ -1,4 +1,4 @@
-# Copyright 2017 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2017-2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
 import unittest
@@ -106,19 +106,20 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         self.service._update_user_lines(user)
 
         self.confd.lines.create.assert_called_once_with(new_line)
-        self.confd.users.return_value.add_line.assert_called_once_with(new_line)
+        self.confd.users.return_value.update_lines.assert_called_once_with([new_line])
         self.confd.lines.update.assert_not_called()
         self.confd.lines.delete.assert_not_called()
 
     def test_when_line_and_no_existing_line_with_id(self):
-        line = {'id': 'line-id'}
-        user = {'uuid': '1234', 'lines': [line]}
+        lines = [{'id': 'line-id'}]
+        user = {'uuid': '1234', 'lines': lines}
         self.confd.users.get.return_value = {'lines': []}
 
         self.service._update_user_lines(user)
 
-        self.confd.lines.update.assert_called_once_with(line)
-        self.confd.users.return_value.add_line.assert_called_once_with(line)
+        for line in lines:
+            self.confd.lines.update.assert_called_once_with(line)
+        self.confd.users.return_value.update_lines.assert_called_once_with(lines)
 
     def test_when_line_and_no_existing_line_with_endpoint_sip(self):
         user = {'uuid': '1234', 'lines': [{'endpoint_sip': {}}]}
@@ -220,37 +221,9 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
 
         self.service._update_user_lines(user)
 
-        self.confd.users.return_value.remove_line.assert_has_calls(
-            [call('line1-id'), call('line2-id')], any_order=True
-        )
         self.confd.lines.update.assert_has_calls([call(line2), call(line1)])
-        self.confd.users.return_value.add_line.assert_has_calls([call(line2), call(line1)])
+        self.confd.users.return_value.update_lines.called_once_with([line2, line1])
         self.confd.lines.delete.assert_not_called()
-
-    def test_when_swapping_lines_with_device_then_device_is_dissociated(self):
-        line1 = {'id': 'line1-id', 'device_id': 'device1-id'}
-        line2 = {'id': 'line2-id', 'device_id': 'device2-id'}
-        user = {'uuid': '1234', 'lines': [line2, line1]}
-        self.confd.users.get.return_value = {'lines': [line1, line2]}
-        self.confd.lines.get.side_effect = lambda x: {'line1-id': {'device_id': 'device1-id'},
-                                                      'line2-id': {'device_id': 'device2-id'}}[x]
-
-        self.service._update_user_lines(user)
-
-        self.confd.lines.return_value.remove_device.assert_has_calls(
-            [call('device1-id'), call('device2-id')], any_order=True
-        )
-
-    def test_when_swapping_lines_with_device_then_device_is_reassociated(self):
-        line1 = {'id': 'line1-id', 'device_id': 'device1-id'}
-        line2 = {'id': 'line2-id', 'device_id': 'device2-id'}
-        user = {'uuid': '1234', 'lines': [line2, line1]}
-        self.confd.users.get.return_value = {'lines': [line1, line2]}
-        self.confd.lines.get.return_value = {'device_id': None}
-
-        self.service._update_user_lines(user)
-
-        self.confd.lines.return_value.add_device.assert_has_calls([call('device2-id'), call('device1-id')])
 
     def test_when_extension_is_updated_and_it_is_associated_with_other_lines(self):
         extension = {'id': 'extension-id', 'exten': '123', 'context': 'default'}
