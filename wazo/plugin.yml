@@ -22,3 +22,5 @@ depends:
     version: 0.0.2-2
   - name: admin-ui-schedule
     namespace: official
+  - name: admin-ui-voicemail
+    namespace: official

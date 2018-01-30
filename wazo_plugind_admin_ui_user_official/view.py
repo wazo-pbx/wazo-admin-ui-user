@@ -46,6 +46,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
                 form_extension.exten.choices = self._build_set_choices_extension(form_extension)
         form.group_ids.choices = self._build_set_choices_groups(form.groups)
         form.schedules[0].form.id.choices = self._build_set_choices_schedule(form.schedules[0])
+        form.voicemail.form.id.choices = self._build_set_choices_voicemail(form)
         return form
 
     def _build_set_choices_device(self, line):
@@ -91,6 +92,11 @@ class UserView(IndexAjaxViewMixin, BaseView):
         if not schedule.form.id.data or schedule.form.id.data == 'None':
             return []
         return [(schedule.form.id.data, schedule.form.name.data)]
+
+    def _build_set_choices_voicemail(self, user):
+        if not user.voicemail.form.id.data or user.voicemail.form.id.data == 'None':
+            return []
+        return [(user.voicemail.form.id.data, user.voicemail.form.name.data)]
 
     def _build_lines(self, lines):
         results = []

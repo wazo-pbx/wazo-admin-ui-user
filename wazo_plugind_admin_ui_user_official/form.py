@@ -98,6 +98,11 @@ class ScheduleForm(BaseForm):
     name = HiddenField()
 
 
+class VoicemailForm(BaseForm):
+    id = SelectField(l_('Voicemail'), choices=[])
+    name = HiddenField()
+
+
 class UserForm(BaseForm):
     firstname = StringField(l_('Firstname'), [InputRequired(), Length(max=128)])
     lastname = StringField(l_('Lastname'), [Length(max=128)])
@@ -121,6 +126,7 @@ class UserForm(BaseForm):
     groups = FieldList(FormField(GroupForm))
     funckeys = FieldList(FormField(FuncKeyTemplateKeysForm))
     schedules = FieldList(FormField(ScheduleForm), min_entries=1)
+    voicemail = FormField(VoicemailForm)
     submit = SubmitField(l_('Submit'))
 
 
