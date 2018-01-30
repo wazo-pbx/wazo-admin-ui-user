@@ -102,16 +102,16 @@ class UserService(BaseConfdService):
             confd.users(user).add_schedule(user['schedules'][0])
 
     def _update_voicemail(self, existing_user, user):
-        existing_voicemail_id = new_voicemail_id = None
-        if existing_user['voicemail']:
-            existing_voicemail_id = existing_user['voicemail'].get('id')
-        if user['voicemail'].get('id'):
-            new_voicemail_id = int(user['voicemail'].get('id'))
-        if existing_voicemail_id and existing_voicemail_id == new_voicemail_id:
+        existing_voicemail_id = existing_user['voicemail'].get('id') if existing_user['voicemail'] else None
+        voicemail_id = int(user['voicemail']['id']) if user['voicemail'].get('id') else None
+
+        if existing_voicemail_id == voicemail_id:
             return
-        if existing_voicemail_id and existing_voicemail_id != new_voicemail_id:
+
+        if existing_voicemail_id:
             confd.users(user).remove_voicemail()
-        if new_voicemail_id:
+
+        if voicemail_id:
             confd.users(user).add_voicemail(user['voicemail'])
 
     def _update_user_lines(self, existing_user, user):
