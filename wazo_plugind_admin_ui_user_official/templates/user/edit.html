@@ -18,6 +18,7 @@
           {{ add_tab_navigation_item('groups', _('Groups')) }}
           {{ add_tab_navigation_item('funckeys', _('FuncKeys')) }}
           {{ add_tab_navigation_item('schedule', _('Schedule')) }}
+          {{ add_tab_navigation_item('voicemail', _('Voicemail')) }}
         {% endcall %}
         {% call build_form(action=url_for('.UserView:put', id=resource.uuid)) %}
           {% call build_tabs_content() %}
@@ -137,6 +138,15 @@
                                 data_listing_href=url_for(listing_urls['schedule']),
                                 data_allow_clear=True,
                                 data_placeholder=_('Choose Schedules')) }}
+              {% endcall %}
+            {% endcall %}
+
+            {% call build_tab_content_item('voicemail') %}
+              {% call add_default_fields(form=form, submit_value=_('Update')) %}
+              {{ render_field(form.voicemail['id'],
+                              data_listing_href=url_for(listing_urls['voicemail']),
+                              data_allow_clear=True,
+                              data_placeholder=_('Choose Voicemail')) }}
               {% endcall %}
             {% endcall %}
 

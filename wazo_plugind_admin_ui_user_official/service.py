@@ -61,6 +61,7 @@ class UserService(BaseConfdService):
             self._update_schedules(existing_user, user)
 
         confd.users(user['uuid']).update_cti_profile(user['cti_profile'])
+        self._update_voicemail(existing_user, user)
         self._update_user_lines(existing_user, user)
 
         if 'groups' in user and user.get('lines'):
@@ -99,6 +100,19 @@ class UserService(BaseConfdService):
             confd.users(user).remove_schedule(schedule_id)
         if user['schedules'][0].get('id'):
             confd.users(user).add_schedule(user['schedules'][0])
+
+    def _update_voicemail(self, existing_user, user):
+        existing_voicemail_id = existing_user['voicemail'].get('id') if existing_user['voicemail'] else None
+        voicemail_id = int(user['voicemail']['id']) if user['voicemail'].get('id') else None
+
+        if existing_voicemail_id == voicemail_id:
+            return
+
+        if existing_voicemail_id:
+            confd.users(user).remove_voicemail()
+
+        if voicemail_id:
+            confd.users(user).add_voicemail(user['voicemail'])
 
     def _update_user_lines(self, existing_user, user):
         lines = user.get('lines', [])
