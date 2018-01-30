@@ -93,6 +93,11 @@ class FuncKeyTemplateKeysForm(BaseForm):
     submit = SubmitField()
 
 
+class ScheduleForm(BaseForm):
+    id = SelectField(l_('Schedule'), choices=[])
+    name = HiddenField()
+
+
 class UserForm(BaseForm):
     firstname = StringField(l_('Firstname'), [InputRequired(), Length(max=128)])
     lastname = StringField(l_('Lastname'), [Length(max=128)])
@@ -115,6 +120,7 @@ class UserForm(BaseForm):
     group_ids = SelectMultipleField(l_('Groups'), choices=[])
     groups = FieldList(FormField(GroupForm))
     funckeys = FieldList(FormField(FuncKeyTemplateKeysForm))
+    schedules = FieldList(FormField(ScheduleForm), min_entries=1)
     submit = SubmitField(l_('Submit'))
 
 

@@ -20,3 +20,5 @@ depends:
   - name: admin-ui-funckey
     namespace: official
     version: 0.0.2-2
+  - name: admin-ui-schedule
+    namespace: official

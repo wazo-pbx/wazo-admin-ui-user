@@ -45,6 +45,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
             for form_extension in form_line.extensions:
                 form_extension.exten.choices = self._build_set_choices_extension(form_extension)
         form.group_ids.choices = self._build_set_choices_groups(form.groups)
+        form.schedules[0].form.id.choices = self._build_set_choices_schedule(form.schedules[0])
         return form
 
     def _build_set_choices_device(self, line):
@@ -85,6 +86,11 @@ class UserView(IndexAjaxViewMixin, BaseView):
         if not user.cti_profile.form.id.data or user.cti_profile.form.id.data == 'None':
             return []
         return [(user.cti_profile.form.id.data, user.cti_profile.form.name.data)]
+
+    def _build_set_choices_schedule(self, schedule):
+        if not schedule.form.id.data or schedule.form.id.data == 'None':
+            return []
+        return [(schedule.form.id.data, schedule.form.name.data)]
 
     def _build_lines(self, lines):
         results = []
