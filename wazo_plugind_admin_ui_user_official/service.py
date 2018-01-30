@@ -110,7 +110,7 @@ class UserService(BaseConfdService):
                 if line.get('device_id'):
                     confd.lines(line).add_device(line['device_id'])
 
-        if line_ids != existing_line_ids or (line and lines[0]['id'] != existing_lines[0]['id']):
+        if line_ids != existing_line_ids or (lines and lines[0]['id'] != existing_lines[0]['id']):
             confd.users(user).update_lines(lines)
 
     def _update_device_association(self, line_id, device_id):
