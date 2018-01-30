@@ -46,6 +46,8 @@ class UserService(BaseConfdService):
     def update(self, user):
         super(UserService, self).update(user)
 
+        existing_user = confd.users.get(user)
+
         if user.get('fallbacks'):
             confd.users(user['uuid']).update_fallbacks(user['fallbacks'])
 
@@ -55,8 +57,11 @@ class UserService(BaseConfdService):
         if user.get('forwards'):
             confd.users(user['uuid']).update_forwards(user['forwards'])
 
+        if user.get('schedules'):
+            self._update_schedules(existing_user, user)
+
         confd.users(user['uuid']).update_cti_profile(user['cti_profile'])
-        self._update_user_lines(user)
+        self._update_user_lines(existing_user, user)
 
         if 'groups' in user and user.get('lines'):
             confd.users(user).update_groups(user['groups'])
@@ -88,10 +93,17 @@ class UserService(BaseConfdService):
                 line = self._create_line_and_associations(line)
             confd.users(user).add_line(line)
 
-    def _update_user_lines(self, user):
+    def _update_schedules(self, existing_user, user):
+        if existing_user['schedules']:
+            schedule_id = existing_user['schedules'][0]['id']
+            confd.users(user).remove_schedule(schedule_id)
+        if user['schedules'][0].get('id'):
+            confd.users(user).add_schedule(user['schedules'][0])
+
+    def _update_user_lines(self, existing_user, user):
         lines = user.get('lines', [])
         line_ids = set([l.get('id') for l in lines])
-        existing_lines = confd.users.get(user['uuid'])['lines']
+        existing_lines = existing_user['lines']
         existing_line_ids = set([l['id'] for l in existing_lines])
 
         line_ids_to_remove = existing_line_ids - line_ids
