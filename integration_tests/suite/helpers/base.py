@@ -3,7 +3,12 @@
 
 import os
 
+from pyvirtualdisplay import Display
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from wazo_admin_ui_test_helpers.asset_launching_test_case import AdminUIAssetLaunchingTestCase
+from wazo_admin_ui_test_helpers.pages.browser import Browser
+from wazo_admin_ui_test_helpers.pages.page import Page
 from xivo_confd_test_helpers.helpers import setup_confd as setup_confd_helpers
 
 from .pages.user import UserListPage
@@ -26,6 +31,29 @@ class IntegrationTest(AdminUIAssetLaunchingTestCase):
 
     @classmethod
     def setup_browser(cls):
-        browser = super(IntegrationTest, cls).setup_browser()
+        username = 'xivo-auth-mock-doesnt-care-about-username'
+        password = 'xivo-auth-mock-doesnt-care-about-password'
+        Page.CONFIG['base_url'] = 'https://admin-ui:9296'
+
+        browser_port = cls.service_port(4444, 'browser')
+        remote_url = 'http://localhost:{port}/wd/hub'.format(port=browser_port)
+        browser = RemoteBrowser(remote_url, username, password)
+
         browser.pages['users'] = UserListPage
         return browser
+
+
+class RemoteBrowser(Browser):
+
+    def __init__(self, remote_url, username, password):
+        self.remote_url = remote_url
+        self.username = username
+        self.password = password
+
+    def start(self):
+        self.driver = webdriver.Remote(command_executor=self.remote_url, desired_capabilities=DesiredCapabilities.FIREFOX)
+        self.driver.set_window_size(1920, 1080)
+        self._login()
+
+    def stop(self):
+        self.driver.close()
