@@ -83,7 +83,7 @@ function add_available_extensions() {
     }
   }
 
-  let ajax_url = $(extension_select).attr('data-available_extension_href')
+  let ajax_url = $(extension_select).attr('data-listing_href')
   if (! ajax_url || ! context_select) {
     return;
   }
@@ -92,6 +92,7 @@ function add_available_extensions() {
     allowClear: true,
     theme: 'bootstrap',
     placeholder: 'Select...',
+    tags: true,
     ajax: {
       url: ajax_url,
       data: function (params) {
