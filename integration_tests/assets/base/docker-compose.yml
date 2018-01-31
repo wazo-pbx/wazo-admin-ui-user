@@ -4,12 +4,13 @@ sync:
     - admin-ui
     - auth
     - confd
+    - browser
     - postgres
     - provd
     - rabbitmq
     - sysconfd
   environment:
-    PORTS: "5432 5672 8666 8668 9296 9486 9497"
+    PORTS: "4444 5432 5672 8666 8668 9296 9486 9497"
     TIMEOUT: "${INTEGRATION_TEST_TIMEOUT}"
 
 admin-ui:
@@ -41,6 +42,13 @@ confd:
     - sysconfd
   volumes:
     - "./etc/xivo-confd:/etc/xivo-confd"
+
+browser:
+  image: selenium/standalone-chrome
+  ports:
+    - "4444"
+  links:
+    - admin-ui
 
 postgres:
   image: wazopbx/postgres-test
