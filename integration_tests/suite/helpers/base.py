@@ -51,7 +51,7 @@ class RemoteBrowser(Browser):
         self.password = password
 
     def start(self):
-        self.driver = webdriver.Remote(command_executor=self.remote_url, desired_capabilities=DesiredCapabilities.CHROME)
+        self.driver = webdriver.Remote(command_executor=self.remote_url, desired_capabilities=DesiredCapabilities.FIREFOX)
         self.driver.set_window_size(1920, 1080)
         self._login()
 

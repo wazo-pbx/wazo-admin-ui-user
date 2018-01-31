@@ -44,7 +44,7 @@ confd:
     - "./etc/xivo-confd:/etc/xivo-confd"
 
 browser:
-  image: selenium/standalone-chrome
+  image: selenium/standalone-firefox
   ports:
     - "4444"
   links:
