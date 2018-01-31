@@ -1,12 +1,19 @@
-# Copyright 2017 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2017-2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
-from hamcrest import assert_that, equal_to, contains_inanyorder, has_item
+from hamcrest import (
+    assert_that,
+    contains_inanyorder,
+    equal_to,
+    has_item,
+)
 from unittest import skip
 
-from xivo_confd_test_helpers import fixtures
-from xivo_confd_test_helpers import associations as a
-from xivo_confd_test_helpers import scenarios as s
+from xivo_confd_test_helpers import (
+    associations as a,
+    fixtures,
+    scenarios as s,
+)
 from .helpers.base import IntegrationTest
 
 
@@ -150,7 +157,6 @@ class TestUser(IntegrationTest):
             assert_that(dest.type_choices(), contains_inanyorder(
                 'None',
                 'Custom',
-                'Sound',
                 'Hangup',
                 'Application',
                 'User',
@@ -199,36 +205,6 @@ class TestUser(IntegrationTest):
             assert_that(page.is_not_savable())
             dest.fill_sub_redirection_option('timeout', 30)
             assert_that(dest.get_sub_redirection_option_value('timeout'), equal_to('30'))
-            assert_that(page.is_savable())
-
-    @fixtures.user()
-    def test_sound_destination(self, user):
-        page = self.browser.users.edit_by_id(user['uuid'])
-        fallbacks_tab = page.fallbacks()
-
-        for fallback in ('noanswer_destination',
-                         'busy_destination',
-                         'congestion_destination',
-                         'fail_destination'):
-            dest = getattr(fallbacks_tab, fallback)()
-            assert_that(dest.type_choices(), has_item('Sound'))
-
-            dest.select_type('Sound')
-            assert_that(dest.get_selected_type_value(), equal_to('sound'))
-            assert_that(page.is_not_savable())
-
-            dest.fill_redirection_option('filename', s.random_string(300))
-            assert_that(len(dest.get_redirection_option_value('filename')), equal_to(255))
-            dest.fill_redirection_option('filename', 'hello-world')
-            assert_that(dest.get_redirection_option_value('filename'), 'hello-world')
-            assert_that(page.is_savable())
-
-            dest.fill_redirection_option('skip', True)
-            assert_that(dest.get_redirection_option_value('skip'), equal_to(True))
-            assert_that(page.is_savable())
-
-            dest.fill_redirection_option('no_answer', True)
-            assert_that(dest.get_redirection_option_value('no_answer'), equal_to(True))
             assert_that(page.is_savable())
 
     @fixtures.user()
