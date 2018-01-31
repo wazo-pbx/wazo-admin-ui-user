@@ -49,6 +49,7 @@ browser:
     - "4444"
   links:
     - admin-ui
+  shm_size: '2GB'
 
 postgres:
   image: wazopbx/postgres-test
