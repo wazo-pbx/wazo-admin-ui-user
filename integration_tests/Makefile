@@ -10,6 +10,7 @@ docker-pull:
 	docker pull n3llyb0y/wait
 	docker pull p0bailey/docker-flask
 	docker pull rabbitmq
+	docker pull selenium/standalone-firefox
 	docker pull wazopbx/wazo-admin-ui
 	docker pull wazopbx/xivo-auth-mock
 	docker pull wazopbx/postgres
