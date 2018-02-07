@@ -4,6 +4,7 @@
 import unittest
 
 from mock import Mock, call
+from hamcrest import assert_that, contains_inanyorder, has_entries
 
 import wazo_admin_ui.helpers.service
 import wazo_plugind_admin_ui_user_official.service as service
@@ -210,7 +211,14 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         self.service._update_line_and_associations(line)
 
         self.confd.endpoints_sip.get.assert_called_once_with(endpoint_sip)
-        self.confd.endpoints_sip.update.assert_called_once_with(expected_endpoint_sip)
+        self.confd.endpoints_sip.update.assert_called_once()
+        args, kwargs = self.confd.endpoints_sip.update.call_args
+        assert_that(args[0], has_entries(options=contains_inanyorder(
+            ('toto', 'titi'),
+            ('allow', 'no'),
+            ('avpf', 'yes'),
+            ('transport', 'wss'),
+        )))
 
     def test_when_line_and_no_existing_line_with_device_id(self):
         user = {'uuid': '1234', 'lines': [{'endpoint_sip': {}, 'device_id': 'device-id'}]}
