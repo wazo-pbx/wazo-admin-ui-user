@@ -179,6 +179,39 @@ class TestUserServiceUpdateUserLines(unittest.TestCase):
         self.confd.extensions.create.assert_not_called()
         self.confd.lines.return_value.add_extension.assert_called_once_with({'id': 'extension-id'})
 
+    def test_when_line_with_webrtc_endpoint_sip(self):
+        existing_endpoint_sip = {
+            'id': 1,
+            'options': [
+                ['toto', 'titi'],
+                ['allow', 'no'],
+                ['avpf', 'no']
+            ]
+        }
+        endpoint_sip = {
+            'id': 1,
+            'options': [
+                ('transport', 'wss'),
+                ('avpf', 'yes')
+            ]
+        }
+        expected_endpoint_sip = {
+            'id': 1,
+            'options': [
+                ('toto', 'titi'),
+                ('allow', 'no'),
+                ('avpf', 'yes'),
+                ('transport', 'wss')
+            ]
+        }
+        line = {'id': 1, 'endpoint_sip': endpoint_sip}
+        self.confd.endpoints_sip.get.return_value = existing_endpoint_sip
+
+        self.service._update_line_and_associations(line)
+
+        self.confd.endpoints_sip.get.assert_called_once_with(endpoint_sip)
+        self.confd.endpoints_sip.update.assert_called_once_with(expected_endpoint_sip)
+
     def test_when_line_and_no_existing_line_with_device_id(self):
         user = {'uuid': '1234', 'lines': [{'endpoint_sip': {}, 'device_id': 'device-id'}]}
         existing_user = {'lines': []}
