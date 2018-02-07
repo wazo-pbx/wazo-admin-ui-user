@@ -4,7 +4,7 @@ namespace: official
 version: 1.2.0-1
 author: Wazo Team
 display_name: User
-min_wazo_version: 18.01
+min_wazo_version: 18.02
 tags:
   - users
 homepage: https://github.com/wazo-pbx/wazo-admin-ui-user
