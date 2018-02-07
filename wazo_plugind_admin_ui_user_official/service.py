@@ -187,10 +187,8 @@ class UserService(BaseConfdService):
     def _update_line_and_associations(self, line):
         if line.get('endpoint_sip'):
             # If we move from SIP to WEBRTC
-            existing_endpoint_sip = confd.endpoints_sip.get(line['endpoint_sip'])
-            existing_endpoint_sip_options = [tuple(option) for option in existing_endpoint_sip['options']]
-            merged_endpoint_sip = list(set(line['endpoint_sip']['options'] + existing_endpoint_sip_options))
-            line['endpoint_sip']['options'] = merged_endpoint_sip
+            if 'options' in line['endpoint_sip']:
+                self._update_endoint_sip_webrtc(line['endpoint_sip'])
             confd.endpoints_sip.update(line['endpoint_sip'])
 
         extensions = line.get('extensions', [])
@@ -214,6 +212,11 @@ class UserService(BaseConfdService):
                 confd.extensions.delete(existing_extensions[0])
 
         confd.lines.update(line)
+
+    def _update_endoint_sip_webrtc(self, endpoint_sip):
+        existing_endpoint_sip_options = confd.endpoints_sip.get(endpoint_sip)['options']
+        merged_endpoint_sip_options_dict = {**dict(existing_endpoint_sip_options), **dict(endpoint_sip['options'])}
+        endpoint_sip['options'] = [(k, v) for k, v in merged_endpoint_sip_options_dict.items()]
 
     def _is_extension_associated_with_other_lines(self, extension):
         if len(extension['lines']) > 1:
