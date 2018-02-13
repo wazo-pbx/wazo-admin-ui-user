@@ -24,10 +24,6 @@
           {{ render_field(form.lastname) }}
           {{ render_field(form.email) }}
           {{ render_field(form.password, type='password', data_toggle='password') }}
-          {{ render_field(form.cti_profile['id'],
-                          data_listing_href=url_for(listing_urls['cti_profile']),
-                          data_allow_clear=True,
-                          data_placeholder=_('Choose your CTI profile')) }}
           {% do form.lines.append_entry() %}
           {{ render_field(form.lines[0]['id']) }}
           {{ render_field(form.lines[0].endpoint_sip_id) }}

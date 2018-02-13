@@ -39,7 +39,8 @@ class UserService(BaseConfdService):
     def create(self, user):
         user['uuid'] = super(UserService, self).create(user)['uuid']
         if user.get('username') and user.get('password'):
-            confd.users(user['uuid']).update_cti_profile(user['cti_profile'])
+            # ID 3 is the default ID for Client profile in populate.sql
+            confd.users(user['uuid']).update_cti_profile({'id': 3})
         self._create_user_lines(user)
 
     def update(self, user):
