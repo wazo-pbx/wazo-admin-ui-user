@@ -86,6 +86,11 @@ class UserView(IndexAjaxViewMixin, BaseView):
     def _build_set_choices_cti_profile(self, user):
         if not user.cti_profile.form.id.data or user.cti_profile.form.id.data == 'None':
             return []
+        else:
+            cti_profile = self.service.get_cti_profile(user.cti_profile.form.id.data)
+            if cti_profile:
+                return [(cti_profile['id'], cti_profile['name'])]
+
         return [(user.cti_profile.form.id.data, user.cti_profile.form.name.data)]
 
     def _build_set_choices_schedule(self, schedule):
@@ -231,3 +236,15 @@ class UserDestinationView(LoginRequiredView):
             results.append({'id': user[field_id], 'text': text})
 
         return jsonify(build_select2_response(results, users['total'], params))
+
+
+class CtiProfilesView(LoginRequiredView):
+
+    def list_json(self):
+        params = extract_select2_params(request.args)
+        cti_profiles = self.service.list()
+        results = []
+        for cti_profile in cti_profiles['items']:
+            results.append({'id': cti_profile['id'], 'text': cti_profile['name']})
+
+        return jsonify(build_select2_response(results, cti_profiles['total'], params))

@@ -252,3 +252,12 @@ class UserService(BaseConfdService):
         result = confd.contexts.list(name=context)
         for context in result['items']:
             return context
+
+    def get_cti_profile(self, id):
+        return confd.cti_profiles.get(id)
+
+
+class CtiService(BaseConfdService):
+
+    def list(self):
+        return confd.cti_profiles.list()
