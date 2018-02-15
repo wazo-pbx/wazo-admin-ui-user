@@ -19,6 +19,7 @@
           {{ add_tab_navigation_item('funckeys', _('FuncKeys')) }}
           {{ add_tab_navigation_item('schedule', _('Schedule')) }}
           {{ add_tab_navigation_item('voicemail', _('Voicemail')) }}
+          {{ add_tab_navigation_item('callpermissions', _('Call Permissions')) }}
         {% endcall %}
         {% call build_form(action=url_for('.UserView:put', id=resource.uuid)) %}
           {% call build_tabs_content() %}
@@ -150,6 +151,16 @@
                               data_placeholder=_('Choose Voicemail')) }}
               {% endcall %}
             {% endcall %}
+
+          {% call build_tab_content_item('callpermissions') %}
+            {% call add_default_fields(form=form, submit_value=_('Update')) %}
+                {{ render_field(form.call_permissions[0]['name']) }}
+                {{ render_field(form.call_permissions[0]['id'],
+                                data_listing_href=url_for(listing_urls['callpermission']),
+                                data_allow_clear=True,
+                                data_placeholder=_('Choose Call Permissions')) }}
+            {% endcall %}
+          {% endcall %}
 
           {% endcall %}
         {% endcall %}

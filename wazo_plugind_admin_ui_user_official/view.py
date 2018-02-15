@@ -14,13 +14,12 @@ from .form import UserForm
 
 
 class UserView(IndexAjaxViewMixin, BaseView):
-
     form = UserForm
     resource = 'user'
 
     @classy_menu_item('.users', l_('Users'), order=1, icon="user")
     def index(self):
-        return super(UserView, self).index()
+        return super().index()
 
     def _map_resources_to_form(self, resource):
         resource_lines = [self.service.get_line(line['id']) for line in resource['lines']]
@@ -47,6 +46,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
         form.group_ids.choices = self._build_set_choices_groups(form.groups)
         form.schedules[0].form.id.choices = self._build_set_choices_schedule(form.schedules[0])
         form.voicemail.form.id.choices = self._build_set_choices_voicemail(form)
+        form.call_permissions[0].form.id.choices = self._build_set_choices_callpermissions(form.call_permissions[0])
         return form
 
     def _build_set_choices_device(self, line):
@@ -102,6 +102,11 @@ class UserView(IndexAjaxViewMixin, BaseView):
         if not user.voicemail.form.id.data or user.voicemail.form.id.data == 'None':
             return []
         return [(user.voicemail.form.id.data, user.voicemail.form.name.data)]
+
+    def _build_set_choices_callpermissions(self, callpermissions):
+        if not callpermissions.form.id.data or callpermissions.form.id.data == 'None':
+            return []
+        return [(callpermissions.form.id.data, callpermissions.form.name.data)]
 
     def _build_lines(self, lines):
         results = []
