@@ -109,6 +109,7 @@ class UserForm(BaseForm):
     username = StringField(l_('Username'), [Length(min=2, max=254)])
     password = StringField(l_('Password'), [Length(min=4, max=64)])
     email = EmailField(l_('Email'), [Length(max=254)])
+    caller_id = StringField(l_('Caller ID'), [Length(max=80)])
     mobile_phone_number = StringField(l_('Phone mobile'), [Length(max=80)])
     ring_seconds = IntegerField(l_('Ring seconds'), [NumberRange(min=0, max=60)])
     music_on_hold = SelectField(l_('Music On Hold'), choices=[])
