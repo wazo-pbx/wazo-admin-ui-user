@@ -27,6 +27,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
         groups = [group['id'] for group in resource['groups']]
         resource_funckeys = self.service.list_funckeys(resource['uuid'])
         funckeys = self._build_funckeys(resource_funckeys)
+        resource['call_permission_ids'] = [call_permission['id'] for call_permission in resource['call_permissions']]
         form = self.form(data=resource, lines=lines, group_ids=groups, funckeys=funckeys)
         return form
 
@@ -46,7 +47,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
         form.group_ids.choices = self._build_set_choices_groups(form.groups)
         form.schedules[0].form.id.choices = self._build_set_choices_schedule(form.schedules[0])
         form.voicemail.form.id.choices = self._build_set_choices_voicemail(form)
-        form.call_permissions[0].form.id.choices = self._build_set_choices_callpermissions(form.call_permissions[0])
+        form.call_permission_ids.choices = self._build_set_choices_callpermissions(form.call_permissions)
         return form
 
     def _build_set_choices_device(self, line):
@@ -103,10 +104,13 @@ class UserView(IndexAjaxViewMixin, BaseView):
             return []
         return [(user.voicemail.form.id.data, user.voicemail.form.name.data)]
 
-    def _build_set_choices_callpermissions(self, callpermissions):
-        if not callpermissions.form.id.data or callpermissions.form.id.data == 'None':
-            return []
-        return [(callpermissions.form.id.data, callpermissions.form.name.data)]
+    def _build_set_choices_callpermissions(self, call_permissions):
+        results = []
+        for call_permission in call_permissions:
+            if not call_permission.form.id.data or call_permission.form.id.data == 'None':
+                return []
+            results.append((call_permission.form.id.data, call_permission.form.name.data))
+        return results
 
     def _build_lines(self, lines):
         results = []
@@ -153,6 +157,8 @@ class UserView(IndexAjaxViewMixin, BaseView):
         resource['groups'] = self._map_form_to_resource_group(form)
         resource['lines'] = self._map_form_to_resource_line(form)
         resource['funckeys'] = self._map_form_to_resource_funckey(form)
+        resource['call_permissions'] = [{'id': call_permission_id} for call_permission_id in
+                                        form.call_permission_ids.data]
 
         return resource
 

@@ -120,11 +120,13 @@ class UserService(BaseConfdService):
             confd.users(user).add_schedule(user['schedules'][0])
 
     def _update_callpermissions(self, existing_user, user):
-        if existing_user.get('call_permissions'):
-            call_permission_id = existing_user['call_permissions'][0]['id']
-            confd.users(user).remove_call_permission(call_permission_id)
-        if user['call_permissions'][0].get('id'):
-            confd.users(user).add_call_permission(user['call_permissions'][0])
+        if existing_user:
+            existing_call_permissions = confd.users(existing_user).list_call_permissions()
+            for existing_call_permission in existing_call_permissions['items']:
+                confd.users(existing_user).remove_call_permission(existing_call_permission['call_permission_id'])
+
+        for call_permission in user['call_permissions']:
+            confd.users(user).add_call_permission(call_permission['id'])
 
     def _update_voicemail(self, existing_user, user):
         existing_voicemail_id = existing_user['voicemail'].get('id') if existing_user['voicemail'] else None

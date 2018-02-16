@@ -103,8 +103,8 @@ class VoicemailForm(BaseForm):
     name = HiddenField()
 
 
-class CallpermissionsForm(BaseForm):
-    id = SelectField(l_('Call Permissions'), choices=[])
+class CallPermissionForm(BaseForm):
+    id = HiddenField()
     name = HiddenField()
 
 
@@ -133,7 +133,8 @@ class UserForm(BaseForm):
     funckeys = FieldList(FormField(FuncKeyTemplateKeysForm))
     schedules = FieldList(FormField(ScheduleForm), min_entries=1)
     voicemail = FormField(VoicemailForm)
-    call_permissions = FieldList(FormField(CallpermissionsForm), min_entries=1)
+    call_permission_ids = SelectMultipleField(l_('Call Permissions'), choices=[])
+    call_permissions = FieldList(FormField(CallPermissionForm))
     submit = SubmitField(l_('Submit'))
 
 

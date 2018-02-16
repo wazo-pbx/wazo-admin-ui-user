@@ -154,11 +154,11 @@
 
           {% call build_tab_content_item('callpermissions') %}
             {% call add_default_fields(form=form, submit_value=_('Update')) %}
-                {{ render_field(form.call_permissions[0]['name']) }}
-                {{ render_field(form.call_permissions[0]['id'],
-                                data_listing_href=url_for(listing_urls['callpermission']),
-                                data_allow_clear=True,
-                                data_placeholder=_('Choose Call Permissions')) }}
+              {{ render_field(form.call_permission_ids,
+                              data_listing_href=url_for(listing_urls['callpermission']),
+                              data_allow_clear=True,
+                              data_placeholder=_('Choose Call Permissions')) }}
+              {{ render_field(form.call_permissions, with_label=False) }}
             {% endcall %}
           {% endcall %}
 
