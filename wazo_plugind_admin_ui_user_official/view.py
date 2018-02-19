@@ -105,12 +105,7 @@ class UserView(IndexAjaxViewMixin, BaseView):
         return [(user.voicemail.form.id.data, user.voicemail.form.name.data)]
 
     def _build_set_choices_callpermissions(self, call_permissions):
-        results = []
-        for call_permission in call_permissions:
-            if not call_permission.form.id.data or call_permission.form.id.data == 'None':
-                return []
-            results.append((call_permission.form.id.data, call_permission.form.name.data))
-        return results
+        return [(call_permission.form.id.data, call_permission.form.name.data) for call_permission in call_permissions]
 
     def _build_lines(self, lines):
         results = []
