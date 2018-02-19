@@ -20,5 +20,3 @@ depends:
     namespace: official
   - name: admin-ui-voicemail
     namespace: official
-  - name: admin-ui-call-permission
-    namespace: official
