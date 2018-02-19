@@ -10,8 +10,23 @@ logger = logging.getLogger(__name__)
 
 
 class UserService(BaseConfdService):
-
     resource_confd = 'users'
+
+    def get(self, resource_id):
+        resource = super().get(resource_id)
+        call_permissions = confd.users(resource_id).list_call_permissions()
+        resource['call_permissions'] = self._build_call_permissions_list(call_permissions['items'])
+        return resource
+
+    def _build_call_permissions_list(self, call_permissions):
+        result = []
+        for call_permission in call_permissions:
+            call_permission_data = self.get_call_permission(call_permission['call_permission_id'])
+            result.append({
+                'id': call_permission['call_permission_id'],
+                'name': call_permission_data['name']
+            })
+        return result
 
     def list(self, limit=None, order=None, direction=None, offset=None, search=None):
         return confd.users.list(view='summary',
@@ -37,14 +52,14 @@ class UserService(BaseConfdService):
         return False
 
     def create(self, user):
-        user['uuid'] = super(UserService, self).create(user)['uuid']
+        user['uuid'] = super().create(user)['uuid']
         if user.get('username') and user.get('password'):
             # ID 3 is the default ID for Client profile in populate.sql
             confd.users(user['uuid']).update_cti_profile({'id': 3})
         self._create_user_lines(user)
 
     def update(self, user):
-        super(UserService, self).update(user)
+        super().update(user)
 
         existing_user = confd.users.get(user)
 
@@ -59,6 +74,9 @@ class UserService(BaseConfdService):
 
         if user.get('schedules'):
             self._update_schedules(existing_user, user)
+
+        if user.get('call_permissions'):
+            self._update_callpermissions(existing_user, user)
 
         confd.users(user['uuid']).update_cti_profile(user['cti_profile'])
         self._update_voicemail(existing_user, user)
@@ -100,6 +118,15 @@ class UserService(BaseConfdService):
             confd.users(user).remove_schedule(schedule_id)
         if user['schedules'][0].get('id'):
             confd.users(user).add_schedule(user['schedules'][0])
+
+    def _update_callpermissions(self, existing_user, user):
+        if existing_user:
+            existing_call_permissions = confd.users(existing_user).list_call_permissions()
+            for existing_call_permission in existing_call_permissions['items']:
+                confd.users(existing_user).remove_call_permission(existing_call_permission['call_permission_id'])
+
+        for call_permission in user['call_permissions']:
+            confd.users(user).add_call_permission(call_permission['id'])
 
     def _update_voicemail(self, existing_user, user):
         existing_voicemail_id = existing_user['voicemail'].get('id') if existing_user['voicemail'] else None
@@ -224,8 +251,8 @@ class UserService(BaseConfdService):
         return False
 
     def _is_extension_has_changed(self, extension, existing_extension):
-        if existing_extension['exten'] == extension['exten'] and \
-           existing_extension['context'] == extension['context']:
+        if (existing_extension['exten'] == extension['exten'] and
+                existing_extension['context'] == extension['context']):
             return False
         return True
 
@@ -255,6 +282,9 @@ class UserService(BaseConfdService):
 
     def get_cti_profile(self, id):
         return confd.cti_profiles.get(id)
+
+    def get_call_permission(self, id):
+        return confd.call_permissions.get(id)
 
 
 class CtiService(BaseConfdService):
