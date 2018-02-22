@@ -2,14 +2,12 @@
 # Copyright 2017 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
+from distutils.cmd import Command as _Command
 from setuptools import find_packages
 from setuptools import setup
-from setuptools.command.egg_info import egg_info as _egg_info
-from babel.messages import frontend as babel
-from babel.messages.catalog import Catalog as _Catalog
+from setuptools.command.build_py import build_py as _build_py
 
 PROJECT = 'wazo-admin-ui-user'
-
 DEFAULT_HEADER = u"""\
 # Translations template for {PROJECT}.
 # Copyright (C) 2018 The Wazo Authors  (see the AUTHORS file)
@@ -19,26 +17,58 @@ DEFAULT_HEADER = u"""\
 #""".format(PROJECT=PROJECT)
 
 
-class Catalog(_Catalog):
-    def __init__(self,
-                 project=PROJECT,
-                 copyright_holder='The Wazo Authors  (see the AUTHORS file)',
-                 msgid_bugs_address='dev@wazo.community',
-                 last_translator='Wazo Authors <dev@wazo.community>',
-                 language_team='en <dev@wazo.community>', **kwargs):
-        super().__init__(header_comment=DEFAULT_HEADER,
-                         project=project, copyright_holder=copyright_holder,
-                         msgid_bugs_address=msgid_bugs_address, last_translator=last_translator,
-                         language_team=language_team, fuzzy=False, **kwargs)
-
-
-babel.Catalog = Catalog
-
-
-class egg_info(_egg_info):
+class build_py(_build_py):
     def run(self):
         self.run_command('compile_catalog')
-        _egg_info.run(self)
+        _build_py.run(self)
+
+
+class BabelWrapper(object):
+
+    @property
+    def babel(self):
+        from babel.messages import frontend as babel
+        from babel.messages.catalog import Catalog as _Catalog
+
+        class Catalog(_Catalog):
+            def __init__(self,
+                         project=PROJECT,
+                         copyright_holder='The Wazo Authors  (see the AUTHORS file)',
+                         msgid_bugs_address='dev@wazo.community',
+                         last_translator='Wazo Authors <dev@wazo.community>',
+                         language_team='en <dev@wazo.community>', **kwargs):
+                super().__init__(header_comment=DEFAULT_HEADER,
+                                 project=project, copyright_holder=copyright_holder,
+                                 msgid_bugs_address=msgid_bugs_address, last_translator=last_translator,
+                                 language_team=language_team, fuzzy=False, **kwargs)
+
+
+        babel.Catalog = Catalog
+        return babel
+
+
+class Command(_Command):
+    user_options = []
+
+
+class compile_catalog(Command):
+    def __new__(cls, *args, **kwargs):
+        return BabelWrapper().babel.compile_catalog(*args, **kwargs)
+
+
+class extract_messages(Command):
+    def __new__(cls, *args, **kwargs):
+        return BabelWrapper().babel.extract_messages(*args, **kwargs)
+
+
+class init_catalog(Command):
+    def __new__(cls, *args, **kwargs):
+        return BabelWrapper().babel.init_catalog(*args, **kwargs)
+
+
+class update_catalog(Command):
+    def __new__(cls, *args, **kwargs):
+        return BabelWrapper().babel.update_catalog(*args, **kwargs)
 
 
 setup(
@@ -59,11 +89,11 @@ setup(
     zip_safe=False,
 
     cmdclass={
-        'egg_info': egg_info,
-        'compile_catalog': babel.compile_catalog,
-        'extract_messages': babel.extract_messages,
-        'init_catalog': babel.init_catalog,
-        'update_catalog': babel.update_catalog
+        'build_py': build_py,
+        'compile_catalog': compile_catalog,
+        'extract_messages': extract_messages,
+        'init_catalog': init_catalog,
+        'update_catalog': update_catalog
     },
 
     entry_points={
