@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2017 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2017-2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
 from distutils.cmd import Command as _Command
@@ -8,13 +8,6 @@ from setuptools import setup
 from setuptools.command.build_py import build_py as _build_py
 
 PROJECT = 'wazo-admin-ui-user'
-DEFAULT_HEADER = u"""\
-# Translations template for {PROJECT}.
-# Copyright (C) 2018 The Wazo Authors  (see the AUTHORS file)
-# This file is distributed under the same license as the
-# {PROJECT} project.
-# Wazo Dev Team <dev@wazo.community>, 2018.
-#""".format(PROJECT=PROJECT)
 
 
 class build_py(_build_py):
@@ -24,6 +17,33 @@ class build_py(_build_py):
 
 
 class BabelWrapper(object):
+
+    DEFAULT_HEADER = u"""\
+# Translations template for {PROJECT}.
+# Copyright (C) 2018 The Wazo Authors  (see the AUTHORS file)
+# This file is distributed under the same license as the
+# {PROJECT} project.
+# Wazo Dev Team <dev@wazo.community>, 2018.
+#""".format(PROJECT=PROJECT)
+
+    class Command(_Command):
+        user_options = []
+
+    class compile_catalog(Command):
+        def __new__(cls, *args, **kwargs):
+            return BabelWrapper().babel.compile_catalog(*args, **kwargs)
+
+    class extract_messages(Command):
+        def __new__(cls, *args, **kwargs):
+            return BabelWrapper().babel.extract_messages(*args, **kwargs)
+
+    class init_catalog(Command):
+        def __new__(cls, *args, **kwargs):
+            return BabelWrapper().babel.init_catalog(*args, **kwargs)
+
+    class update_catalog(Command):
+        def __new__(cls, *args, **kwargs):
+            return BabelWrapper().babel.update_catalog(*args, **kwargs)
 
     @property
     def babel(self):
@@ -37,39 +57,16 @@ class BabelWrapper(object):
                          msgid_bugs_address='dev@wazo.community',
                          last_translator='Wazo Authors <dev@wazo.community>',
                          language_team='en <dev@wazo.community>', **kwargs):
-                super().__init__(header_comment=DEFAULT_HEADER,
+                super().__init__(header_comment=BabelWrapper.DEFAULT_HEADER,
                                  project=project, copyright_holder=copyright_holder,
                                  msgid_bugs_address=msgid_bugs_address, last_translator=last_translator,
                                  language_team=language_team, fuzzy=False, **kwargs)
-
 
         babel.Catalog = Catalog
         return babel
 
 
-class Command(_Command):
-    user_options = []
-
-
-class compile_catalog(Command):
-    def __new__(cls, *args, **kwargs):
-        return BabelWrapper().babel.compile_catalog(*args, **kwargs)
-
-
-class extract_messages(Command):
-    def __new__(cls, *args, **kwargs):
-        return BabelWrapper().babel.extract_messages(*args, **kwargs)
-
-
-class init_catalog(Command):
-    def __new__(cls, *args, **kwargs):
-        return BabelWrapper().babel.init_catalog(*args, **kwargs)
-
-
-class update_catalog(Command):
-    def __new__(cls, *args, **kwargs):
-        return BabelWrapper().babel.update_catalog(*args, **kwargs)
-
+babel_wrapper = BabelWrapper()
 
 setup(
     name=PROJECT,
@@ -90,10 +87,10 @@ setup(
 
     cmdclass={
         'build_py': build_py,
-        'compile_catalog': compile_catalog,
-        'extract_messages': extract_messages,
-        'init_catalog': init_catalog,
-        'update_catalog': update_catalog
+        'compile_catalog': babel_wrapper.compile_catalog,
+        'extract_messages': babel_wrapper.extract_messages,
+        'init_catalog': babel_wrapper.init_catalog,
+        'update_catalog': babel_wrapper.update_catalog
     },
 
     entry_points={
