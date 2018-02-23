@@ -8,6 +8,8 @@ from setuptools import setup
 from setuptools.command.build_py import build_py as _build_py
 
 PROJECT = 'wazo-admin-ui-user'
+AUTHOR = 'Wazo Authors'
+EMAIL = 'dev@wazo.community'
 
 
 class build_py(_build_py):
@@ -54,9 +56,9 @@ class BabelWrapper(object):
             def __init__(self,
                          project=PROJECT,
                          copyright_holder='The Wazo Authors  (see the AUTHORS file)',
-                         msgid_bugs_address='dev@wazo.community',
-                         last_translator='Wazo Authors <dev@wazo.community>',
-                         language_team='en <dev@wazo.community>', **kwargs):
+                         msgid_bugs_address=EMAIL,
+                         last_translator='{author} <{email}>'.format(author=AUTHOR, email=EMAIL),
+                         language_team='en <{email}>'.format(email=EMAIL), **kwargs):
                 super().__init__(header_comment=BabelWrapper.DEFAULT_HEADER,
                                  project=project, copyright_holder=copyright_holder,
                                  msgid_bugs_address=msgid_bugs_address, last_translator=last_translator,
@@ -74,8 +76,8 @@ setup(
 
     description='Wazo Admin User',
 
-    author='Wazo Authors',
-    author_email='dev@wazo.community',
+    author=AUTHOR,
+    author_email=EMAIL,
 
     url='http://wazo.community',
 
