@@ -1,16 +1,16 @@
-# Translations template for wazo-admin-ui-user.
+# Translations template for wazo_admin_ui_user.
 # Copyright (C) 2018 The Wazo Authors  (see the AUTHORS file)
 # This file is distributed under the same license as the
-# wazo-admin-ui-user project.
+# wazo_admin_ui_user project.
 # Wazo Dev Team <dev@wazo.community>, 2018.
 # 
 # Translators:
 # Cedric Abunar <cabunar@wazo.io>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: wazo-admin-ui-user 0.1\n"
+"Project-Id-Version: wazo_admin_ui_user 0.1\n"
 "Report-Msgid-Bugs-To: 'dev@wazo.community'\n"
-"POT-Creation-Date: 2018-02-22 15:55-0500\n"
+"POT-Creation-Date: 2018-02-27 13:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Cedric Abunar <cabunar@wazo.io>, 2018\n"
 "Language-Team: French (https://www.transifex.com/wazo/teams/69545/fr/)\n"
@@ -44,6 +44,7 @@ msgstr "Occupé"
 #: wazo_plugind_admin_ui_user_official/form.py:45
 #: wazo_plugind_admin_ui_user_official/form.py:50
 #: wazo_plugind_admin_ui_user_official/form.py:55
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:119
 msgid "Destination"
 msgstr "Destination"
 
@@ -68,26 +69,32 @@ msgid "CTI Profile"
 msgstr "Profile CTI"
 
 #: wazo_plugind_admin_ui_user_official/form.py:89
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:118
 msgid "Label"
 msgstr "Étiquette"
 
 #: wazo_plugind_admin_ui_user_official/form.py:92
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:120
 msgid "BLF"
 msgstr "Supervision"
 
 #: wazo_plugind_admin_ui_user_official/form.py:97
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:20
 msgid "Schedule"
 msgstr "Horaire"
 
 #: wazo_plugind_admin_ui_user_official/form.py:102
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:21
 msgid "Voicemail"
 msgstr "Messagerie vocale"
 
 #: wazo_plugind_admin_ui_user_official/form.py:112
+#: wazo_plugind_admin_ui_user_official/templates/user/list.html:12
 msgid "Firstname"
 msgstr "Prénom"
 
 #: wazo_plugind_admin_ui_user_official/form.py:113
+#: wazo_plugind_admin_ui_user_official/templates/user/list.html:13
 msgid "Lastname"
 msgstr "Nom"
 
@@ -140,10 +147,12 @@ msgid "Description"
 msgstr "Description"
 
 #: wazo_plugind_admin_ui_user_official/form.py:131
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:18
 msgid "Groups"
 msgstr "Groupes"
 
 #: wazo_plugind_admin_ui_user_official/form.py:136
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:22
 msgid "Call Permissions"
 msgstr "Droit d'appel"
 
@@ -155,6 +164,9 @@ msgstr "Soumettre"
 #: wazo_plugind_admin_ui_user_official/form.py:153
 #: wazo_plugind_admin_ui_user_official/plugin.py:30
 #: wazo_plugind_admin_ui_user_official/plugin.py:31
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:12
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:13
+#: wazo_plugind_admin_ui_user_official/templates/user/list.html:9
 msgid "User"
 msgstr "Utilisateur"
 
@@ -162,6 +174,106 @@ msgstr "Utilisateur"
 msgid "Ring time"
 msgstr "Temps de sonnerie"
 
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:5
+#: wazo_plugind_admin_ui_user_official/templates/user/list.html:4
 #: wazo_plugind_admin_ui_user_official/view.py:20
 msgid "Users"
 msgstr "Utilisateurs"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:5
+msgid "Edit"
+msgstr "Modifier"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:14
+msgid "General"
+msgstr "Général "
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:15
+msgid "Fallbacks"
+msgstr "Non réponse"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:16
+msgid "Services"
+msgstr "Services"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:17
+msgid "Lines"
+msgstr "Lignes"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:19
+msgid "FuncKeys"
+msgstr "Touches de fonctions"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:28
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:43
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:56
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:65
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:79
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:106
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:113
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:137
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:147
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:156
+msgid "Update"
+msgstr "Mettre à jour"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:36
+msgid "Choose your CTI profile"
+msgstr "Choisissez votre profile CTI"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:83
+msgid "Protocol"
+msgstr "Protocole"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:84
+msgid "Name"
+msgstr "Nom"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:85
+msgid "Context"
+msgstr "Contexte"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:86
+#: wazo_plugind_admin_ui_user_official/templates/user/list.html:14
+msgid "Extension"
+msgstr "Extension"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:87
+msgid "Device"
+msgstr "Terminaison"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:88
+msgid "Line (N°)"
+msgstr "Ligne (N°)"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:117
+msgid "Position"
+msgstr "Position"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:142
+msgid "Choose Schedules"
+msgstr "Choisir un horaire"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:151
+msgid "Choose Voicemail"
+msgstr "Choisir une messagerie vocale"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/edit.html:160
+msgid "Choose Call Permissions"
+msgstr "Choisissez les droits d'appels"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/list.html:15
+msgid "Code"
+msgstr "Code"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/list.html:20
+msgid "Add User"
+msgstr "Ajouter un utilisateur"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/list.html:22
+msgid "Add"
+msgstr "Ajouter"
+
+#: wazo_plugind_admin_ui_user_official/templates/user/list.html:42
+msgid "Choose Context"
+msgstr "Choisir un contexte"
