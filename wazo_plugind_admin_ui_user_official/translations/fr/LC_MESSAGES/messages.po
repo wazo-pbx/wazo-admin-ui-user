@@ -149,7 +149,7 @@ msgstr "Droit d'appel"
 
 #: wazo_plugind_admin_ui_user_official/form.py:138
 msgid "Submit"
-msgstr "Envoyé"
+msgstr "Soumettre"
 
 #: wazo_plugind_admin_ui_user_official/form.py:144
 #: wazo_plugind_admin_ui_user_official/form.py:153
