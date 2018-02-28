@@ -7,6 +7,7 @@ min_wazo_version: 18.02
 tags:
   - users
 homepage: https://github.com/wazo-pbx/wazo-admin-ui-user
+icon: user
 depends:
   - name: admin-ui-context
     namespace: official
