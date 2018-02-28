@@ -5,6 +5,7 @@ import logging
 
 from wazo_admin_ui.helpers.service import BaseConfdService
 from wazo_admin_ui.helpers.confd import confd
+from wazo_admin_ui.helpers.auth import auth
 
 logger = logging.getLogger(__name__)
 
@@ -52,8 +53,20 @@ class UserService(BaseConfdService):
         return False
 
     def create(self, user):
+        username = user.pop('username')
+        password = user.pop('password')
         user['uuid'] = super().create(user)['uuid']
-        if user.get('username') and user.get('password'):
+        auth.users.new(
+            uuid=user['uuid'],
+            username=username or user['email'] or user['uuid'],
+            password=password,
+            firstname=user['firstname'],
+            lastname=user['lastname'],
+            email_address=user['email'],
+            enabled=True,
+        )
+
+        if username and password:
             # ID 3 is the default ID for Client profile in populate.sql
             confd.users(user['uuid']).update_cti_profile({'id': 3})
         self._create_user_lines(user)
