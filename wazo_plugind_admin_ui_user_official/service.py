@@ -74,7 +74,10 @@ class UserService(BaseConfdService):
         self._create_user_lines(user)
 
     def update(self, user):
+        username = user.pop('username')
+        password = user.pop('password')
         super().update(user)
+        self._update_wazo_user(user, username, password)
 
         existing_user = confd.users.get(user)
 
@@ -133,6 +136,20 @@ class UserService(BaseConfdService):
             if not line.get('id'):
                 line = self._create_line_and_associations(line)
             confd.users(user).add_line(line)
+
+    def _update_wazo_user(self, user, username, password):
+        auth.users.edit(
+            user['uuid'],
+            username=username or user['email'] or user['uuid'],
+            firstname=user['firstname'],
+            lastname=user['lastname'],
+            enabled=True if user['cti_profile'] else False,
+        )
+        emails = [{'address': user['email'], 'confirmed': True, 'main': True}] if user['email'] else []
+        auth.admin.update_user_emails(user['uuid'], emails)
+
+        if password:
+            auth.users.set_password(user['uuid'], password)
 
     def _update_schedules(self, existing_user, user):
         if existing_user['schedules']:
