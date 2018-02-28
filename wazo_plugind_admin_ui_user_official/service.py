@@ -18,6 +18,8 @@ class UserService(BaseConfdService):
     def get(self, resource_id):
         resource = super().get(resource_id)
         call_permissions = confd.users(resource_id).list_call_permissions()
+        wazo_user = auth.users.get(resource_id)
+        resource['username'] = wazo_user['username']
         resource['call_permissions'] = self._build_call_permissions_list(call_permissions['items'])
         return resource
 
