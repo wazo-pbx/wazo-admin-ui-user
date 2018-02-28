@@ -3,6 +3,8 @@
 
 import logging
 
+import requests
+
 from wazo_admin_ui.helpers.service import BaseConfdService
 from wazo_admin_ui.helpers.confd import confd
 from wazo_admin_ui.helpers.auth import auth
@@ -104,6 +106,13 @@ class UserService(BaseConfdService):
     def delete(self, user_uuid):
         user = confd.users.get(user_uuid)
         self._delete_user_associations(user)
+        try:
+            auth.users.delete(user_uuid)
+        except requests.HTTPError as e:
+            error = e.response.json() or {}
+            if error.get('error_id') == 'unknown_user':
+                pass
+            raise
         confd.users.delete(user_uuid)
 
     def _delete_user_associations(self, user):
