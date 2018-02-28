@@ -72,7 +72,7 @@ class UserService(BaseConfdService):
 
         if username and password:
             # ID 3 is the default ID for Client profile in populate.sql
-            confd.users(user['uuid']).update_cti_profile({'id': 3})
+            confd.users(user['uuid']).update_cti_profile({'id': 3}, enabled=False)
         self._create_user_lines(user)
 
     def update(self, user):
@@ -98,7 +98,7 @@ class UserService(BaseConfdService):
         if user.get('call_permissions'):
             self._update_callpermissions(existing_user, user)
 
-        confd.users(user['uuid']).update_cti_profile(user['cti_profile'])
+        confd.users(user['uuid']).update_cti_profile(user['cti_profile'], enabled=False)
         self._update_voicemail(existing_user, user)
         self._update_user_lines(existing_user, user)
 
