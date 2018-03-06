@@ -111,7 +111,7 @@ class CallPermissionForm(BaseForm):
 class UserForm(BaseForm):
     firstname = StringField(l_('Firstname'), [InputRequired(), Length(max=128)])
     lastname = StringField(l_('Lastname'), [Length(max=128)])
-    username = StringField(l_('Username'), [Length(min=2, max=254)])
+    username = StringField(l_('Username'), [InputRequired(), Length(min=2, max=254)])
     password = StringField(l_('Password'), [Length(min=4, max=64)])
     email = EmailField(l_('Email'), [Length(max=254)])
     caller_id = StringField(l_('Caller ID'), [Length(max=80)])

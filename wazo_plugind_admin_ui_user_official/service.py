@@ -3,8 +3,11 @@
 
 import logging
 
+import requests
+
 from wazo_admin_ui.helpers.service import BaseConfdService
 from wazo_admin_ui.helpers.confd import confd
+from wazo_admin_ui.helpers.auth import auth
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +18,8 @@ class UserService(BaseConfdService):
     def get(self, resource_id):
         resource = super().get(resource_id)
         call_permissions = confd.users(resource_id).list_call_permissions()
+        wazo_user = auth.users.get(resource_id)
+        resource['username'] = wazo_user['username']
         resource['call_permissions'] = self._build_call_permissions_list(call_permissions['items'])
         return resource
 
@@ -52,14 +57,29 @@ class UserService(BaseConfdService):
         return False
 
     def create(self, user):
+        username = user.pop('username')
+        password = user.pop('password')
         user['uuid'] = super().create(user)['uuid']
-        if user.get('username') and user.get('password'):
+        auth.users.new(
+            uuid=user['uuid'],
+            username=username or user['email'] or user['uuid'],
+            password=password,
+            firstname=user['firstname'],
+            lastname=user['lastname'],
+            email_address=user['email'],
+            enabled=True,
+        )
+
+        if username and password:
             # ID 3 is the default ID for Client profile in populate.sql
-            confd.users(user['uuid']).update_cti_profile({'id': 3})
+            confd.users(user['uuid']).update_cti_profile({'id': 3}, enabled=False)
         self._create_user_lines(user)
 
     def update(self, user):
+        username = user.pop('username')
+        password = user.pop('password')
         super().update(user)
+        self._update_wazo_user(user, username, password)
 
         existing_user = confd.users.get(user)
 
@@ -78,7 +98,7 @@ class UserService(BaseConfdService):
         if user.get('call_permissions'):
             self._update_callpermissions(existing_user, user)
 
-        confd.users(user['uuid']).update_cti_profile(user['cti_profile'])
+        confd.users(user['uuid']).update_cti_profile(user['cti_profile'], enabled=False)
         self._update_voicemail(existing_user, user)
         self._update_user_lines(existing_user, user)
 
@@ -91,6 +111,12 @@ class UserService(BaseConfdService):
     def delete(self, user_uuid):
         user = confd.users.get(user_uuid)
         self._delete_user_associations(user)
+        try:
+            auth.users.delete(user_uuid)
+        except requests.HTTPError as e:
+            error = e.response.json() or {}
+            if error.get('error_id') != 'unknown_user':
+                raise
         confd.users.delete(user_uuid)
 
     def _delete_user_associations(self, user):
@@ -111,6 +137,20 @@ class UserService(BaseConfdService):
             if not line.get('id'):
                 line = self._create_line_and_associations(line)
             confd.users(user).add_line(line)
+
+    def _update_wazo_user(self, user, username, password):
+        auth.users.edit(
+            user['uuid'],
+            username=username or user['email'] or user['uuid'],
+            firstname=user['firstname'],
+            lastname=user['lastname'],
+            enabled=True if user['cti_profile'] else False,
+        )
+        emails = [{'address': user['email'], 'confirmed': True, 'main': True}] if user['email'] else []
+        auth.admin.update_user_emails(user['uuid'], emails)
+
+        if password:
+            auth.users.set_password(user['uuid'], password)
 
     def _update_schedules(self, existing_user, user):
         if existing_user['schedules']:
