@@ -5,6 +5,7 @@ from hamcrest import (
     assert_that,
     contains_inanyorder,
     equal_to,
+    empty,
     has_item,
 )
 from unittest import skip
@@ -49,7 +50,7 @@ class TestUser(IntegrationTest):
         assert_that(user2.get_value('firstname'), equal_to('firstname2'))
         assert_that(user2.get_value('email'), equal_to(email))
         assert_that(user2.get_value('username'), equal_to(email))
-        assert_that(user2.get_value('password'), equal_to('password2'))
+        assert_that(user2.get_value('password'), empty())
 
     @skip('need xivo_provd_client to python3 because confd-test import it')
     @fixtures.user()
@@ -63,8 +64,6 @@ class TestUser(IntegrationTest):
     @fixtures.user(firstname='Bob',
                    lastname='ette',
                    email='bob.ette@example.com',
-                   username='bette',
-                   password='password',
                    mobile_phone_number='5555555555',
                    ring_seconds=12,
                    music_on_hold='default',
@@ -90,13 +89,14 @@ class TestUser(IntegrationTest):
                                                        'context': 'default',
                                                        'pin': '123'}})
     def test_edit_with_same_user_params(self, user):
+        self.auth.users.new(uuid=user['uuid'], username=user['uuid'])
         page = self.browser.users.edit_by_id(user['uuid'])
 
         assert_that(page.get_value('firstname'), equal_to(user['firstname']))
         assert_that(page.get_value('lastname'), equal_to(user['lastname']))
         assert_that(page.get_value('email'), equal_to(user['email']))
-        assert_that(page.get_value('username'), equal_to(user['username']))
-        assert_that(page.get_value('password'), equal_to(user['password']))
+        assert_that(page.get_value('username'), equal_to(user['uuid']))
+        assert_that(page.get_value('password'), empty())
         assert_that(page.get_value('mobile_phone_number'), equal_to(user['mobile_phone_number']))
         assert_that(page.get_int_value('ring_seconds'), equal_to(user['ring_seconds']))
         assert_that(page.get_value('music_on_hold'), equal_to(user['music_on_hold']))
@@ -147,6 +147,7 @@ class TestUser(IntegrationTest):
 
     @fixtures.user()
     def test_installed_destination_type(self, user):
+        self.auth.users.new(uuid=user['uuid'], username=user['uuid'])
         page = self.browser.users.edit_by_id(user['uuid'])
         fallbacks_tab = page.fallbacks()
         for fallback in ('noanswer_destination',
@@ -169,6 +170,7 @@ class TestUser(IntegrationTest):
 
     @fixtures.user()
     def test_hangup_destination(self, user):
+        self.auth.users.new(uuid=user['uuid'], username=user['uuid'])
         page = self.browser.users.edit_by_id(user['uuid'])
         fallbacks_tab = page.fallbacks()
 
@@ -209,6 +211,7 @@ class TestUser(IntegrationTest):
 
     @fixtures.user()
     def test_custom_destination(self, user):
+        self.auth.users.new(uuid=user['uuid'], username=user['uuid'])
         page = self.browser.users.edit_by_id(user['uuid'])
         fallbacks_tab = page.fallbacks()
 
@@ -231,6 +234,7 @@ class TestUser(IntegrationTest):
 
     @fixtures.user()
     def test_none_destination(self, user):
+        self.auth.users.new(uuid=user['uuid'], username=user['uuid'])
         page = self.browser.users.edit_by_id(user['uuid'])
         fallbacks_tab = page.fallbacks()
 
@@ -247,6 +251,7 @@ class TestUser(IntegrationTest):
 
     @fixtures.user()
     def test_application_destination(self, user):
+        self.auth.users.new(uuid=user['uuid'], username=user['uuid'])
         page = self.browser.users.edit_by_id(user['uuid'])
         fallbacks_tab = page.fallbacks()
 
@@ -340,6 +345,7 @@ class TestUser(IntegrationTest):
 
     @fixtures.user(firstname='Bob', lastname='Ino')
     def test_user_destination(self, user):
+        self.auth.users.new(uuid=user['uuid'], username=user['uuid'])
         page = self.browser.users.edit_by_id(user['uuid'])
         fallbacks_tab = page.fallbacks()
 
@@ -366,6 +372,7 @@ class TestUser(IntegrationTest):
 
     @fixtures.user()
     def test_forwards(self, user):
+        self.auth.users.new(uuid=user['uuid'], username=user['uuid'])
         page = self.browser.users.edit_by_id(user['uuid'])
         services_tab = page.services()
 
@@ -390,6 +397,7 @@ class TestUser(IntegrationTest):
 
     @fixtures.user()
     def test_general_tab(self, user):
+        self.auth.users.new(uuid=user['uuid'], username=user['uuid'])
         page = self.browser.users.edit_by_id(user['uuid'])
         tab = page.general()
 
@@ -426,6 +434,7 @@ class TestUser(IntegrationTest):
 
     @fixtures.user()
     def test_user_tab(self, user):
+        self.auth.users.new(uuid=user['uuid'], username=user['uuid'])
         page = self.browser.users.edit_by_id(user['uuid'])
         tab = page.user()
 
