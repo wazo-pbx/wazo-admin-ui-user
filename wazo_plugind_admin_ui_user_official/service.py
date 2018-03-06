@@ -115,9 +115,8 @@ class UserService(BaseConfdService):
             auth.users.delete(user_uuid)
         except requests.HTTPError as e:
             error = e.response.json() or {}
-            if error.get('error_id') == 'unknown_user':
-                pass
-            raise
+            if error.get('error_id') != 'unknown_user':
+                raise
         confd.users.delete(user_uuid)
 
     def _delete_user_associations(self, user):
