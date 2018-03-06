@@ -1,9 +1,10 @@
-# Copyright 2017 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2017-2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
 import os
 
 from wazo_admin_ui_test_helpers.asset_launching_test_case import AdminUIAssetLaunchingTestCase
+from xivo_auth_client import Client as AuthClient
 from xivo_confd_test_helpers.helpers import setup_confd as setup_confd_helpers
 
 from .pages.user import UserListPage
@@ -19,6 +20,11 @@ class IntegrationTest(AdminUIAssetLaunchingTestCase):
     def setUpClass(cls):
         super(IntegrationTest, cls).setUpClass()
         cls.setup_helpers()
+        cls.auth = cls.create_auth()
+
+    @classmethod
+    def create_auth(cls):
+        return AuthClient(host='localhost', port=cls.service_port(9497, 'auth'), verify_certificate=False)
 
     @classmethod
     def setup_helpers(cls):

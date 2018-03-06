@@ -27,7 +27,7 @@ admin-ui:
 
 auth:
   image: wazopbx/xivo-auth-mock
-  expose:
+  ports:
     - "9497"
 
 confd:
