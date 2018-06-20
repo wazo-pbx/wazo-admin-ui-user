@@ -4,12 +4,15 @@
 # wazo_admin_ui_user project.
 # Wazo Dev Team <dev@wazo.community>, 2018.
 # 
+# Translators:
+# Roberto Xavier dos Santos <rxsantos@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: wazo_admin_ui_user 0.1\n"
 "Report-Msgid-Bugs-To: 'dev@wazo.community'\n"
 "POT-Creation-Date: 2018-02-27 13:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Roberto Xavier dos Santos <rxsantos@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/wazo/teams/69545/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -20,142 +23,142 @@ msgstr ""
 
 #: wazo_plugind_admin_ui_user_official/form.py:33
 msgid "SIP"
-msgstr ""
+msgstr "SIP"
 
 #: wazo_plugind_admin_ui_user_official/form.py:34
 msgid "SCCP"
-msgstr ""
+msgstr "SCCP"
 
 #: wazo_plugind_admin_ui_user_official/form.py:35
 msgid "CUSTOM"
-msgstr ""
+msgstr "PERSONALIZADO"
 
 #: wazo_plugind_admin_ui_user_official/form.py:36
 msgid "SIP (webrtc)"
-msgstr ""
+msgstr "SIP (webrtc)"
 
 #: wazo_plugind_admin_ui_user_official/form.py:44
 msgid "Busy"
-msgstr ""
+msgstr "Ocupado"
 
 #: wazo_plugind_admin_ui_user_official/form.py:45
 #: wazo_plugind_admin_ui_user_official/form.py:50
 #: wazo_plugind_admin_ui_user_official/form.py:55
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:119
 msgid "Destination"
-msgstr ""
+msgstr "Destino"
 
 #: wazo_plugind_admin_ui_user_official/form.py:49
 msgid "No answer"
-msgstr ""
+msgstr "Sem resposta"
 
 #: wazo_plugind_admin_ui_user_official/form.py:54
 msgid "Unconditional"
-msgstr ""
+msgstr "incondicional"
 
 #: wazo_plugind_admin_ui_user_official/form.py:65
 msgid "Do not disturb"
-msgstr ""
+msgstr "Não perturbe"
 
 #: wazo_plugind_admin_ui_user_official/form.py:69
 msgid "Incall filtering"
-msgstr ""
+msgstr "Filtrando Incall"
 
 #: wazo_plugind_admin_ui_user_official/form.py:78
 msgid "CTI Profile"
-msgstr ""
+msgstr "Perfil CTI"
 
 #: wazo_plugind_admin_ui_user_official/form.py:89
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:118
 msgid "Label"
-msgstr ""
+msgstr "Título"
 
 #: wazo_plugind_admin_ui_user_official/form.py:92
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:120
 msgid "BLF"
-msgstr ""
+msgstr "BLF"
 
 #: wazo_plugind_admin_ui_user_official/form.py:97
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:20
 msgid "Schedule"
-msgstr ""
+msgstr "Cronograma"
 
 #: wazo_plugind_admin_ui_user_official/form.py:102
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:21
 msgid "Voicemail"
-msgstr ""
+msgstr "Correio de Voz"
 
 #: wazo_plugind_admin_ui_user_official/form.py:112
 #: wazo_plugind_admin_ui_user_official/templates/user/list.html:12
 msgid "Firstname"
-msgstr ""
+msgstr "Nome"
 
 #: wazo_plugind_admin_ui_user_official/form.py:113
 #: wazo_plugind_admin_ui_user_official/templates/user/list.html:13
 msgid "Lastname"
-msgstr ""
+msgstr "Sobrenome"
 
 #: wazo_plugind_admin_ui_user_official/form.py:114
 msgid "Username"
-msgstr ""
+msgstr "Nome de usuário"
 
 #: wazo_plugind_admin_ui_user_official/form.py:115
 msgid "Password"
-msgstr ""
+msgstr "Senha"
 
 #: wazo_plugind_admin_ui_user_official/form.py:116
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: wazo_plugind_admin_ui_user_official/form.py:117
 msgid "Caller ID"
-msgstr ""
+msgstr "Caller ID"
 
 #: wazo_plugind_admin_ui_user_official/form.py:118
 msgid "Phone mobile"
-msgstr ""
+msgstr "Telefone móvel"
 
 #: wazo_plugind_admin_ui_user_official/form.py:119
 msgid "Ring seconds"
-msgstr ""
+msgstr "Segundos de Ring"
 
 #: wazo_plugind_admin_ui_user_official/form.py:120
 msgid "Music On Hold"
-msgstr ""
+msgstr "Música em Espera"
 
 #: wazo_plugind_admin_ui_user_official/form.py:121
 msgid "Subroutine"
-msgstr ""
+msgstr "Sub-rotina"
 
 #: wazo_plugind_admin_ui_user_official/form.py:122
 msgid "Simultaneous calls"
-msgstr ""
+msgstr "Ligações Simultâneas"
 
 #: wazo_plugind_admin_ui_user_official/form.py:123
 msgid "Timezone"
-msgstr ""
+msgstr "Fuso horário"
 
 #: wazo_plugind_admin_ui_user_official/form.py:124
 msgid "User Field"
-msgstr ""
+msgstr "Campo do Usuário"
 
 #: wazo_plugind_admin_ui_user_official/form.py:125
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #: wazo_plugind_admin_ui_user_official/form.py:131
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:18
 msgid "Groups"
-msgstr ""
+msgstr "Grupos"
 
 #: wazo_plugind_admin_ui_user_official/form.py:136
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:22
 msgid "Call Permissions"
-msgstr ""
+msgstr "Permissões de Chamada"
 
 #: wazo_plugind_admin_ui_user_official/form.py:138
 msgid "Submit"
-msgstr ""
+msgstr "Submeter"
 
 #: wazo_plugind_admin_ui_user_official/form.py:144
 #: wazo_plugind_admin_ui_user_official/form.py:153
@@ -165,41 +168,41 @@ msgstr ""
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:13
 #: wazo_plugind_admin_ui_user_official/templates/user/list.html:9
 msgid "User"
-msgstr ""
+msgstr "Usuário"
 
 #: wazo_plugind_admin_ui_user_official/form.py:145
 msgid "Ring time"
-msgstr ""
+msgstr "Tempo de Toque"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:5
 #: wazo_plugind_admin_ui_user_official/templates/user/list.html:4
 #: wazo_plugind_admin_ui_user_official/view.py:20
 msgid "Users"
-msgstr ""
+msgstr "Usuários"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:5
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:14
 msgid "General"
-msgstr ""
+msgstr "Geral"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:15
 msgid "Fallbacks"
-msgstr ""
+msgstr "Fallbacks"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:16
 msgid "Services"
-msgstr ""
+msgstr "Serviços"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:17
 msgid "Lines"
-msgstr ""
+msgstr "Linhas"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:19
 msgid "FuncKeys"
-msgstr ""
+msgstr "Função das Teclas"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:28
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:43
@@ -212,65 +215,65 @@ msgstr ""
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:147
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:156
 msgid "Update"
-msgstr ""
+msgstr "Atualizar"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:36
 msgid "Choose your CTI profile"
-msgstr ""
+msgstr "Escolha seu perfil CTI"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:83
 msgid "Protocol"
-msgstr ""
+msgstr "Protocolo"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:84
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:85
 msgid "Context"
-msgstr ""
+msgstr "Contexto"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:86
 #: wazo_plugind_admin_ui_user_official/templates/user/list.html:14
 msgid "Extension"
-msgstr ""
+msgstr "Extensão"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:87
 msgid "Device"
-msgstr ""
+msgstr "Dispositivo"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:88
 msgid "Line (N°)"
-msgstr ""
+msgstr "Linha (N°)"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:117
 msgid "Position"
-msgstr ""
+msgstr "Posição"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:142
 msgid "Choose Schedules"
-msgstr ""
+msgstr "Escolher Cronogramas"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:151
 msgid "Choose Voicemail"
-msgstr ""
+msgstr "Escolher Correio de Voz"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/edit.html:160
 msgid "Choose Call Permissions"
-msgstr ""
+msgstr "Escolher Permissões de Chamada"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/list.html:15
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/list.html:20
 msgid "Add User"
-msgstr ""
+msgstr "Adicionar Usuário"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/list.html:22
 msgid "Add"
-msgstr ""
+msgstr "Adicionar"
 
 #: wazo_plugind_admin_ui_user_official/templates/user/list.html:42
 msgid "Choose Context"
-msgstr ""
+msgstr "Escolher Contexto"
